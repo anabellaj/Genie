@@ -10,7 +10,7 @@ class User {
       required this.username,
       required this.university,
       required this.career,
-      required this.intetests,
+      required this.interests,
       required this.chats,
       required this.studyGroups})
       : id = id ?? uuid.v4();
@@ -20,7 +20,7 @@ class User {
   final String username;
   final String university;
   final String career;
-  final List<String> intetests;
+  final List<String> interests;
   final List<String> chats;
   final List<String> studyGroups;
 }
