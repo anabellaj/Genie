@@ -49,7 +49,14 @@ final ThemeData genieThemeDataDemo = ThemeData(
   )),
   canvasColor:const Color(0xffFFFCFF),
   cardColor: const Color(0xffFFFCFF),
-   
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: Color(0xffFFC1C9),
+    contentTextStyle: TextStyle(
+      fontSize:12,
+      color: Color(0xffC5061D)
+    ),
+    insetPadding: EdgeInsets.all(24),
+  )
 
   
   
@@ -74,5 +81,11 @@ ButtonStyle outlinedButtonStyle =  ButtonStyle(
   backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
   foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.primary),
   textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
+  padding:const WidgetStatePropertyAll(EdgeInsets.all(10)),
+);
+ButtonStyle linkButtonStyle =  ButtonStyle(
+  backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
+  foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.secondary),
+  textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodySmall),
   padding:const WidgetStatePropertyAll(EdgeInsets.all(10)),
 );
