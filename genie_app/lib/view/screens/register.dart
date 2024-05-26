@@ -25,7 +25,6 @@ class _MyHomePageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final validate = Validator();
 
-  RegExp get _emailRegex => RegExp(r'^\S+@\S+$');
   String name="";
   String email="";
   String password="";
@@ -90,10 +89,8 @@ class _MyHomePageState extends State<RegisterPage> {
                         
                       },
                       validator: (value){
-                        if(value==null || value.isEmpty){
-                          return 'Campo Obligatorio';
-                        }
-                        return null;},
+                          return validate.validateEmpty(value);
+                        },
                       decoration: InputDecoration(
                         errorStyle: TextStyle(
                           color: genieThemeDataDemo.colorScheme.onError,
@@ -124,12 +121,8 @@ class _MyHomePageState extends State<RegisterPage> {
                         }
                       },
                       validator: (value){
-                        if(value==null || value.isEmpty){
-                          return 'Campo obligatorio';
-                        }else if(!_emailRegex.hasMatch(value)){
-                          return 'Ingrese un correo válido';
-                        }
-                        return null;},
+                          return validate.validateEmail(value);
+                        },
                       decoration: InputDecoration(
                         errorStyle: TextStyle(
                           color: genieThemeDataDemo.colorScheme.onError,
@@ -160,10 +153,8 @@ class _MyHomePageState extends State<RegisterPage> {
                         }
                       }, 
                       validator: (value){
-                        if(value==null || value.isEmpty){
-                          return 'Campo obligatorio';
-                      }
-                      return null;},
+                          return validate.validateEmail(value);
+                        },
                       decoration: InputDecoration(
                         errorStyle: TextStyle(
                           color: genieThemeDataDemo.colorScheme.onError,

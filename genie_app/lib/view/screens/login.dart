@@ -3,6 +3,7 @@ import 'package:genie_app/view/screens/register.dart';
 import 'package:genie_app/view/screens/initial.dart';
 
 import 'package:genie_app/viewModel/authentication.dart';
+import 'package:genie_app/viewModel/validator.dart';
 import '../theme.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,11 +17,11 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _MyHomePageState();
 }
-RegExp get _emailRegex => RegExp(r'^\S+@\S+$');
+
 
 class _MyHomePageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-
+  final validate = Validator();
  
 
   bool isLoading=false;
@@ -84,13 +85,8 @@ class _MyHomePageState extends State<LoginPage> {
                         }
                       },
                       validator: (value) {
-                        if(value==null || value.isEmpty){
-                          return 'Campo obligatorio';
-                        }else if(!_emailRegex.hasMatch(value)){
-                          return 'Ingrese un correo válido';
-                        }
-                        return null;
-                      },
+                          return validate.validateEmail(value);
+                        },
                       decoration: InputDecoration(
                         hintText: 'Correo Electrónico',
                         errorStyle: TextStyle(
@@ -121,10 +117,7 @@ class _MyHomePageState extends State<LoginPage> {
                         }
                       },
                       validator: (value){
-                        if(value==null || value.isEmpty){
-                          return 'Campo obligatorio';
-                      }
-                        return null;
+                        return validate.validateEmpty(value);
                       },
                       
                       decoration: InputDecoration(
