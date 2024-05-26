@@ -43,7 +43,6 @@ dependencies:
   google_fonts: ^6.2.1
   mongo_dart: ^0.10.2
   flutter_pdfview: ^1.2.7
-  pdf: ^3.5.0
 
 dev_dependencies:
   flutter_test:
