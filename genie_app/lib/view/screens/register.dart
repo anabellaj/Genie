@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/initial.dart';
+import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/login.dart';
 import 'package:genie_app/viewModel/authentication.dart';
 import 'package:genie_app/viewModel/validator.dart';
@@ -153,7 +153,7 @@ class _MyHomePageState extends State<RegisterPage> {
                         }
                       }, 
                       validator: (value){
-                          return validate.validateEmail(value);
+                          return validate.validateEmpty(value);
                         },
                       decoration: InputDecoration(
                         errorStyle: TextStyle(
@@ -193,9 +193,9 @@ class _MyHomePageState extends State<RegisterPage> {
                             isLoading=false;
                           }),
                           if(answer=='success'){
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context, 
-                            MaterialPageRoute(builder: (context)=> const SplashPage(title: 'Splash')))}
+                            MaterialPageRoute(builder: (context)=> const AddGroupScreen()))}
                           else if(answer=="user_exists"){
                             ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Ya hay un usuario con esta cuenta')
@@ -220,7 +220,7 @@ class _MyHomePageState extends State<RegisterPage> {
                       child:  FilledButton(
                       style: linkButtonStyle,
                       onPressed: ()=>{
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context, 
                           MaterialPageRoute(builder: (context)=> const LoginPage(title: 'Inicar Sesion')))
                       }, 

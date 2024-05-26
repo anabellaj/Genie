@@ -16,6 +16,7 @@ class Authenticate{
 
       User user = User(email, password);
       user.name = name;
+      user.initialize();
 
       final result = await Connection.checkUser(user);
       
@@ -45,7 +46,7 @@ class Authenticate{
         
         if(result[0]["password"]==password){
           await prefs.setBool('isLoggedIn', true);
-          await prefs.setString("user", jsonEncode(user.toJson()));
+          await prefs.setString("user", jsonEncode(result[0]));
           return "success";
         }else{
           return "wrong_credentials";
@@ -56,6 +57,7 @@ class Authenticate{
 
       
     } catch (e) {
+      print(e);
       return "error";
     }
   }

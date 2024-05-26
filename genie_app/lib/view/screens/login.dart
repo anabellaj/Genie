@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/register.dart';
-import 'package:genie_app/view/screens/initial.dart';
-
 import 'package:genie_app/viewModel/authentication.dart';
 import 'package:genie_app/viewModel/validator.dart';
 import '../theme.dart';
@@ -154,10 +153,11 @@ class _MyHomePageState extends State<LoginPage> {
                           answer = await Authenticate.loginUser(email, password),
                           setState(()=>
                           isLoading=false),
+
                           if(answer == "success"){
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context, 
-                            MaterialPageRoute(builder: (context)=> const SplashPage(title: 'Splash')))
+                            MaterialPageRoute(builder: (context)=> const AddGroupScreen()))
                           }else if(answer == "wrong_credentials"){
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('El usuario o contraseña es incorrecto'))),
@@ -181,7 +181,7 @@ class _MyHomePageState extends State<LoginPage> {
                       child:  FilledButton(
                       style: linkButtonStyle,
                       onPressed: ()=>{
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context, 
                           MaterialPageRoute(
                             builder: (context)=> const RegisterPage(title: 'Registrar Página')))
