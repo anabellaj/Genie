@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/initial.dart';
 import 'view/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:genie_app/viewModel/controller.dart';
+
 import 'dart:async';
 import 'package:genie_app/view/screens/add_group.dart';
 
@@ -27,31 +28,26 @@ class _myAppState extends State<MyApp> {
 
   late bool isUser;
 
-  getLoggedInUser() async{
-    final prefs = await SharedPreferences.getInstance();
-    var answer = await prefs.getBool("isLoggedIn");
-    if(answer!=null){
-      if(answer){
+  void checkState()async {
+    bool ans = await Controller.getLoggedInUser();
+      if(ans){
         setState(() {
-          isUser =true;
+          isUser = true;
         });
       }else{
         setState(() {
-          isUser =false;
+          isUser=false;
         });
       }
-    }else{
-      setState(() {
-          isUser =false;
-        });
-    }
   }
+  
   
   @override
   void initState(){
     super.initState();
 
-    getLoggedInUser();
+    checkState();
+    
     Timer(
       const Duration(seconds: 3),
       ()=>Navigator.pushReplacement(
@@ -71,7 +67,7 @@ class _myAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
-      title: "Shared Preferences",
+      title: "genie",
       debugShowCheckedModeBanner: false,
       theme: genieThemeDataDemo,
       home: const Scaffold(

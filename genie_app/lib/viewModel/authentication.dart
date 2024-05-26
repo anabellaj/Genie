@@ -1,7 +1,10 @@
 
 
 
-import 'package:mongo_dart/mongo_dart.dart';
+import 'dart:convert';
+
+import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -11,26 +14,19 @@ class Authenticate{
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-      await db.open();
+      User user = User(email, password);
+      user.name = name;
 
-      var userCollection = db.collection('user');
-      List result = await userCollection.find(where.eq(
-        "email", email,
-      )).toList();
+      final result = await Connection.checkUser(user);
+      
+
+      
       if(!result.isNotEmpty){
-        await userCollection.insertOne({
-        "email": email,
-        "name":name,
-        "password":password
-        
-      });
+        await Connection.insertNewUser(user);
         await prefs.setBool('isLoggedIn', true);
-        await prefs.setStringList("user", [email, name, password]);
-        await db.close();
+        await prefs.setString("user", jsonEncode(user.toJson()));
         return "success";
       }else{
-        await db.close();
         return "user_exists";
       }
     } catch (e) {
@@ -41,18 +37,15 @@ class Authenticate{
   static Future<String> loginUser(String email, String password) async{
     try {
       final prefs = await SharedPreferences.getInstance();
-      final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-      await db.open();
-      var userCollection = db.collection('user');
-      List result = await userCollection.find(where.eq(
-        "email", email,
-      )).toList();
-      db.close();
+      User user = User(email, password);
+
+      final result = await Connection.checkUser(user);
+      
       if(result.isNotEmpty){
         
         if(result[0]["password"]==password){
           await prefs.setBool('isLoggedIn', true);
-          await prefs.setStringList("user", [result[0]["email"], result[0]["name"], result[0]["password"]]);
+          await prefs.setString("user", jsonEncode(user.toJson()));
           return "success";
         }else{
           return "wrong_credentials";
