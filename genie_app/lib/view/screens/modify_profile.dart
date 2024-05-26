@@ -257,7 +257,12 @@ class _ModifyProfile extends State<ModifyProfile>{
                                   initialValue: loggedUser.interests.isEmpty? "": Controller.getListInfo(loggedUser.interests),
                                   onSaved:(value){
                                     if(value!=null){
-                                      loggedUser.interests=value.split(",");
+                                      if(value==""){
+                                        loggedUser.interests=[];
+                                      }else{
+                                         loggedUser.interests=value.split(",");
+                                      }
+                                     
                                     }
                                   }, 
                                   decoration: InputDecoration(
