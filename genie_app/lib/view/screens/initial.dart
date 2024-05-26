@@ -3,6 +3,8 @@ import 'package:genie_app/view/screens/register.dart';
 import 'package:genie_app/view/screens/login.dart';
 import '../theme.dart';
 
+
+
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key, required this.title});
 
@@ -15,7 +17,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<SplashPage> {
-  
+   
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

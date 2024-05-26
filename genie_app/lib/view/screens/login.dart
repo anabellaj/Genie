@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/register.dart';
+import 'package:genie_app/view/screens/initial.dart';
+
+import 'package:genie_app/viewModel/authentication.dart';
 import '../theme.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +20,14 @@ RegExp get _emailRegex => RegExp(r'^\S+@\S+$');
 
 class _MyHomePageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+
+ 
+
+  bool isLoading=false;
+
+  String email = "";
+  String password = "";
+  String answer = "";
   
   @override
   Widget build(BuildContext context) {
@@ -47,7 +58,10 @@ class _MyHomePageState extends State<LoginPage> {
             ),
             Expanded(
 
-            child: Padding(
+            child: 
+            isLoading? const Center(
+              child: CircularProgressIndicator()):
+            Padding(
               padding: const EdgeInsets.all(24),
               child: ListView(
               
@@ -64,12 +78,18 @@ class _MyHomePageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     TextFormField(
+                      onSaved: (value){
+                        if(value !=null){
+                          email=value;
+                        }
+                      },
                       validator: (value) {
                         if(value==null || value.isEmpty){
                           return 'Campo obligatorio';
                         }else if(!_emailRegex.hasMatch(value)){
                           return 'Ingrese un correo válido';
                         }
+                        return null;
                       },
                       decoration: InputDecoration(
                         hintText: 'Correo Electrónico',
@@ -95,10 +115,17 @@ class _MyHomePageState extends State<LoginPage> {
 
                     ),
                     TextFormField(
+                      onSaved: (value){
+                        if(value !=null){
+                          password=value;
+                        }
+                      },
                       validator: (value){
                         if(value==null || value.isEmpty){
                           return 'Campo obligatorio';
-                      }},
+                      }
+                        return null;
+                      },
                       
                       decoration: InputDecoration(
                         errorStyle: TextStyle(
@@ -126,10 +153,29 @@ class _MyHomePageState extends State<LoginPage> {
                     Container(
                       margin: const EdgeInsets.only(top:24),
                       child:  FilledButton(
-                      onPressed: ()=>{
+                      onPressed: ()async=> {
                         if(_formKey.currentState!.validate()){
-                          ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data'))),
+                          _formKey.currentState!.save(),
+                          setState(()=>
+                          isLoading=true),
+                          answer = await Authenticate.loginUser(email, password),
+                          setState(()=>
+                          isLoading=false),
+                          if(answer == "success"){
+                            Navigator.push(
+                              context, 
+                            MaterialPageRoute(builder: (context)=> const SplashPage(title: 'Splash')))
+                          }else if(answer == "wrong_credentials"){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('El usuario o contraseña es incorrecto'))),
+                          }else if(answer == "user_doesnt_exist"){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('No hay usuario con estas credenciales'))),
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Hubo un error'))),
+                          }
+                          
                         }
                       }, 
                       style: mainButtonStyle,
