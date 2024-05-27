@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:genie_app/view/theme.dart';
 
 class FileInput extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class FileInput extends StatefulWidget {
 
 class _FileInputState extends State<FileInput> {
   File? _uploadedFile;
-  Widget content = const Text('No file selected.');
+  Widget content = const Text('No hay archivo seleccionado.');
 
   void openPDF() async {
     // ignore: use_build_context_synchronously
@@ -54,7 +55,17 @@ class _FileInputState extends State<FileInput> {
           height: 20,
         ),
         ElevatedButton(
-            onPressed: selectFile, child: const Text('Select a file'))
+            onPressed: selectFile, 
+            style: ElevatedButton.styleFrom(
+              backgroundColor: genieThemeDataDemo.colorScheme.secondary
+            ),
+            child: const Text(
+              'Selecciona un archivo',
+              style: TextStyle(
+                color: Colors.white,
+                
+              ),
+              ))
       ],
     );
   }
