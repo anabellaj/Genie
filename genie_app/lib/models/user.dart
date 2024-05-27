@@ -19,9 +19,19 @@ class User {
   late String username;
   late String university;
   late String career;
-  late List<String> interests;
-  late List<String> chats;
-  late List<String> studyGroups;
+  late List<dynamic> interests;
+  late List<dynamic> chats;
+  late List<dynamic> studyGroups;
+
+  void initialize(){
+      career="";
+      university="";
+      id= "";
+      career="";
+      interests = [];
+      chats = [];
+      studyGroups= []; 
+    }
 
   Map<String, dynamic> toJson()=>
     {
@@ -32,19 +42,22 @@ class User {
       "username":username,
       "university":university,
       "career":career,
-      "interests":interests.toString(),
-      "chats": chats.toString(),
-      "studyGroups":studyGroups.toString()
+      "interests":interests,
+      "chats": chats,
+      "studyGroups":studyGroups
 
     };
   User.fromJson(Map<String,dynamic> json):
-    id = json['id'],
+    id = json['id']== null? "": json['id'],
     name = json['name'],
     email = json['email'],
     password = json['password'],
-    username = json['username'],
-    university = json['university'],
-    career = json['career'];    
+    username = json['username']==null? "": json['username'],
+    university = json['university']==null? "": json['university'],
+    career = json['career']==null? "": json['career'],
+    interests = json['interests']==null? []:json['interests'],
+    chats = json['chats']==null? []: json['chats'],
+    studyGroups = json['studyGroups']==null? []: json['studyGroups'];
   
   
 }
