@@ -56,10 +56,13 @@ class _ModifyProfile extends State<ModifyProfile>{
       appBar: TopBar(),
       body:  Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
+        child: isLoading? 
+          const Center(child: CircularProgressIndicator())
+          : Column(
           children: [
             TextButton(
               onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                 Navigator.pushReplacement(context, 
                   MaterialPageRoute(builder: (context)=>const AddGroupScreen())
                 );
@@ -79,9 +82,7 @@ class _ModifyProfile extends State<ModifyProfile>{
               
               ),
               Expanded(
-                child: isLoading? 
-                const Center(child: CircularProgressIndicator())
-                :Card(
+                child: Card(
                   color: genieThemeDataDemo.colorScheme.surface,
                   shadowColor: genieThemeDataDemo.colorScheme.onSurface,
                   elevation: 4,
@@ -321,7 +322,7 @@ class _ModifyProfile extends State<ModifyProfile>{
                                         actions: [IconButton(
                                           onPressed: ()=>
                                             ScaffoldMessenger.of(context).hideCurrentMaterialBanner(), 
-                                          icon:  Icon(Icons.check, color: genieThemeDataDemo.colorScheme.onSecondary,))]));
+                                            icon: Icon(Icons.check, color: genieThemeDataDemo.colorScheme.onSecondary,))]));
                                     }else{
                                       ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Hubo un error')

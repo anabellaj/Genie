@@ -43,6 +43,7 @@ class Controller{
 
   static Future<String> updateUserInfo(User userInfo) async{
     try {
+      
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("user", jsonEncode(userInfo.toJson()));
       await Connection.updateUser(userInfo);
