@@ -44,13 +44,32 @@ final ThemeData genieThemeDataDemo = ThemeData(
       color: Color(0xff212227),
       fontSize: 16),
 
+    bodyLarge: TextStyle( //se utiliza para los botones
+      color: Color(0xff084C6E),
+      fontSize: 10 ),
     bodyMedium: TextStyle( //se utiliza para los botones
-      fontSize: 20.0 )
+      fontSize: 20.0 ),
+    bodySmall: TextStyle(
+      fontSize: 14
+    )
   )),
   canvasColor:const Color(0xffFFFCFF),
   cardColor: const Color(0xffFFFCFF),
-   
-
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: Color(0xffFFC1C9),
+    contentTextStyle: TextStyle(
+      fontSize:12,
+      color: Color(0xffC5061D)
+    ),
+    insetPadding: EdgeInsets.all(24),
+  ),
+  appBarTheme:  AppBarTheme(
+    backgroundColor: const Color(0xff084C6E),
+    titleTextStyle: GoogleFonts.breeSerif(
+      color: const Color(0xffFFFCFF),
+      fontSize: 36
+    ),
+  )
   
   
   
@@ -75,4 +94,22 @@ ButtonStyle outlinedButtonStyle =  ButtonStyle(
   foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.primary),
   textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
   padding:const WidgetStatePropertyAll(EdgeInsets.all(10)),
+);
+ButtonStyle linkButtonStyle =  ButtonStyle(
+  backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
+  foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.secondary),
+  textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodySmall),
+  padding:const WidgetStatePropertyAll(EdgeInsets.all(10)),
+);
+ButtonStyle smallButtonStyle =  ButtonStyle(
+  backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.secondary),
+  foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
+  textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodySmall),
+  padding:const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 10, horizontal: 32)),
+);
+ButtonStyle deleteButtonStyle =  ButtonStyle(
+  backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.error),
+  foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onError),
+  textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodySmall),
+  padding:const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 10, horizontal: 32)),
 );
