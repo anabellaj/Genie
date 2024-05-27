@@ -31,11 +31,12 @@ class _FileInputState extends State<FileInput> {
   }
 
   void selectFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
     if (result == null) {
       return;
     }
     File file = File(result.files.single.path!);
+    
     setState(() {
       _uploadedFile = file;
     });
