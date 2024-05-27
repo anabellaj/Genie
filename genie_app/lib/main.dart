@@ -26,7 +26,7 @@ class MyApp extends StatefulWidget {
 
 class _myAppState extends State<MyApp> { 
 
-  late bool isUser;
+  late bool isUser=false;
 
   void checkState()async {
     bool ans = await Controller.getLoggedInUser();
