@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
 import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
@@ -54,7 +55,7 @@ class _myAppState extends State<MyApp> {
         context,
         MaterialPageRoute(builder: (context)=>
           isUser? 
-            const AddGroupScreen(): 
+            const HomeScreen(): 
             const SplashPage(title: "SplashPage")
         
 

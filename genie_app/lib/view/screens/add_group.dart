@@ -13,11 +13,10 @@ class AddGroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TopBar(),
-      body: const Center(
+    return const Scaffold(
+      body: Center(
         child:  Text('en teoria un home'),
-      )
+      ),
     );
   }
 }
