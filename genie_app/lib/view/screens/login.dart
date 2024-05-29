@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/add_group.dart';
+import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/register.dart';
 import 'package:genie_app/viewModel/authentication.dart';
 import 'package:genie_app/viewModel/validator.dart';
@@ -157,7 +158,7 @@ class _MyHomePageState extends State<LoginPage> {
                           if(answer == "success"){
                             Navigator.pushReplacement(
                               context, 
-                            MaterialPageRoute(builder: (context)=> const AddGroupScreen()))
+                            MaterialPageRoute(builder: (context)=> const HomeScreen()))
                           }else if(answer == "wrong_credentials"){
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('El usuario o contraseña es incorrecto'))),

@@ -1,5 +1,7 @@
+import 'group.dart';
 import 'user.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
 
 class Connection{
 
@@ -52,6 +54,23 @@ class Connection{
 
     await db.close();
   }
-
-
+  //No funciona
+  static Future insertNewGroup(User user, Groups group) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var result = await checkUser(user);
+    ObjectId id = result[0]["_id"];
+    var groupCollection = db.collection("studyGroup");
+    await groupCollection.insertOne({
+      "name":group.name,
+      "description":group.description,
+      "creator":id,
+      "forums":[],
+      "members":[id],
+      "topics":[],
+      "admins":[id],
+      "profile_picture":""
+    });
+    await db.close();
+  }
 }

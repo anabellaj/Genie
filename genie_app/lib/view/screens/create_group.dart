@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/home.dart';
-import 'package:genie_app/view/widgets/appbar.dart';
-import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/add_group.dart';
-import 'package:genie_app/view/screens/initial.dart';
-import 'package:genie_app/viewModel/controller.dart';
-import 'package:genie_app/view/theme.dart';
-import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
-
+import 'package:genie_app/view/screens/home.dart';
+import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/validator.dart';
+
 class CreateGroupPage extends StatefulWidget {
   const CreateGroupPage({super.key});
 
@@ -24,10 +21,30 @@ final _formKey = GlobalKey<FormState>();
   String name = "";
   String description = "";
   String answer = "";
+  late User loggedUser;
+  late Groups newGroup;
+  late String userId;
+  bool isLoading =true;
 
-  String verifyNameDescription(){
-    String answer ="";
-    return answer;
+  void getUser() async{
+    User userNow = await Controller.getUserInfo();
+    if(userNow.email.isNotEmpty){
+    setState(() {
+      isLoading = false;
+    });
+    }else {
+      userNow.initialize();
+      loggedUser = userNow;
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    getUser();
   }
   @override
   Widget build(BuildContext context){
@@ -35,7 +52,9 @@ final _formKey = GlobalKey<FormState>();
       body:Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
+          child:isLoading? 
+          const Center(child: CircularProgressIndicator())
+          : Column(
             children: [
               TextButton(
                       onPressed: () {
@@ -156,22 +175,32 @@ final _formKey = GlobalKey<FormState>();
                       )),
                       textAlignVertical: TextAlignVertical.center,
                       style: Theme.of(context).textTheme.displayLarge,
-                      obscureText: true,
+                      obscureText: false,
                     ),
                       Container(
                         margin: const EdgeInsets.only(top:24),
                         child: FilledButton(
                           style: mainButtonStyle,
                           child: const Text(
-                          'Iniciar Sesión'
+                          'Crear Grupo'
                         ),
                           onPressed: () async=>{
                             if(_formKey.currentState!.validate()){
                               _formKey.currentState!.save()
                             ,
-                            print(description),
+                            setState(() {
+                              isLoading = true;
+                            }),
+                            loggedUser = await Controller.getUserInfo(),
+                            newGroup = Groups(description, name),
+                            
+                            Connection.insertNewGroup(loggedUser, newGroup),
+                            setState(() {
+                              isLoading = false;
+                            }),
                             Navigator.pushReplacement(context, 
                             MaterialPageRoute(builder: (context)=>const HomeScreen()))
+                            
                             }
                           },
                         )
