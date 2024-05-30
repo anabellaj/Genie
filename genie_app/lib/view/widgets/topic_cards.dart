@@ -10,38 +10,30 @@ class TopicCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (int i = 0; i < study_material.length; i = i + 2)
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Text(study_material[i].title),
-                        Text(study_material[i].description),
-                      ],
-                    ),
+        for (int i = 0; i < study_material.length; i++)
+          Container(
+            width: double.infinity,
+            child: Expanded(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(study_material[i].title),
+                          Icon(Icons.file_open_outlined)
+                        ],
+                      ),
+                      Text(study_material[i].description),
+                    ],
                   ),
                 ),
               ),
-              if (i + 1 < study_material.length)
-                Expanded(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          Text(study_material[i].title),
-                          Text(study_material[i].description),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          )
+            ),
+          ),
       ],
     );
   }

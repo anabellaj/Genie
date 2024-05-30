@@ -1,3 +1,4 @@
+import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/topic.dart';
 
 import 'user.dart';
@@ -74,15 +75,11 @@ class Connection {
   }
 
   static Future<String> createTopic(Topic topic) async {
-    print('Creo Topico');
     try {
       final db = await Db.create(
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-      print('Creo la BD');
       await db.open();
-      print('Abro la BD');
       var topicCollection = db.collection('topic');
-      print('Imprimre el mapa');
       print(topic.jsonifica());
       topicCollection.insertOne(topic.jsonifica());
       db.close();
@@ -91,6 +88,34 @@ class Connection {
       final error = e;
       print(e);
       return 'Ocurrio un error $e';
+    }
+  }
+
+  /*StudyMaterials queries*/
+  static Future<String> addStudyMaterialToTopic(
+    Topic topic,
+    StudyMaterial studyMaterial,
+  ) async {
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open();
+      final studyMaterialCollection = db.collection('studyMaterial');
+      WriteResult response = await studyMaterialCollection.insertOne({
+        'title': studyMaterial.title,
+        'description': studyMaterial.description,
+        'fileContent': studyMaterial.fileContent
+      });
+      print(response);
+      ObjectId id = ObjectId.fromHexString(topic.id);
+      final topicCollection = db.collection('topic');
+      final response2 = await topicCollection.update(where.eq('_id', id),
+          modify.push('studyMaterial', {'_id': response.id}));
+      print(response2);
+      db.close();
+      return 'success';
+    } on Exception catch (e) {
+      return ('Error $e');
     }
   }
 }

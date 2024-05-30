@@ -39,7 +39,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     final topic = Topic(
         name: _titleController.text,
         description: _descriptionController.text,
-        label: selectedOption,
+        label: otherLabelController.text,
         files: []);
     setState(() {
       isLoading = true;

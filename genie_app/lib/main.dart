@@ -4,6 +4,7 @@ import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/create_topic.dart';
 import 'package:genie_app/view/screens/initial.dart';
 import 'package:genie_app/view/screens/topic.dart';
+import 'package:genie_app/view/screens/upload_study_material.dart';
 import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
@@ -24,7 +25,14 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MaterialApp(
-    home: CreateTopicScreen(),
+    home: UploadStudyMaterialScreen(
+      topic: const Topic(
+          id: '6657d49d7dca3271d92245a1',
+          name: '',
+          description: '',
+          label: '',
+          files: []),
+    ),
     theme: genieThemeDataDemo,
   ));
 }
@@ -42,7 +50,7 @@ class _myAppState extends State<MyApp> {
   void checkState() async {
     bool ans = await Controller.getLoggedInUser();
     if (ans) {
-      setState(() {
+      setState(() { 
         isUser = true;
       });
     } else {
