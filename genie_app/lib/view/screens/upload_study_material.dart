@@ -33,7 +33,10 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
     if (_titleController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         _uploadedFile == null) {
-      //TODO: Meter popup
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Por favor llene todos los campos.')));
       return;
     }
     setState(() {
@@ -55,10 +58,12 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
       print('FIN');
       return;
     }
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ha ocurrido un error')));  //Popup de que algo no salio bien 
+
     setState(() {
       _isLoading = false;
     });
-    /*TODO: Popup de que algo no salio bien (hazlo con el snackbar que es como esta en el login)*/
   }
 
   void openPDF() async {
@@ -109,7 +114,7 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
               ),
               TextButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                   // ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
