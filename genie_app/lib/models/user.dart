@@ -3,24 +3,61 @@ import 'package:uuid/uuid.dart';
 const uuid = Uuid();
 
 class User {
-  User(
-      {String? id,
-      required this.name,
-      required this.lastName,
-      required this.username,
-      required this.university,
-      required this.career,
-      required this.interests,
-      required this.chats,
-      required this.studyGroups})
-      : id = id ?? uuid.v4();
-  final String id;
-  final String name;
-  final String lastName;
-  final String username;
-  final String university;
-  final String career;
-  final List<String> interests;
-  final List<String> chats;
-  final List<String> studyGroups;
+ User(String emailPam, String passwordPam,){
+      name= "";
+      email = emailPam;
+      password = passwordPam;
+      username="";
+      university="";
+      career="";
+    }
+      
+  late String id;
+  late String name;
+  late String email;
+  late String password;
+  late String username;
+  late String university;
+  late String career;
+  late List<dynamic> interests;
+  late List<dynamic> chats;
+  late List<dynamic> studyGroups;
+
+  void initialize(){
+      career="";
+      university="";
+      id= "";
+      career="";
+      interests = [];
+      chats = [];
+      studyGroups= []; 
+    }
+
+  Map<String, dynamic> toJson()=>
+    {
+      "id":id,
+      "name":name,
+      "email":email,
+      "password":password,
+      "username":username,
+      "university":university,
+      "career":career,
+      "interests":interests,
+      "chats": chats,
+      "studyGroups":studyGroups
+
+    };
+  User.fromJson(Map<String,dynamic> json):
+    id = json['id']== null? "": json['id'],
+    name = json['name'],
+    email = json['email'],
+    password = json['password'],
+    username = json['username']==null? "": json['username'],
+    university = json['university']==null? "": json['university'],
+    career = json['career']==null? "": json['career'],
+    interests = json['interests']==null? []:json['interests'],
+    chats = json['chats']==null? []: json['chats'],
+    studyGroups = json['studyGroups']==null? []: json['studyGroups'];
+  
+  
 }
