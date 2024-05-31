@@ -39,4 +39,5 @@ class Groups{
     members = json["members"],
     admins = json["admins"],
     entranceCode = json["entrance_code"];
+  
 }
