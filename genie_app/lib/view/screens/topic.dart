@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/upload_study_material.dart';
@@ -15,9 +19,34 @@ class TopicScreen extends StatefulWidget {
 }
 
 class _TopicScreenState extends State<TopicScreen> {
+  var isLoading = false;
   @override
   void initState() {
     super.initState();
+  }
+
+  void createPdfFile(String id, String title) async {
+    if (isLoading == true) return;
+    isLoading = true;
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Se esta abriendo el archivo')));
+    final pdfContent = await Connection.getFileById(id);
+
+    final tempDir = await getTemporaryDirectory();
+    File file = File('${tempDir.path}/data.pdf');
+    await file.writeAsBytes(pdfContent);
+    isLoading = true;
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (ctx) => Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: PDFView(
+          filePath: file.path,
+        ),
+      ),
+    ));
   }
 
   Future<Topic> _loadTopic() async {
@@ -102,7 +131,12 @@ class _TopicScreenState extends State<TopicScreen> {
                         ),
                       ),
                     ),
-                    TopicCards(study_material: snapshot.data!.files)
+                    TopicCards(
+                      studyMaterial: snapshot.data!.files,
+                      viewFile: (String id, String title) {
+                        createPdfFile(id, title);
+                      },
+                    )
                   ],
                 ),
               ),

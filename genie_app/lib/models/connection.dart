@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:genie_app/models/object_id_converter.dart';
@@ -69,25 +69,19 @@ class Connection {
 
   /*Topic queries*/
   static Future<Topic> readTopic(String id) async {
-    print('Entre a la Funcion read topic');
     ObjectId castedId = ObjectId.fromHexString(id);
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
-    print('Abri la BD');
     var topicCollection = db.collection('topic');
     final response = await topicCollection.findOne(where.eq('_id', castedId));
-    print('Llegue aqui 1');
     List<StudyMaterial> studyMaterials = [];
-    print(response!['studyMaterial']);
     for (var studyMaterial in response!['studyMaterial']) {
-      print('Entre');
       studyMaterials.add(StudyMaterial(
           id: ObjectIdConverter.convertToId(studyMaterial['_id']),
           title: studyMaterial['title'] as String,
           description: studyMaterial['description'] as String));
     }
-    print('Llegue aqui 2');
     Topic topic = Topic(
         id: id,
         name: response['name'],
@@ -95,7 +89,6 @@ class Connection {
         label: response['label'],
         files: studyMaterials);
     db.close();
-    print('La cerre');
     return topic;
   }
 
@@ -109,8 +102,6 @@ class Connection {
       db.close();
       return 'success';
     } on Exception catch (e) {
-      final error = e;
-      print(e);
       return 'Ocurrio un error $e';
     }
   }
@@ -131,21 +122,33 @@ class Connection {
       if (response.isFailure) {
         throw Exception();
       }
-      print(response);
       ObjectId id = ObjectId.fromHexString(topic.id);
       final topicCollection = db.collection('topic');
-      final response2 = await topicCollection.update(
+      await topicCollection.update(
           where.eq('_id', id),
           modify.push('studyMaterial', {
             '_id': response.id,
             'title': studyMaterial.title,
             'description': studyMaterial.description,
           }));
-      print(response2);
       db.close();
       return 'success';
     } on Exception catch (e) {
       return ('Error $e');
     }
+  }
+
+  static Future<Uint8List> getFileById(String id) async {
+    ObjectId convertedId = ObjectId.fromHexString(id);
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final studyMaterialCollection = db.collection('studyMaterial');
+    final response =
+        await studyMaterialCollection.findOne(where.eq('_id', convertedId));
+    print(response!['fileContent'].runtimeType);
+    List<int> pdfContent1 = List<int>.from(response!['fileContent']);
+    final pdfContent = Uint8List.fromList(pdfContent1.cast());
+    return pdfContent;
   }
 }
