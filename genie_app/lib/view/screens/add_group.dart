@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/view/screens/forums.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,8 +16,10 @@ class AddGroupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopBar(),
-      body: const Center(
-        child:  Text('en teoria un home'),
+      body:  Center(
+        child:  FilledButton(onPressed: ()=>{
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>const ForumsListPage()))}, 
+          child: const Text('foros')),
       )
     );
   }
