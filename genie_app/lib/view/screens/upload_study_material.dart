@@ -1,12 +1,8 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/topic.dart';
-import 'package:genie_app/view/screens/create_topic.dart';
-import 'package:genie_app/view/widgets/file_input.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
@@ -45,11 +41,11 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
 
     final pdfContent = await _uploadedFile!.readAsBytes();
     final studyMaterial = StudyMaterial(
-        title: _titleController.text,
-        description: _descriptionController.text,
-        fileContent: pdfContent);
-    var result =
-        await Connection.addStudyMaterialToTopic(widget.topic, studyMaterial);
+      title: _titleController.text,
+      description: _descriptionController.text,
+    );
+    var result = await Connection.addStudyMaterialToTopic(
+        widget.topic, studyMaterial, pdfContent);
     setState(() {
       _isLoading = false;
     });

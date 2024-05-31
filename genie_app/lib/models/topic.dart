@@ -16,7 +16,7 @@ class Topic {
   final String label;
   final List<StudyMaterial> files;
 
-  Map<String, dynamic> jsonifica() {
+  Map<String, dynamic> toJson() {
     return {
       'name': name,
       'description': description,
@@ -24,13 +24,10 @@ class Topic {
     };
   }
 
-  Topic deJsonificacion(String response) {
-    final result = json.decode(response);
-    return Topic(
-        id: result['_id'],
-        name: result['name'],
-        description: result['description'],
-        label: result['label'],
-        files: result['files']);
-  }
+  Topic.fromJson(Map<String, dynamic> json)
+      : id = json['_id'],
+        name = json['name'],
+        description = json['description'],
+        label = json['label'],
+        files = json['files'];
 }

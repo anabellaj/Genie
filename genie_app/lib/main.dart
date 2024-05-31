@@ -10,29 +10,12 @@ import 'package:genie_app/viewModel/controller.dart';
 
 import 'dart:async';
 import 'package:genie_app/view/screens/add_group.dart';
-/*TopicScreen(
-      topic: Topic(
-          name: 'Tema 1',
-          description: 'Guia para saber esto',
-          label: 'Parcial',
-          files: [
-            StudyMaterial(title: 'title1', description: 'description1'),
-            StudyMaterial(title: 'title2', description: 'description2'),
-            StudyMaterial(title: 'title3', description: 'description3'),
-          ]), ),*/
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MaterialApp(
-    home: UploadStudyMaterialScreen(
-      topic: const Topic(
-          id: '6657d49d7dca3271d92245a1',
-          name: '',
-          description: '',
-          label: '',
-          files: []),
-    ),
+    home: TopicScreen(topicId: '6657d49d7dca3271d92245a1',),
     theme: genieThemeDataDemo,
   ));
 }
@@ -50,7 +33,7 @@ class _myAppState extends State<MyApp> {
   void checkState() async {
     bool ans = await Controller.getLoggedInUser();
     if (ans) {
-      setState(() { 
+      setState(() {
         isUser = true;
       });
     } else {
