@@ -7,6 +7,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/view/screens/create_topic.dart';
 
 class UploadStudyMaterialScreen extends StatefulWidget {
   const UploadStudyMaterialScreen({super.key, required this.topic});
