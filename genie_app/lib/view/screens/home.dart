@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/add_group.dart';
+import 'package:genie_app/view/screens/code.dart';
 import 'package:genie_app/view/screens/create_group.dart';
+import 'package:genie_app/view/screens/join_group.dart';
+import 'package:genie_app/view/screens/joined_groups.dart';
+import 'package:genie_app/view/screens/modify_profile.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   int _currentIndex = 0;
-  List<Widget> body = const [AddGroupScreen(), CreateGroupPage(), AddGroupScreen()];
+  List<Widget> body = const [AddGroupScreen(), CreateGroupPage(), JoinedGroups()];
   removeUser()async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isLoggedIn", false);
@@ -32,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _currentIndex,
         onTap: (int newIndex){
           setState(() {
+            
             _currentIndex = newIndex;
+            
           });
         },
         items: const [

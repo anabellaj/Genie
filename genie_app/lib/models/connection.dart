@@ -1,3 +1,6 @@
+import 'package:genie_app/viewModel/controller.dart';
+import 'package:uuid/uuid.dart';
+
 import 'group.dart';
 import 'user.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -15,6 +18,20 @@ class Connection{
       )).toList();
     await db.close();
     return result;
+  }
+
+  static Future<List> checkStudyGroup(String groupId) async{
+    ObjectId grId = ObjectId.fromHexString(groupId);
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    var groupCollection = db.collection('studyGroup');
+      List result = await groupCollection.find(where.eq(
+        "_id", grId
+      )).toList();
+    await db.close();
+    return result;
+    
   }
 
   static Future insertNewUser(User user) async{
@@ -60,17 +77,28 @@ class Connection{
     await db.open();
     var result = await checkUser(user);
     ObjectId id = result[0]["_id"];
+    String objIdString = id.oid;
+    //String enterCode = objIdString.substring(2,10);
     var groupCollection = db.collection("studyGroup");
-    await groupCollection.insertOne({
+    WriteResult writeResult = await groupCollection.insertOne({
       "name":group.name,
       "description":group.description,
-      "creator":id,
+      "creator":objIdString,
       "forums":[],
-      "members":[id],
+      "members":[objIdString],
       "topics":[],
-      "admins":[id],
-      "profile_picture":""
+      "admins":[objIdString],
+      "profile_picture":"",
+      "entrance_code":"",
     });
+    
+    ObjectId insertedStGroupId = await writeResult.id;
+    String enterCode = insertedStGroupId.oid.substring(2,10);
+    groupCollection.updateOne(where.eq("_id", insertedStGroupId), modify.set("entrance_code", enterCode));
+    //Map<String,dynamic> insertedGroupObj = await groupCollection.findOne({"_id":x}) as Map<String,dynamic>;
     await db.close();
+    return insertedStGroupId.oid;
+
   }
+
 }

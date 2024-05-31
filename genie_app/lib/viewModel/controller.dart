@@ -1,10 +1,28 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/user.dart';
+import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Controller{
+
+  static Future<Widget> getUserGroups() async{
+    User loggedUser = await Controller.getUserInfo();
+    print("Aca");
+    List stGroups = loggedUser.studyGroups;
+    List<Widget> obtainedGroups = [];
+    for (String groupId in stGroups){
+     List gr = await Connection.checkStudyGroup(groupId);
+     obtainedGroups.add(GroupPreview(name: gr[0]["name"], membersQty: gr[0]["members"], description: gr[0]["description"]));
+    }
+    
+    return ListView(
+      children: obtainedGroups,
+    );
+  }
+
   static Future<bool>  getLoggedInUser() async{
     final prefs = await SharedPreferences.getInstance();
     var answer = await prefs.getBool("isLoggedIn");
@@ -51,8 +69,6 @@ class Controller{
     } catch (e) {
       return 'error';
     }
-    
-    
     
   }
 

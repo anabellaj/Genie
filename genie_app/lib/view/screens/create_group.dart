@@ -25,6 +25,7 @@ final _formKey = GlobalKey<FormState>();
   late Groups newGroup;
   late String userId;
   bool isLoading =true;
+  late var insertedStGroupId;
 
   void getUser() async{
     User userNow = await Controller.getUserInfo();
@@ -193,8 +194,9 @@ final _formKey = GlobalKey<FormState>();
                             }),
                             loggedUser = await Controller.getUserInfo(),
                             newGroup = Groups(description, name),
-                            
-                            Connection.insertNewGroup(loggedUser, newGroup),
+                            insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup),
+                            loggedUser.studyGroups.add(insertedStGroupId),
+                            Controller.updateUserInfo(loggedUser),
                             setState(() {
                               isLoading = false;
                             }),
