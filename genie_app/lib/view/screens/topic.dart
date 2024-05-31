@@ -3,6 +3,7 @@ import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/upload_study_material.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/topic_cards.dart';
 
 class TopicScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _TopicScreenState extends State<TopicScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: TopBar(),
       body: FutureBuilder(
           future: _loadTopic(),
           builder: (context, snapshot) {

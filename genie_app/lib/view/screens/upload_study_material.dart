@@ -7,7 +7,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
-import 'package:genie_app/view/screens/create_topic.dart';
+import 'package:genie_app/view/screens/topic.dart';
 
 class UploadStudyMaterialScreen extends StatefulWidget {
   const UploadStudyMaterialScreen({super.key, required this.topic});
@@ -53,6 +53,11 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
     if (result == 'success') {
       //Navigator.of(context).pop();
       print('FIN');
+                     // ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const TopicScreen(topicId: '6657d49d7dca3271d92245a1')));
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(
@@ -116,7 +121,7 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const CreateTopicScreen()));
+                              builder: (context) => const TopicScreen(topicId: '6657d49d7dca3271d92245a1')));
                     },
                     child: Row(
                       children: [
