@@ -69,7 +69,9 @@ class CodePage extends StatelessWidget{
                                     style: Theme.of(context).textTheme.displayMedium,
                                     textAlign: TextAlign.start),
                                     const SizedBox(height: 20),
-
+                                    Text("5a4c50fe",
+                                      style: Theme.of(context).primaryTextTheme.headlineMedium
+                                    )
                                     ]
 
                                 ),

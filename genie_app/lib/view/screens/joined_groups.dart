@@ -19,12 +19,13 @@ class _JoinedGroupsState extends State<JoinedGroups> {
   void getGroups() async{
     Widget g = await Controller.getUserGroups();
     print("Hola");
+    if(mounted){
     setState(() {
       groups = g;
       print(groups);
       isLoading = false;
     });
-
+    }
   }
   @override 
     void initState(){

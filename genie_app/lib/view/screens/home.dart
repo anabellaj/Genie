@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   int _currentIndex = 0;
-  List<Widget> body = const [AddGroupScreen(), CreateGroupPage(), JoinedGroups()];
+  List<Widget> body = const [CodePage(), JoinGroupPage(), JoinedGroups()];
   removeUser()async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isLoggedIn", false);

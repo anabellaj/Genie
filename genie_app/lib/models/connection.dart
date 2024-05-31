@@ -72,6 +72,10 @@ class Connection{
     await db.close();
   }
   //No funciona
+  static Future joinGroup(User user, Groups groupCode) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+  }
   static Future insertNewGroup(User user, Groups group) async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
