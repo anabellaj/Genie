@@ -56,7 +56,12 @@ class _TopicScreenState extends State<TopicScreen> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (ctx) => Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          leading: IconButton(
+          icon: Icon(Icons.arrow_back, color:Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ), 
+          title: Text(title, style: TextStyle(fontSize: 18),),
+
         ),
         body: PDFView(
           filePath: file.path,
