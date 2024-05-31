@@ -28,10 +28,26 @@ class _TopicScreenState extends State<TopicScreen> {
   void createPdfFile(String id, String title) async {
     if (isLoading == true) return;
     isLoading = true;
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Se esta abriendo el archivo')));
+    // ScaffoldMessenger.of(context).clearSnackBars();
+    // ScaffoldMessenger.of(context)
+    //     .showSnackBar(SnackBar(content: Text('Se esta abriendo el archivo')));
+    showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 20),
+            Text('Se está abriendo el archivo...'),
+          ],
+        ),
+      );
+    },
+  );
     final pdfContent = await Connection.getFileById(id);
+  Navigator.of(context).pop(); // Cerrar el diálogo de carga
 
     final tempDir = await getTemporaryDirectory();
     File file = File('${tempDir.path}/data.pdf');
@@ -74,7 +90,9 @@ class _TopicScreenState extends State<TopicScreen> {
             }
             if (snapshot.hasError) {
               //TODO: Meter snackbar
-
+              ScaffoldMessenger.of(context).clearSnackBars();
+               ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
               return const Center(
                 child: Text('No llego nada'),
               );
@@ -90,7 +108,7 @@ class _TopicScreenState extends State<TopicScreen> {
                       children: [
                         Text(
                           snapshot.data!.name,
-                          style: genieThemeDataDemo.textTheme.headlineLarge!
+                          style: genieThemeDataDemo.textTheme.displayMedium!
                               .copyWith(
                                   fontSize: 32, fontWeight: FontWeight.w700),
                         ),
@@ -99,13 +117,18 @@ class _TopicScreenState extends State<TopicScreen> {
                             icon: const Icon(Icons.more_horiz))
                       ],
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 10),
                       decoration: BoxDecoration(
                           color: genieThemeDataDemo.colorScheme.secondary,
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(20))),
+                              const BorderRadius.all(Radius.circular(20))
+                              
+                              ),
                       child: Text(
                         snapshot.data!.label,
                         style: genieThemeDataDemo.textTheme.headlineLarge!
