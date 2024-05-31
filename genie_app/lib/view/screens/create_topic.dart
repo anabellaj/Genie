@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
 
 class CreateTopicScreen extends StatefulWidget {
   const CreateTopicScreen({super.key});
@@ -78,98 +79,135 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
         child: CircularProgressIndicator(),
       );
     } else {
-      content = Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
+      content = SingleChildScrollView(
+          child: Column(children: [
+                const SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                       // ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const CreateTopicScreen()));
+            },
+           child: Row(
+                        children: [
+                          Icon(
+                            Icons.chevron_left,
+                            color: genieThemeDataDemo.colorScheme.secondary,
+                          ),
+                          Text(
+                            'Regresar',
+                            style: TextStyle(
+                                color: genieThemeDataDemo.colorScheme.secondary),
+                          )
+                        ],
+           )), 
+          const SizedBox(
+                    height: 50,
+                  ),
+          Container(
+            margin: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2),
-                borderRadius: const BorderRadius.all(Radius.circular(16))),
+            borderRadius: BorderRadius.circular(
+                20.0), 
+            color: Colors.white,
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromARGB(255, 172, 174, 188),
+                spreadRadius: 1,
+                blurRadius: 10,
+              )
+            ]),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Crear Tema',
-                    style: genieThemeDataDemo.textTheme.titleLarge!
-                        .copyWith(fontSize: 36, fontWeight: FontWeight.w800),
-                    textAlign: TextAlign.start,
-                  ),
-                  TextField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(
-                      label: Text('Nombre del Tópico'),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    controller: _descriptionController,
-                    maxLines: 5,
-                    minLines: 1,
-                    maxLength: 250,
-                    decoration: const InputDecoration(
-                      label: Text('Descripción'),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Column(
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      DropdownButtonFormField(
-                        value: selectedOption,
-                        items: evaluationLabels
-                            .map(
-                              (label) => DropdownMenuItem<String>(
-                                value: label,
-                                child: Text(label),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedOption = value!;
-                          });
-                        },
+                      Text(
+                        'Crear Tema',
+                        style: genieThemeDataDemo.primaryTextTheme.headlineMedium
                       ),
-                      if (selectedOption == 'Otro')
-                        TextField(
-                          controller: otherLabelController,
-                          decoration:
-                              const InputDecoration(label: Text('Add new ')),
-                        )
+                      TextField(
+                        controller: _titleController,
+                        maxLength: 50,
+                        decoration: const InputDecoration(
+                          label: Text('Nombre del Tópico'),
+                          
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextField(
+                        controller: _descriptionController,
+                        maxLines: 5,
+                        minLines: 1,
+                        maxLength: 250,
+                        decoration: const InputDecoration(
+                          label: Text('Descripción'),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        children: [
+                          DropdownButtonFormField(
+                            value: selectedOption,
+                            items: evaluationLabels
+                                .map(
+                                  (label) => DropdownMenuItem<String>(
+                                    value: label,
+                                    child: Text(label),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedOption = value!;
+                              });
+                            },
+                          ),
+                          if (selectedOption == 'OTRO')
+                            TextField(
+                              controller: otherLabelController,
+                              decoration:
+                                  const InputDecoration(label: Text('Agregar ')),
+                            )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _saveTopic,
+                          style: const ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll(Color(0xff3d7f95))),
+                          child: const Text(
+                            'Crear Tema',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      )
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _saveTopic,
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              WidgetStatePropertyAll(Color(0xff3d7f95))),
-                      child: const Text(
-                        'Crear Tema',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      );
+        ]));
     }
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Crear Tópico'),
-        ),
+        appBar: TopBar(),
         body: content);
   }
 }
