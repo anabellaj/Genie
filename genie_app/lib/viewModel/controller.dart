@@ -15,7 +15,9 @@ class Controller{
     List<Widget> obtainedGroups = [];
     for (String groupId in stGroups){
      List gr = await Connection.checkStudyGroup(groupId);
-     obtainedGroups.add(GroupPreview(name: gr[0]["name"], membersQty: gr[0]["members"], description: gr[0]["description"]));
+     if(gr.isNotEmpty){
+     obtainedGroups.add(GroupPreview(name: gr[0]["name"], membersQty: "2", description: gr[0]["description"]));
+     }
     }
     
     return ListView(

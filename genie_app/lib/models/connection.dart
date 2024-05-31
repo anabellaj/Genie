@@ -26,7 +26,7 @@ class Connection{
     await db.open();
 
     var groupCollection = db.collection('studyGroup');
-      List result = await groupCollection.find(where.eq(
+    List result = await groupCollection.find(where.eq(
         "_id", grId
       )).toList();
     await db.close();
