@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:genie_app/view/theme.dart';
+
+
+import 'package:genie_app/view/screens/forum_list.dart';
+
+import 'package:genie_app/view/screens/topic.dart';
+
+
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
@@ -21,13 +29,32 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
+
+    return Scaffold(
+      appBar: TopBar(),
+      body:  Center(
         child: Column(
-          children:[Text("GGGG")]
-        ),
-      ),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+            FilledButton(onPressed: (){
+              Navigator.pushReplacement(context, 
+              MaterialPageRoute(
+                builder: (context) => const TopicScreen(topicId: '6657d49d7dca3271d92245a1'),)
+                );}
+          
+              , child: Text('Temas')),
+            FilledButton(onPressed: (){
+              Navigator.pushReplacement(context, 
+              MaterialPageRoute(
+                builder: (context) => const ForumsListPage(),)
+                );}
+          
+              , child: Text('Foros')),
+          ]
+        )
+
+      )
+
     );
   }
 }
