@@ -24,14 +24,16 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
   void _saveTopic() async {
     print('Entre');
     if (_titleController.text.isEmpty || _descriptionController.text.isEmpty) {
-      //TODO: Meter popup de que el campo es requerido
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor llene todos los campos'))); 
       return;
     }
     print('PASE 1');
     if (selectedOption == 'OTRO') {
       for (var label in evaluationLabels) {
         if (label.toUpperCase() == otherLabelController.text) {
-          //TODO: Poner popup de que el label ya existe
+          ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('La etiqueta ingresada ya existe. '))); 
           return;
         }
       }
@@ -49,12 +51,12 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     setState(() {
       isLoading = false;
     });
-    if (result == 'succes') {
+    if (result == 'success') {
       Navigator.of(context).pop<Topic>();
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Ocurrió un error intenta de nuevo más tarde.')));
+          content: Text('Ha ocurrido un error, por favor intenta de nuevo más tarde.')));
     }
     print(result);
   }

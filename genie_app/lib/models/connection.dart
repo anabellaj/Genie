@@ -151,4 +151,42 @@ class Connection {
     final pdfContent = Uint8List.fromList(pdfContent1.cast());
     return pdfContent;
   }
+
+  static Future updateTopic(Topic topic, String previous) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();  
+    final topicCollection = db.collection('topic');
+    try{await topicCollection.update(
+      where.eq('name', previous),
+      ModifierBuilder()
+        .set('name', topic.name)
+        .set('description', topic.description)
+        .set('label', topic.label),
+    );
+  
+    await db.close();
+    return 'success';
+    } on Exception catch (e){
+        return e;
+    }
+  }
+
+  static Future deleteTopic(String strId) async{
+      final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+     await db.open();
+    try{
+    ObjectId id = ObjectId.fromHexString(strId);
+    var topicCollection = db.collection('topic');
+    await topicCollection.remove(where.eq('_id', id));
+    await db.close();
+    return 'success';
+    } on Exception catch (e){
+      return e; 
+    }
+  }
+
+
+
 }

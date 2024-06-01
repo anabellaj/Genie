@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
+import 'package:genie_app/view/screens/modify_topic.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -35,7 +37,7 @@ class _TopicScreenState extends State<TopicScreen> {
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
-      return AlertDialog(
+      return const AlertDialog(
         content: Row(
           children: [
             CircularProgressIndicator(),
@@ -82,6 +84,14 @@ class _TopicScreenState extends State<TopicScreen> {
       ),
     ));
   }
+   
+  void modificarArchivo(Topic topic) async{
+    Navigator.of(context).push<Map<String, String>>(MaterialPageRoute(
+      builder: (ctx) => ModifyTopicScreen(
+        topic: topic,
+      ),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +104,7 @@ class _TopicScreenState extends State<TopicScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasError) {
-              //TODO: Meter snackbar
+              //snackbar
               ScaffoldMessenger.of(context).clearSnackBars();
                ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
@@ -108,9 +118,33 @@ class _TopicScreenState extends State<TopicScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const TopicScreen(
+                                  topicId: '6657d49d7dca3271d92245a1')));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.chevron_left,
+                          color: genieThemeDataDemo.colorScheme.secondary,
+                        ),
+                        Text(
+                          'Regresar',
+                          style: TextStyle(
+                              color: genieThemeDataDemo.colorScheme.secondary),
+                        )
+                      ],
+                    )),
+                    
+                    
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        
                         Text(
                           snapshot.data!.name,
                           style: genieThemeDataDemo.textTheme.displayMedium!
@@ -118,7 +152,7 @@ class _TopicScreenState extends State<TopicScreen> {
                                   fontSize: 32, fontWeight: FontWeight.w700),
                         ),
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {modificarArchivo(snapshot.data!);},
                             icon: const Icon(Icons.more_horiz))
                       ],
                     ),
