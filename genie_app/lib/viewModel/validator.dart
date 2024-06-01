@@ -19,4 +19,8 @@ class Validator{
     return null;
   }
 
+  bool validateEmptyMessage(String message){
+    return message.isNotEmpty;
+  }
+
 }
