@@ -21,8 +21,14 @@ class Topic {
     };
   }
 
+  Topic.forPreview(Map<String, dynamic> json):
+    id = json["_id"] is String?  json['_id']:json['_id'].oid.toString(),
+    name = json['name'],
+    label = json['label'],
+    files = [];
+
   Topic.fromJson(Map<String, dynamic> json)
-      : id = json['_id'],
+      : id = json["_id"] is String?  json['_id']:json['_id'].oid.toString(),
         name = json['name'],
         label = json['label'],
         files = json['files'];

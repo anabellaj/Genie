@@ -466,6 +466,35 @@ class Connection {
 
   }
 
+  static Future<List> getTopics(String groupId)async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();  
+
+    final groupCollection = db.collection('studyGroup');
+    final topicCollection = db.collection('topic');
+
+    Map<String,dynamic>? result = await groupCollection.findOne(
+      where.eq("_id", ObjectId.fromHexString(groupId))
+    );
+
+    List allTopics=[];
+
+    if(result!=null){
+      for (var t in result['topics']) {
+        Map<String,dynamic>? topic = await topicCollection.findOne(
+          where.eq( "_id", t)
+        );
+        if(topic!=null){
+          allTopics.add(topic);
+        }
+      }
+    }
+    print(allTopics);
+
+    return allTopics;
+
+  }
+
 
 
 

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:genie_app/models/group.dart';
+import 'package:genie_app/view/screens/create_topic.dart';
+import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/screens/home.dart';
+import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/screens/members_view.dart';
 import 'package:genie_app/view/screens/modify_group.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import '../theme.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/viewModel/controller.dart';
@@ -38,18 +42,27 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-  // @override
-  // Widget build(BuildContext context) {
-  //   late bool isLoading=true;
-  //   late Widget previews;
+  late bool isLoading=true;
+  late List<Widget> topics;
 
-  //   void getGroup()async{
-  //     Widget p = await Controller.getGroup(); // no se como hacer la parte de controller
-  //     setState(() {
-  //       previews= p;
-  //       isLoading=false;
-  //     });
-  //   }
+  void getTopics()async{
+    
+    List<Widget> r = await Controller.getTopics(widget.group.id.oid.toString());
+    setState(() {
+      topics = r;
+      isLoading= false;
+    });
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getTopics();
+
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +71,7 @@ class _GroupViewState extends State<GroupView> {
       body: Container(
         padding: const EdgeInsets.all(12.0),
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(2.0),
+          padding: const EdgeInsets.all(2.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +84,7 @@ class _GroupViewState extends State<GroupView> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const HomeScreen())); //CAMBIAR ROUTE A group_menu
+                                const JoinedGroups())); //CAMBIAR ROUTE A group_menu
                   },
                   child: Row(children: [
                     Icon(
@@ -144,7 +157,7 @@ class _GroupViewState extends State<GroupView> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const HomeScreen())); //CAMBIAR ROUTE A foro
+                                   ForumsListPage(groupId: widget.group.id.oid.toString(),))); //CAMBIAR ROUTE A foro
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: genieThemeDataDemo.colorScheme.secondary,
@@ -169,7 +182,7 @@ class _GroupViewState extends State<GroupView> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const HomeScreen())); //CAMBIAR ROUTE A create_topic
+                                    const CreateTopicScreen())); //CAMBIAR ROUTE A create_topic
                       },
                       style: mainButtonStyle,
                       child: const Text('Crear nuevo tema'),
@@ -178,136 +191,19 @@ class _GroupViewState extends State<GroupView> {
                 ],
               ),
               const SizedBox(height: 16.0),
-
+              isLoading? const Center(child: CircularProgressIndicator(),):
+               Column(
+                  children: [
+                    ...topics
+                  ],
+                )
               // GENERADO PARA CADA TEMA
 
-              Container(
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 172, 174, 188),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            )
-                          ]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'Tema 1',
-                          style: genieThemeDataDemo.primaryTextTheme.titleLarge,
-                        ),
-                      ),
-                    ),
-                  )),
-
-              Container(
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 172, 174, 188),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            )
-                          ]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'Tema 2',
-                          style: genieThemeDataDemo.primaryTextTheme.titleLarge,
-                        ),
-                      ),
-                    ),
-                  )),
-
-              Container(
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 172, 174, 188),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            )
-                          ]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'Tema 3',
-                          style: genieThemeDataDemo.primaryTextTheme.titleLarge,
-                        ),
-                      ),
-                    ),
-                  )),
-
-              Container(
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 172, 174, 188),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                            )
-                          ]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'Tema 4',
-                          style: genieThemeDataDemo.primaryTextTheme.titleLarge,
-                        ),
-                      ),
-                    ),
-                  ))
             ],
           ),
         ),
       ),
+    bottomNavigationBar:BottomNavBar(),
     );
   }
 }

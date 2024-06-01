@@ -12,7 +12,6 @@ import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
 import 'dart:async';
-import 'package:genie_app/view/screens/add_group.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,9 +59,9 @@ class _myAppState extends State<MyApp> {
         MaterialPageRoute(builder: (context)=>
           isUser? 
             const HomeScreen(): 
-            const SplashPage(title: "SplashPage")
+            const SplashPage(title: "SplashPage"))));
 
-
+  }
     
 
   // This widget is the root of your application.

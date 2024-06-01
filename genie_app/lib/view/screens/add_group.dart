@@ -43,13 +43,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                 );}
           
               , child: Text('Temas')),
-            FilledButton(onPressed: (){
-              Navigator.pushReplacement(context, 
-              MaterialPageRoute(
-                builder: (context) => const ForumsListPage(),)
-                );}
-          
-              , child: Text('Foros')),
+
           ]
         )
 

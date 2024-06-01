@@ -54,7 +54,7 @@ class _MemberPreviewState extends State<MemberPreview> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.member.id,
+                        Text(widget.member.name,
                           overflow: TextOverflow.ellipsis,
                           style: genieThemeDataDemo.primaryTextTheme.titleLarge),
                          ],
