@@ -39,21 +39,26 @@ class Controller{
       }
       }
   }
-  static Future<Widget> obtainGroupMembers(List groupMembers) async{
+  static Future<Widget> obtainGroupMembers(List groupMembers,Groups group) async{
     List<User> members = await Connection.getGroupMembers(groupMembers);
     List<Widget> obtainedMembers = [];
     for (User u in members){
-      obtainedMembers.add(MemberPreview(name: u.name, member: u));
+      obtainedMembers.add(MemberPreview(name: u.name, member: u, group: group));
     }
-    print("ACAAA");
     return ListView(
       children: obtainedMembers,
     );
   }
 
-  //static Future<bool> checkAdmin(String userId){
-   // return true;
-  //}
+  static Future<String> deleteMember(String memberId, Groups group) async{
+    try{
+    Connection.removeGroupMember(memberId, group);
+    return "success";
+    }catch (e){
+      return "no_success";
+    }
+  }
+
   static Future<Widget> getUserGroups() async{
     User loggedUser = await Controller.getUserInfo();
     List stGroups = loggedUser.studyGroups;
@@ -98,6 +103,27 @@ class Controller{
     }
   }
 
+  static Future<bool> checkAdminCurrUser(String memberId) async{
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+
+    if(logUser[0]["_id"].oid == memberId){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> checkIsAdmin(Groups group) async{
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+    String logUserId = logUser[0]["_id"].oid;
+    print(logUserId);
+    print(group.admins);
+    bool res = group.admins.contains(logUserId);
+    print(res);
+    return res;
+  }
   static String getListInfo(List<dynamic> list){
     String res='';
     for(var i in list){

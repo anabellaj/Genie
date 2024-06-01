@@ -39,7 +39,7 @@ class _MembersViewState extends State<MembersView> {
   late Widget members;
 
   void getMembers() async{
-    Widget g = await Controller.obtainGroupMembers(widget.group.members);
+    Widget g = await Controller.obtainGroupMembers(widget.group.members, widget.group);
     if(mounted){
     setState(() {
       members = g;

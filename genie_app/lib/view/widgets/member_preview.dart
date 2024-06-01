@@ -8,9 +8,10 @@ import 'package:genie_app/viewModel/controller.dart';
 
 class MemberPreview extends StatefulWidget{
   final User member;
+  final Groups group;
   final String name;
 
-  const MemberPreview({super.key, required this.name, required this.member});
+  const MemberPreview({super.key, required this.name, required this.member, required this.group});
 
   @override
   State<MemberPreview> createState() => _MemberPreviewState();
@@ -19,14 +20,22 @@ class MemberPreview extends StatefulWidget{
 class _MemberPreviewState extends State<MemberPreview> {
   
   late bool isAdmin = false;
+  late bool currUserisAdmin = false;
 
   void checkAdmin() async{
-    //bool response = await Controller.checkAdmin();
+    bool check = await Controller.checkAdminCurrUser(widget.member.id);
+    bool response = await Controller.checkIsAdmin(widget.group);
+    if(mounted){
     setState(() {
-      isAdmin = true;
-    });
-  }
+      isAdmin = response;
+      currUserisAdmin = check;
+    });}
 
+    print("isAdmin "+ "${isAdmin}");
+    print(currUserisAdmin);
+  }
+  
+  @override
   void initState(){
     super.initState();
     checkAdmin();
@@ -54,10 +63,47 @@ class _MemberPreviewState extends State<MemberPreview> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.member.id,
-                          overflow: TextOverflow.ellipsis,
-                          style: genieThemeDataDemo.primaryTextTheme.titleLarge),
-                         ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(widget.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: genieThemeDataDemo.primaryTextTheme.titleLarge),
+                             ],
+                        ),
+                        (isAdmin & !currUserisAdmin)? PopupMenuButton(
+                          icon: const Icon(Icons.delete_outline),
+                          itemBuilder: 
+                          (BuildContext context) => <PopupMenuEntry<FilledButton>>[
+                            
+                            PopupMenuItem(
+                            onTap: () async{
+                               showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context){
+                                  return const AlertDialog(
+                                  content: Center(
+                                  heightFactor: 2,
+                                  child: CircularProgressIndicator(),
+                            ),
+                          );
+                        });
+                        String response = await Controller.deleteMember(widget.member.id, widget.group);
+                        if(response == "success"){
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> GroupView(group: widget.group)));
+                            }
+                        else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Hubo un error'))
+                        );
+                        }},
+                            child: Text('Eliminar Miembro',
+                            style: TextStyle(
+                            color: genieThemeDataDemo.colorScheme.onError,)))
+
+                          ])
+                          : const SizedBox.shrink()
+                      ],
                     ),
                           
                   ],),
