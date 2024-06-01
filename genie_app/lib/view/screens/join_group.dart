@@ -4,6 +4,7 @@ import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/register.dart';
 import 'package:genie_app/viewModel/authentication.dart';
+import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/validator.dart';
 import '../theme.dart';
 
@@ -19,6 +20,7 @@ class _JoinGroupState extends State<JoinGroupPage> {
   final validate = Validator();
   String code = "";
   bool isLoading =false;
+  String answer = "";
 
   @override
   Widget build (BuildContext context){
@@ -129,9 +131,26 @@ class _JoinGroupState extends State<JoinGroupPage> {
                             setState(() {
                               isLoading = true;
                             }),
-                            
+                            answer = await Controller.updateUsersGroupsAndMembers(code),
+                            print(answer),
+                            if(answer == "success"){
+                              
                             Navigator.pushReplacement(context, 
                             MaterialPageRoute(builder: (context)=>const HomeScreen()))
+                            } else if(answer == "no success"){
+                              print("no existe el grupo"),
+                              ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Código inválido')))
+                            } else {
+                              print("ya estás en el grupo"),
+                              ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Ya estás añadido al grupo')))
+                            },
+                            setState(() {
+                              isLoading = false;
+                            })
+                            
+                          
                             
                             }
                           },

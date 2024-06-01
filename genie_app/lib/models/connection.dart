@@ -34,6 +34,26 @@ class Connection{
     
   }
 
+  static Future<String> checkStudyGroupCode(String enterCode) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    var groupCollection = db.collection("studyGroup");
+    List result = await groupCollection.find(where.eq(
+      "entrance_code",enterCode
+    )).toList();
+
+    if(result.isNotEmpty){
+    ObjectId objId = result[0]["_id"];
+    String toReturn = objId.oid;
+    return toReturn;
+    } else {
+      return "no success";
+    }
+    
+
+  }
+
   static Future insertNewUser(User user) async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
@@ -71,11 +91,17 @@ class Connection{
 
     await db.close();
   }
-  //No funciona
-  static Future joinGroup(User user, Groups groupCode) async{
+  /*static Future joinGroup(User user, String groupCode) async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
-  }
+    String resultGroup = await checkStudyGroupCode(groupCode);
+    var userCollection = db.collection("user");
+    List resultUser = await userCollection.find(where.eq("email", user.email)).toList();
+    ObjectId userId = resultUser[0]["_id"];
+    List resultUser = 
+    
+
+  }*/
   static Future insertNewGroup(User user, Groups group) async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
@@ -99,10 +125,20 @@ class Connection{
     ObjectId insertedStGroupId = await writeResult.id;
     String enterCode = insertedStGroupId.oid.substring(2,10);
     groupCollection.updateOne(where.eq("_id", insertedStGroupId), modify.set("entrance_code", enterCode));
-    //Map<String,dynamic> insertedGroupObj = await groupCollection.findOne({"_id":x}) as Map<String,dynamic>;
     await db.close();
     return insertedStGroupId.oid;
 
+  }
+
+  static void updateGroupMembers(String groupId, List members) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    print(members);
+    var groupCollection = db.collection("studyGroup");
+    ObjectId objId = ObjectId.fromHexString(groupId);
+    groupCollection.updateOne(where.eq("_id", objId), modify.set("members", members));
+    db.close();
+    //print(x.id);
   }
 
 }

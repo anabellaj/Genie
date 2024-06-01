@@ -2,11 +2,40 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Controller{
+
+  static Future<String> updateUsersGroupsAndMembers(String enterCode) async{
+      String responseGroupId = await Connection.checkStudyGroupCode(enterCode);
+      if(responseGroupId == "no success"){
+        return "no success";
+      } else{
+      User loggedUser = await Controller.getUserInfo();
+      List logUser = await Connection.checkUser(loggedUser);
+      print (!loggedUser.studyGroups.contains(responseGroupId));
+      
+      if(!loggedUser.studyGroups.contains(responseGroupId)){
+      loggedUser.studyGroups.add(responseGroupId);
+      updateUserInfo(loggedUser);
+      List result = await Connection.checkStudyGroup(responseGroupId);
+      Groups currentGroup = Groups.fromJson(result[0]);
+      print(currentGroup.members);
+      currentGroup.members.add(logUser[0]["_id"].oid);
+      print(currentGroup.members);
+      Connection.updateGroupMembers(responseGroupId, currentGroup.members);
+      
+      return "success";
+      }
+      else {
+        return "already on group";
+      }
+      }
+  }
+  
 
   static Future<Widget> getUserGroups() async{
     User loggedUser = await Controller.getUserInfo();

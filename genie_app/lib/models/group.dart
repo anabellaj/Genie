@@ -18,7 +18,7 @@ class Groups{
   late List<dynamic> forums;
   late String creator;
   late List<dynamic> members;
-  late List<String> admins;
+  late List<dynamic> admins;
   late String entranceCode;
 
   void initialize(){
