@@ -138,7 +138,7 @@ class Connection{
     ObjectId objId = ObjectId.fromHexString(groupId);
     groupCollection.updateOne(where.eq("_id", objId), modify.set("members", members));
     db.close();
-    //print(x.id);
+
   }
 
 }
