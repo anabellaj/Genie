@@ -39,13 +39,12 @@ class Controller{
 
   static Future<Widget> getUserGroups() async{
     User loggedUser = await Controller.getUserInfo();
-    print("Aca");
     List stGroups = loggedUser.studyGroups;
     List<Widget> obtainedGroups = [];
     for (String groupId in stGroups){
      List gr = await Connection.checkStudyGroup(groupId);
      if(gr.isNotEmpty){
-     obtainedGroups.add(GroupPreview(name: gr[0]["name"], membersQty: gr[0]["members"].length.toString(), description: gr[0]["description"]));
+     obtainedGroups.add(GroupPreview(name: gr[0]["name"], membersQty: gr[0]["members"].length.toString(), description: gr[0]["description"], group: Groups.fromJson(gr[0])));
      }
     }
     

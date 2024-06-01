@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
+import 'package:genie_app/view/screens/group_view.dart';
+import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/theme.dart';
 
 class GroupPreview extends StatefulWidget{
   final String name;
   final String membersQty;
   final String description;
+  final Groups group;
 
-  const GroupPreview({super.key, required this.name, required this.membersQty, required this.description});
+  const GroupPreview({super.key, required this.name, required this.membersQty, required this.description, required this.group});
 
   @override
   State<GroupPreview> createState() => _GroupPreviewState();
@@ -18,7 +22,9 @@ class _GroupPreviewState extends State<GroupPreview> {
   Widget build(BuildContext context){
     return GestureDetector(
       onTap: (){
-        
+        Navigator.pushReplacement(context, 
+                  MaterialPageRoute(builder: (context)=> GroupView(group: widget.group))
+                );
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -48,8 +54,6 @@ class _GroupPreviewState extends State<GroupPreview> {
                       Text(widget.name,
                         overflow: TextOverflow.ellipsis,
                         style: genieThemeDataDemo.primaryTextTheme.titleLarge),
-                      //Text(widget.membersQty,
-                       // style: genieThemeDataDemo.textTheme.titleSmall,)
                        ],
                   ),
                   Text("Miembros: " + widget.membersQty,

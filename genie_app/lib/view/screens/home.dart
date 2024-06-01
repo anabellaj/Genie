@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/code.dart';
 import 'package:genie_app/view/screens/create_group.dart';
+import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/join_group.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   int _currentIndex = 0;
-  List<Widget> body = const [CodePage(), JoinGroupPage(), JoinedGroups()];
+  List<Widget> body = const [JoinedGroups(), JoinGroupPage(), JoinedGroups()];
   removeUser()async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isLoggedIn", false);

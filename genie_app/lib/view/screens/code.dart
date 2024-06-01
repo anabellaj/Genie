@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/add_group.dart';
+import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/register.dart';
 import 'package:genie_app/viewModel/authentication.dart';
@@ -7,7 +9,9 @@ import 'package:genie_app/viewModel/validator.dart';
 import '../theme.dart';
 
 class CodePage extends StatelessWidget{
-  const CodePage({super.key});
+
+  final Groups group;
+  const CodePage({super.key, required this.group});
 
   Widget build(BuildContext context){
     return Scaffold(
@@ -21,7 +25,7 @@ class CodePage extends StatelessWidget{
                               onPressed: () {
                                 ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                                 Navigator.pushReplacement(context, 
-                                  MaterialPageRoute(builder: (context)=>const HomeScreen())
+                                  MaterialPageRoute(builder: (context)=> GroupView(group: group))
                                 );  
                               },
                               child:Row(
@@ -69,7 +73,7 @@ class CodePage extends StatelessWidget{
                                     style: Theme.of(context).textTheme.displayMedium,
                                     textAlign: TextAlign.start),
                                     const SizedBox(height: 20),
-                                    Text("5a4c50fe",
+                                    Text(group.entranceCode,
                                       style: Theme.of(context).primaryTextTheme.headlineMedium
                                     )
                                     ]
