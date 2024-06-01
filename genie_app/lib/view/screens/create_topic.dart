@@ -15,15 +15,14 @@ class CreateTopicScreen extends StatefulWidget {
 
 class _CreateTopicScreenState extends State<CreateTopicScreen> {
   final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final otherLabelController = TextEditingController();
+    final otherLabelController = TextEditingController();
   late List<String> evaluationLabels;
   var isLoading = true;
   late String selectedOption;
 
   void _saveTopic() async {
     print('Entre');
-    if (_titleController.text.isEmpty || _descriptionController.text.isEmpty) {
+    if (_titleController.text.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor llene todos los campos'))); 
       return;
@@ -41,7 +40,6 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     print('PASE 2');
     final topic = Topic(
         name: _titleController.text,
-        description: _descriptionController.text,
         label: otherLabelController.text,
         files: []);
     setState(() {
@@ -146,18 +144,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextField(
-                        controller: _descriptionController,
-                        maxLines: 5,
-                        minLines: 1,
-                        maxLength: 250,
-                        decoration: const InputDecoration(
-                          label: Text('Descripción'),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                     
                       Column(
                         children: [
                           DropdownButtonFormField(

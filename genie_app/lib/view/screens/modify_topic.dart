@@ -15,7 +15,6 @@ class ModifyTopicScreen extends StatefulWidget {
 
 class _ModifyTopicScreen extends State<ModifyTopicScreen> {
   final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
   final otherLabelController = TextEditingController();
   late List<String> evaluationLabels;
   var isLoading = true;
@@ -25,7 +24,6 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
   void initState() {
    
     _titleController.text = widget.topic.name;
-    _descriptionController.text = widget.topic.description;
     otherLabelController.text = widget.topic.label;
     super.initState();
   }
@@ -36,7 +34,6 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
 
   void modifyTopic () async {
     if (_titleController.text.isEmpty ||
-        _descriptionController.text.isEmpty ||
         otherLabelController.text.isEmpty) {
       
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,9 +43,8 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
     }
 
     String newName = _titleController.text;
-    String newDesc = _descriptionController.text;
     String newLabel = otherLabelController.text;
-    Topic newTopic = Topic(name: newName, description: newDesc, label: newLabel, files: widget.topic.files);
+    Topic newTopic = Topic(name: newName, label: newLabel, files: widget.topic.files);
 
     //Confirm dialog
     showDialog(
@@ -274,19 +270,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                           height: 20,
                         ),
                         
-                        //Descripcion
-                        TextField(
-                          controller: _descriptionController,
-                          maxLines: 5,
-                          minLines: 1,
-                          maxLength: 250,
-                          decoration: const InputDecoration(
-                            label: Text('Descripción'),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                       
                         
                         TextField(
                           controller: otherLabelController,

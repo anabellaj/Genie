@@ -15,7 +15,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MaterialApp(
-    home: TopicScreen(topicId: '6657d49d7dca3271d92245a1',),
+    home: MyApp(),
     theme: genieThemeDataDemo,
   ));
 }

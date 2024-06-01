@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:genie_app/view/screens/modify_topic.dart';
+import 'package:genie_app/view/screens/pdf_viewer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -39,9 +40,11 @@ class _TopicScreenState extends State<TopicScreen> {
     builder: (BuildContext context) {
       return const AlertDialog(
         content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          
           children: [
             CircularProgressIndicator(),
-            SizedBox(width: 20),
             Text('Se está abriendo el archivo...'),
           ],
         ),
@@ -49,26 +52,16 @@ class _TopicScreenState extends State<TopicScreen> {
     },
   );
     final pdfContent = await Connection.getFileById(id);
-  Navigator.of(context).pop(); // Cerrar el diálogo de carga
+    
 
     final tempDir = await getTemporaryDirectory();
     File file = File('${tempDir.path}/data.pdf');
     await file.writeAsBytes(pdfContent);
-    isLoading = true;
+    isLoading = false;
+    Navigator.of(context).pop(); // Cerrar el diálogo de carga
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (ctx) => Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-          icon: Icon(Icons.arrow_back, color:Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ), 
-          title: Text(title, style: TextStyle(fontSize: 18),),
-
-        ),
-        body: PDFView(
-          filePath: file.path,
-        ),
-      ),
+      builder: (context)=>  StudyMaterialViewer(filePath: file.path, title: title)
+      
     ));
   }
 

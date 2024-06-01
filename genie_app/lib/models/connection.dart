@@ -85,7 +85,6 @@ class Connection {
     Topic topic = Topic(
         id: id,
         name: response['name'],
-        description: response['description'],
         label: response['label'],
         files: studyMaterials);
     db.close();
@@ -161,7 +160,6 @@ class Connection {
       where.eq('name', previous),
       ModifierBuilder()
         .set('name', topic.name)
-        .set('description', topic.description)
         .set('label', topic.label),
     );
   
