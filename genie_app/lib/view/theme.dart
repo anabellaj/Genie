@@ -6,6 +6,8 @@ final ThemeData genieThemeDataDemo = ThemeData(
 
   primaryColor:const Color(0xff084C6E),
   colorScheme: const ColorScheme(
+    background: Color(0xffFFFCFF),
+    onBackground: Color(0xff212227),
   primary:  Color(0xff084C6E), 
   brightness: Brightness.light,
   onPrimary:  Color(0xffFFFCFF), 
@@ -78,16 +80,16 @@ final ThemeData genieThemeDataDemo = ThemeData(
 
 );
  ButtonStyle mainButtonStyle =  ButtonStyle(
-  backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.primaryColor),
-  foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
-  textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
-  padding:const WidgetStatePropertyAll(EdgeInsets.all(10)),
+  backgroundColor: MaterialStatePropertyAll(genieThemeDataDemo.primaryColor),
+  foregroundColor: MaterialStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
+  textStyle:  MaterialStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
+  padding:const MaterialStatePropertyAll(EdgeInsets.all(10)),
 );
 ButtonStyle secondaryButtonStyle =  ButtonStyle(
-  backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.secondary),
-  foregroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
-  textStyle:  WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
-  padding:const WidgetStatePropertyAll(EdgeInsets.all(10)),
+  backgroundColor: MaterialStatePropertyAll(genieThemeDataDemo.colorScheme.secondary),
+  foregroundColor: MaterialStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
+  textStyle:  MaterialStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
+  padding:const MaterialStatePropertyAll(EdgeInsets.all(10)),
 );
 ButtonStyle outlinedButtonStyle =  ButtonStyle(
   backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),

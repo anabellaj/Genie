@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,8 +16,15 @@ class AddGroupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopBar(),
-      body: const Center(
-        child:  Text('en teoria un home'),
+      body:  Center(
+
+        child:  FilledButton(onPressed: (){
+          Navigator.pushReplacement(context, 
+            MaterialPageRoute(
+              builder: (context) => const TopicScreen(topicId: '6657d49d7dca3271d92245a1'),)
+              );}
+          
+        , child: Text('Temas')),
       )
     );
   }
