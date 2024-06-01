@@ -9,23 +9,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Controller{
 
+  static Future<Groups> updateGroupInfo(Groups group, String newDescr, String newName) async{
+    Connection.setNewGroupInfo(newName, newDescr, group.id.oid);
+    group.name = newName;
+    group.description = newDescr;
+    return group;
+  }
+
   static Future<String> updateUsersGroupsAndMembers(String enterCode) async{
       String responseGroupId = await Connection.checkStudyGroupCode(enterCode);
       if(responseGroupId == "no success"){
         return "no success";
       } else{
       User loggedUser = await Controller.getUserInfo();
-      List logUser = await Connection.checkUser(loggedUser);
-      print (!loggedUser.studyGroups.contains(responseGroupId));
-      
+      List logUser = await Connection.checkUser(loggedUser);   
       if(!loggedUser.studyGroups.contains(responseGroupId)){
       loggedUser.studyGroups.add(responseGroupId);
       updateUserInfo(loggedUser);
       List result = await Connection.checkStudyGroup(responseGroupId);
       Groups currentGroup = Groups.fromJson(result[0]);
-      print(currentGroup.members);
       currentGroup.members.add(logUser[0]["_id"].oid);
-      print(currentGroup.members);
       Connection.updateGroupMembers(responseGroupId, currentGroup.members);
       
       return "success";

@@ -9,8 +9,8 @@ import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/validator.dart';
 
 class ModifyGroupPage extends StatefulWidget {
-  final Groups currentGroup;
-  const ModifyGroupPage({super.key, required this.currentGroup});
+  Groups currentGroup;
+  ModifyGroupPage({super.key, required this.currentGroup});
 
   @override
   State<ModifyGroupPage> createState() => _ModifyGroupPageState();
@@ -119,6 +119,9 @@ final _formKey = GlobalKey<FormState>();
                         if(value !=null){
                           name=value;
                         }
+                        setState(() {
+                          name = value as String;
+                        });
                       },
                       validator: (value) {
                           return validate.validateEmpty(value);
@@ -195,16 +198,13 @@ final _formKey = GlobalKey<FormState>();
                             setState(() {
                               isLoading = true;
                             }),
-                            loggedUser = await Controller.getUserInfo(),
-                            newGroup = Groups(description, name),
-                            insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup),
-                            loggedUser.studyGroups.add(insertedStGroupId),
-                            Controller.updateUserInfo(loggedUser),
+                            widget.currentGroup = await Controller.updateGroupInfo(widget.currentGroup, description, name),
                             setState(() {
                               isLoading = false;
                             }),
+
                             Navigator.pushReplacement(context, 
-                            MaterialPageRoute(builder: (context)=>const HomeScreen()))
+                            MaterialPageRoute(builder: (context)=> GroupView(group: widget.currentGroup)))
                             
                             }
                           },

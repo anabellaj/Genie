@@ -133,12 +133,21 @@ class Connection{
   static void updateGroupMembers(String groupId, List members) async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
-    print(members);
     var groupCollection = db.collection("studyGroup");
     ObjectId objId = ObjectId.fromHexString(groupId);
     groupCollection.updateOne(where.eq("_id", objId), modify.set("members", members));
     db.close();
 
+  }
+
+  static void setNewGroupInfo(String name, String description, String groupId) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var groupCollection = db.collection("studyGroup");
+    ObjectId objId = ObjectId.fromHexString(groupId);
+    final update = ModifierBuilder().set("name", name).set("description", description);
+    groupCollection.updateOne(where.eq("_id", objId), update);
+    db.close();
   }
 
 }
