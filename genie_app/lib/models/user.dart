@@ -60,4 +60,5 @@ class User {
     studyGroups = json['studyGroups'] ?? [];
   
   
+  
 }

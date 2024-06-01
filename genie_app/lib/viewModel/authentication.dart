@@ -1,8 +1,4 @@
-
-
-
 import 'dart:convert';
-
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';

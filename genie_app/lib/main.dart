@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:genie_app/view/screens/home.dart';
+
 import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/create_topic.dart';
@@ -49,15 +52,18 @@ class _myAppState extends State<MyApp> {
 
     checkState();
 
+    
     Timer(
-        const Duration(seconds: 3),
-        () => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => isUser
-                    ? const AddGroupScreen()
-                    : const SplashPage(title: "SplashPage"))));
-  }
+      const Duration(seconds: 3),
+      ()=>Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context)=>
+          isUser? 
+            const HomeScreen(): 
+            const SplashPage(title: "SplashPage")
+
+
+    
 
   // This widget is the root of your application.
   @override

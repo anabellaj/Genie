@@ -1,15 +1,20 @@
 
+import 'package:genie_app/viewModel/controller.dart';
+import 'package:uuid/uuid.dart';
+
+import 'group.dart';
+
+
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:genie_app/models/forum_reply.dart';
 import 'package:genie_app/models/object_id_converter.dart';
 import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/topic.dart';
-
-
 import 'user.dart';
 import 'forum.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
 
 class Connection {
   /*User queries*/
@@ -28,6 +33,57 @@ class Connection {
     return result;
   }
 
+
+  static Future<List<User>> getGroupMembers(List groupMembers) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var userCollection = db.collection("user");
+    List<User> groupMembs = [];
+    for (String memberId in groupMembers){
+      final docUser = await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
+      User groupMember = User.fromJson(docUser as Map<String, dynamic>);
+      groupMember.id = memberId;
+      groupMembs.add(groupMember);
+    }
+    print("VAMOSS");
+    return groupMembs;
+  }
+
+  static Future<List> checkStudyGroup(String groupId) async{
+    ObjectId grId = ObjectId.fromHexString(groupId);
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    var groupCollection = db.collection('studyGroup');
+    List result = await groupCollection.find(where.eq(
+        "_id", grId
+      )).toList();
+    await db.close();
+    return result;
+    
+  }
+
+  static Future<String> checkStudyGroupCode(String enterCode) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    var groupCollection = db.collection("studyGroup");
+    List result = await groupCollection.find(where.eq(
+      "entrance_code",enterCode
+    )).toList();
+
+    if(result.isNotEmpty){
+    ObjectId objId = result[0]["_id"];
+    String toReturn = objId.oid;
+    return toReturn;
+    } else {
+      return "no success";
+    }
+    
+
+  }
+
+ 
 
   static Future<String> insertNewUser(User user) async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
@@ -243,6 +299,53 @@ class Connection {
 
   }
 
+  static Future insertNewGroup(User user, Groups group) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var result = await checkUser(user);
+    ObjectId id = result[0]["_id"];
+    String objIdString = id.oid;
+    //String enterCode = objIdString.substring(2,10);
+    var groupCollection = db.collection("studyGroup");
+    WriteResult writeResult = await groupCollection.insertOne({
+      "name":group.name,
+      "description":group.description,
+      "creator":objIdString,
+      "forums":[],
+      "members":[objIdString],
+      "topics":[],
+      "admins":[objIdString],
+      "profile_picture":"",
+      "entrance_code":"",
+    });
+    
+    ObjectId insertedStGroupId = await writeResult.id;
+    String enterCode = insertedStGroupId.oid.substring(2,10);
+    groupCollection.updateOne(where.eq("_id", insertedStGroupId), modify.set("entrance_code", enterCode));
+    await db.close();
+    return insertedStGroupId.oid;
+
+  }
+
+  static void updateGroupMembers(String groupId, List members) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var groupCollection = db.collection("studyGroup");
+    ObjectId objId = ObjectId.fromHexString(groupId);
+    groupCollection.updateOne(where.eq("_id", objId), modify.set("members", members));
+    db.close();
+
+  }
+
+  static void setNewGroupInfo(String name, String description, String groupId) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var groupCollection = db.collection("studyGroup");
+    ObjectId objId = ObjectId.fromHexString(groupId);
+    final update = ModifierBuilder().set("name", name).set("description", description);
+    groupCollection.updateOne(where.eq("_id", objId), update);
+    db.close();
+  }
   static Future<List> returnAnswers(String forumId)async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
@@ -362,6 +465,7 @@ class Connection {
     return Forum.fromJson(result!);
 
   }
+
 
 
 
