@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+
+import 'package:genie_app/view/screens/forum_list.dart';
+
 import 'package:genie_app/view/screens/topic.dart';
+
 import 'package:genie_app/view/widgets/appbar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +21,6 @@ class AddGroupScreen extends StatelessWidget {
     return Scaffold(
       appBar: TopBar(),
       body:  Center(
-
         child:  FilledButton(onPressed: (){
           Navigator.pushReplacement(context, 
             MaterialPageRoute(
@@ -25,6 +28,7 @@ class AddGroupScreen extends StatelessWidget {
               );}
           
         , child: Text('Temas')),
+
       )
     );
   }

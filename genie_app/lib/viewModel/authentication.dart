@@ -23,7 +23,8 @@ class Authenticate{
 
       
       if(!result.isNotEmpty){
-        await Connection.insertNewUser(user);
+        String id = await Connection.insertNewUser(user);
+        user.id= id;
         await prefs.setBool('isLoggedIn', true);
         await prefs.setString("user", jsonEncode(user.toJson()));
         return "success";

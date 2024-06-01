@@ -3,6 +3,8 @@ import 'package:genie_app/view/screens/modify_profile.dart';
 import 'package:genie_app/view/theme.dart';
 
 class TopBar extends AppBar{
+  TopBar({super.key});
+
   
   @override
   State<TopBar> createState() => _TopBarState();
