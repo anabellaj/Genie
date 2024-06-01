@@ -47,6 +47,10 @@ final ThemeData genieThemeDataDemo = ThemeData(
       color: Color(0xffB4B6BF),
       fontSize: 14
     ),
+    titleMedium: TextStyle(
+      color: Color(0xff212227),
+      fontSize: 16
+    ),
     bodyLarge: TextStyle( //se utiliza para los botones
       color: Color(0xff084C6E),
       fontSize: 10 ),

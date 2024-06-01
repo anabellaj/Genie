@@ -1,58 +1,49 @@
+  import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/forum_list.dart';
-import 'package:genie_app/view/screens/forum_view.dart';
+import 'package:flutter/widgets.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/view/screens/forum_view.dart';
 
 
-class MessagePreview extends StatefulWidget{
+class ForumReplyShow extends StatefulWidget{
+  final String forum;
   final String id;
-  final String title;
   final String creator;
   final String date;
-  final String description;
+  final String message;
   final String creator_id;
-  const MessagePreview({super.key, required this.id, required this.title, required this.creator, required this.date, required this.description, required this.creator_id});
+  const ForumReplyShow({super.key,required this.creator, required this.date, required this.message, required this.creator_id, required this.id, required this.forum});
 
   @override
-  State<MessagePreview> createState()=> _MessagePreview();
+  State<ForumReplyShow> createState()=> _ForumReply();
 }
 
-class _MessagePreview extends State<MessagePreview>{
-  late bool isCreator=false;
+class _ForumReply extends State<ForumReplyShow>{
+  late bool isCreator;
 
   void checkCreator()async{
-    bool check = await Controller.checkIfOwner(widget.creator_id);
+    bool creator = await Controller.checkIfOwner(widget.creator_id);
     setState(() {
-      isCreator=check;
+      isCreator=creator;
     });
-  }
-  @override
-  void initState() {
-    
-    super.initState();
-
-    checkCreator();
   }
 
   
 
   @override
+  void initState() {
+    
+    super.initState();
+    checkCreator();
+    
+
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        Navigator.push(context, 
-          MaterialPageRoute(
-            builder: (context)=>
-              ForumView(
-                date: widget.date,
-                description: widget.description,
-                id:widget.id,
-                title: widget.title,
-                creator: widget.creator,
-                creator_id: widget.creator_id,
-              )));
-      },
+       
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
         decoration: BoxDecoration(
@@ -64,27 +55,24 @@ class _MessagePreview extends State<MessagePreview>{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.title,
+              Text(widget.creator,
                 overflow: TextOverflow.ellipsis,
-                style: genieThemeDataDemo.primaryTextTheme.titleLarge,),
-              Text(widget.date,
-                style: genieThemeDataDemo.textTheme.titleSmall,)],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(widget.creator,
+                style: genieThemeDataDemo.textTheme.titleSmall,),
+              
+                 
+                  
+                  Text(widget.date,
                     style: genieThemeDataDemo.textTheme.titleSmall,),
-                  Text(widget.description,
-                   overflow: TextOverflow.ellipsis,
-                   style: genieThemeDataDemo.textTheme.displayMedium,),
+                    
+                  
                 ],
               ),
-            isCreator? 
-                PopupMenuButton(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(widget.message,
+                 style: genieThemeDataDemo.textTheme.displayMedium,),
+                 PopupMenuButton(
                   icon: const Icon(Icons.delete_outline),
                   itemBuilder: 
                   (BuildContext context) => <PopupMenuEntry<FilledButton>>[
@@ -101,12 +89,14 @@ class _MessagePreview extends State<MessagePreview>{
                             ),
                           );
                         });
-                     String res = await Controller.deleteForum(widget.id);
+                      String res = await Controller.removeAnswer(widget.id, widget.forum);
+                      ForumView f = await Controller.getForum(widget.forum);
                       Navigator.pop(context);
                       
                       if(res=='success'){
                       
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ForumsListPage()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> f));
+                       
                      }else{
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Hubo un error'))
@@ -115,21 +105,19 @@ class _MessagePreview extends State<MessagePreview>{
                       
                       
                     },
-                    child: Text('Eliminar Foro',
+                    child: Text('Eliminar Respuesta',
                     style: TextStyle(
                       color: genieThemeDataDemo.colorScheme.onError,
                       fontWeight: FontWeight.bold,),)
-                  ),]
-                  ):
-                  const SizedBox.shrink()
-               
-                
-            ],)
+                  ), 
+                 ],
+            )])
+            
+            ]
+          ),
           
           
-          
-        ],),
-      )
+        ),
       );
     
   }

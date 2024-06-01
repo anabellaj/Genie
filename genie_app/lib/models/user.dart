@@ -48,16 +48,16 @@ class User {
 
     };
   User.fromJson(Map<String,dynamic> json):
-    id = json['id']== null? "": json['id'],
+    id = json["_id"] is String?  json['_id']:json['_id'].oid.toString(),
     name = json['name'],
     email = json['email'],
     password = json['password'],
-    username = json['username']==null? "": json['username'],
-    university = json['university']==null? "": json['university'],
-    career = json['career']==null? "": json['career'],
-    interests = json['interests']==null? []:json['interests'],
-    chats = json['chats']==null? []: json['chats'],
-    studyGroups = json['studyGroups']==null? []: json['studyGroups'];
+    username = json['username'] ?? "",
+    university = json['university'] ?? "",
+    career = json['career'] ?? "",
+    interests = json['interests'] ?? [],
+    chats = json['chats'] ?? [],
+    studyGroups = json['studyGroups'] ?? [];
   
   
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/add_forum.dart';
-import 'package:genie_app/view/widgets/forum_preview.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import '../theme.dart';
 import 'package:genie_app/view/screens/add_group.dart';

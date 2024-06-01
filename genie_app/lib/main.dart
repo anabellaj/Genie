@@ -11,7 +11,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MaterialApp(
-    home: MyApp(),
+    home: const MyApp(),
     theme: genieThemeDataDemo,
   ));
 }

@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/forum.dart';
 import 'package:genie_app/models/user.dart';
+import 'package:genie_app/view/screens/forum_list.dart';
+import 'package:genie_app/view/screens/forum_view.dart';
 import 'package:genie_app/view/widgets/forum_preview.dart';
+import 'package:genie_app/view/widgets/forum_reply.dart';
+import 'package:genie_app/models/forum_reply.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +16,7 @@ import 'package:intl/intl.dart';
 class Controller{
   static Future<bool>  getLoggedInUser() async{
     final prefs = await SharedPreferences.getInstance();
-    var answer = await prefs.getBool("isLoggedIn");
+    var answer = prefs.getBool("isLoggedIn");
     if(answer!=null){
       if(answer){
        return true;
@@ -26,7 +30,7 @@ class Controller{
 
   static Future<User> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-    var user = await prefs.getString("user");
+    var user = prefs.getString("user");
     User loggedUser;
     if(user!=null){
       loggedUser = User.fromJson(jsonDecode(user));
@@ -95,13 +99,13 @@ class Controller{
     
     try {
       final prefs = await SharedPreferences.getInstance();
-      var user = await prefs.getString("user");
+      var user = prefs.getString("user");
       if(user != null){
         User loggedUser = User.fromJson(jsonDecode(user));
         String creator = loggedUser.name;
         DateTime date = DateTime.now();
 
-        Forum newForum = Forum(title, description, creator, date);
+        Forum newForum = Forum(title, description, creator, loggedUser.id, date);
         newForum.initialize();
 
        await Connection.addNewForum(newForum);
@@ -116,6 +120,7 @@ class Controller{
       }
 
     } catch (e) {
+      print(e);
       return 'error';
     }
   }
@@ -128,7 +133,7 @@ class Controller{
     for (var forum in forums) {
       Forum f = Forum.fromJson(forum);
       previews.add(
-        MessagePreview(title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description)
+        MessagePreview(id:f.id, title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description, creator_id: f.creator_id,)
       );
     }
 
@@ -136,4 +141,105 @@ class Controller{
       children: previews,
     );
   }
+  static Future<List<ForumReplyShow>> getReplys(String forumId)async{
+    
+    List replys = await Connection.returnAnswers(forumId);
+
+    List<ForumReplyShow> messages = [];
+
+    for (var reply in replys) {
+      ForumReply f = ForumReply.fromJson(reply);
+      messages.add(
+        ForumReplyShow(  creator: f.creator, date: DateFormat.yMd().format(f.date), message: f.message, creator_id: f.creator_id, id:f.id, forum: forumId,)
+      );
+    }
+
+    return  messages;
+  }
+
+  static Future<List<ForumReplyShow>> newAnswer(String message, String forumId, List<ForumReplyShow> replys) async{
+    try {
+      final prefs = await SharedPreferences.getInstance();
+    var userInfo = prefs.getString('user');
+      if(userInfo!=null){
+      User user = User.fromJson(jsonDecode(userInfo));
+      DateTime date = DateTime.now();
+
+      ForumReply reply = ForumReply(user.name, date, message, user.id);
+
+  	  String id = await Connection.addNewReply(reply, forumId);
+
+      replys.add(
+        ForumReplyShow(creator: user.name, date: DateFormat.yMd().format(date), message: message, creator_id: user.id, id:id, forum: forumId,)
+      );
+
+      return replys;
+
+
+      } else{
+        return replys;
+      }
+
+    } catch (e) {
+      return replys;
+    }
+
+  }
+
+  static Future<bool> checkIfOwner(String owner)async{
+    final prefs = await SharedPreferences.getInstance();
+    var userInfo = await prefs.getString('user');
+
+    if(userInfo!=null){
+      User user = User.fromJson(jsonDecode(userInfo));
+      return user.id == owner;
+    }else{
+      return false;
+    }
+
+  }
+
+  static Future<String> deleteForum(String forumId)async{
+    try {
+
+      await Connection.removeForum(forumId, "66552c763656b63721956447");
+      return 'success';
+      
+    } catch (e) {
+      print(e);
+      return 'error';
+    }
+
+  }
+
+static Future<String> removeAnswer(String replyId, String forumId) async{
+    try {
+
+  	  await Connection.removeAnswer(replyId, forumId);
+
+      return 'success';
+        
+      
+
+    } catch (e) {
+      print(e);
+      return 'error';
+    }
+
+  
+}
+
+static Future<ForumView> getForum(String forumId)async{
+
+  try {
+    Forum forum = await Connection.refreshForum(forumId);
+
+    return ForumView(date: DateFormat.yMd().format(forum.date), 
+    description: forum.description, id: forum.id, title: forum.title, creator: forum.creator, creator_id: forum.creator_id);
+
+  } catch (e) {
+    return ForumView(date: "", description: "", id: "", title: "", creator: "", creator_id: "");
+  }
+}
+
 }

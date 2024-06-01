@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/forums.dart';
+import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/viewModel/validator.dart';
