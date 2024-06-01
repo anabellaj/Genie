@@ -5,6 +5,7 @@ import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
+import 'package:genie_app/view/widgets/member_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Controller{
@@ -38,8 +39,21 @@ class Controller{
       }
       }
   }
-  
+  static Future<Widget> obtainGroupMembers(List groupMembers) async{
+    List<User> members = await Connection.getGroupMembers(groupMembers);
+    List<Widget> obtainedMembers = [];
+    for (User u in members){
+      obtainedMembers.add(MemberPreview(name: u.name, member: u));
+    }
+    print("ACAAA");
+    return ListView(
+      children: obtainedMembers,
+    );
+  }
 
+  //static Future<bool> checkAdmin(String userId){
+   // return true;
+  //}
   static Future<Widget> getUserGroups() async{
     User loggedUser = await Controller.getUserInfo();
     List stGroups = loggedUser.studyGroups;

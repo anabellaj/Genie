@@ -20,6 +20,21 @@ class Connection{
     return result;
   }
 
+  static Future<List<User>> getGroupMembers(List groupMembers) async{
+    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var userCollection = db.collection("user");
+    List<User> groupMembs = [];
+    for (String memberId in groupMembers){
+      final docUser = await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
+      User groupMember = User.fromJson(docUser as Map<String, dynamic>);
+      groupMember.id = memberId;
+      groupMembs.add(groupMember);
+    }
+    print("VAMOSS");
+    return groupMembs;
+  }
+
   static Future<List> checkStudyGroup(String groupId) async{
     ObjectId grId = ObjectId.fromHexString(groupId);
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
@@ -91,17 +106,7 @@ class Connection{
 
     await db.close();
   }
-  /*static Future joinGroup(User user, String groupCode) async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();
-    String resultGroup = await checkStudyGroupCode(groupCode);
-    var userCollection = db.collection("user");
-    List resultUser = await userCollection.find(where.eq("email", user.email)).toList();
-    ObjectId userId = resultUser[0]["_id"];
-    List resultUser = 
-    
 
-  }*/
   static Future insertNewGroup(User user, Groups group) async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
