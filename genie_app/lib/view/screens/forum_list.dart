@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/add_forum.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -10,7 +11,7 @@ import 'package:genie_app/view/widgets/appbar.dart';
 
 
 class ForumsListPage extends StatefulWidget{
-  final String groupId;
+  final Groups groupId;
   const ForumsListPage({super.key, required this.groupId});
 
   @override
@@ -63,7 +64,7 @@ class _ForumsListPageState extends State<ForumsListPage>{
                     
                     onPressed: () {
                       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> GroupView(group: widget.groupId)));
                     },
                     child:Row(
                       children: [

@@ -168,8 +168,9 @@ class Connection {
     await db.open();
     var topicCollection = db.collection('topic');
     final response = await topicCollection.findOne(where.eq('_id', castedId));
+    print(response);
     List<StudyMaterial> studyMaterials = [];
-    for (var studyMaterial in response!['studyMaterial']) {
+    for (var studyMaterial in response!['studyMaterials']) {
       studyMaterials.add(StudyMaterial(
           id: ObjectIdConverter.convertToId(studyMaterial['_id']),
           title: studyMaterial['title'] as String,
@@ -184,13 +185,19 @@ class Connection {
     return topic;
   }
 
-  static Future<String> createTopic(Topic topic) async {
+  static Future<String> createTopic(Topic topic, Groups group) async {
     try {
       final db = await Db.create(
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
       await db.open();
       var topicCollection = db.collection('topic');
-      topicCollection.insertOne(topic.toJson());
+      WriteResult insert = await topicCollection.insertOne(topic.toJson());
+      var groupCollection = db.collection('studyGroup');
+      await groupCollection.updateOne(
+        where.eq('_id', group.id)
+        , ModifierBuilder().push('topics', insert.id));
+
+
       db.close();
       return 'success';
     } on Exception catch (e) {
@@ -278,7 +285,7 @@ class Connection {
     }
   }
 
-  static Future addNewForum(Forum forum)async{
+  static Future addNewForum(Forum forum, Groups group)async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
@@ -297,7 +304,7 @@ class Connection {
     var studyGroupsCollection = db.collection('studyGroup');
     // Hacer dinamico con el grupo de estudio en el que estas 
     await studyGroupsCollection.updateOne(
-      where.eq("_id", ObjectId.fromHexString("66552c763656b63721956447")), 
+      where.eq("_id", group.id), 
       ModifierBuilder().push('forums', result.id)
     );
 
@@ -379,6 +386,8 @@ class Connection {
     groupCollection.updateOne(where.eq("_id", objId), update);
     db.close();
   }
+
+
   static Future<List> returnAnswers(String forumId)async{
     final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
@@ -522,7 +531,6 @@ class Connection {
         }
       }
     }
-    print(allTopics);
 
     return allTopics;
 

@@ -63,6 +63,7 @@ class _MemberPreviewState extends State<MemberPreview> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -104,6 +105,7 @@ class _MemberPreviewState extends State<MemberPreview> {
                           ])
                           : const SizedBox.shrink()
                       ],
+
                     ),
                           
                   ],),

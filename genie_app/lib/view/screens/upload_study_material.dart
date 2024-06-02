@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/topic.dart';
+import 'package:genie_app/models/group.dart';
+
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
@@ -10,8 +12,9 @@ import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/screens/topic.dart';
 
 class UploadStudyMaterialScreen extends StatefulWidget {
-  const UploadStudyMaterialScreen({super.key, required this.topic});
+  const UploadStudyMaterialScreen({super.key, required this.topic, required this.group});
   final Topic topic;
+  final Groups group;
 
   @override
   State<UploadStudyMaterialScreen> createState() =>
@@ -57,7 +60,7 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => const TopicScreen(topicId: '6657d49d7dca3271d92245a1')));
+              builder: (context) =>  TopicScreen(topicId: widget.topic.id, group: widget.group,)));
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(
@@ -121,7 +124,7 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const TopicScreen(topicId: '6657d49d7dca3271d92245a1')));
+                              builder: (context) =>  TopicScreen(topicId: widget.topic.id, group: widget.group,)));
                     },
                     child: Row(
                       children: [

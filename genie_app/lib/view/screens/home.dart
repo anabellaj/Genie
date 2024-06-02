@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: body[_currentIndex],
       ),
-      bottomNavigationBar: BottomNavBar(),
+      //bottomNavigationBar: BottomNavBar(),
     );
   }
 }

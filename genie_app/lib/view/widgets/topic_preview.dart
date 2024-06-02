@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/home.dart';
@@ -9,7 +10,7 @@ class TopicPreview extends StatefulWidget{
   final String title;
   final String labels;
   final String topicId;
-  final String groupId;
+  final Groups groupId;
 
   const TopicPreview({super.key, required this.title, required this.labels, required this.topicId, required this.groupId});
 
@@ -24,7 +25,7 @@ class _TopicPreviewState extends State<TopicPreview> {
     return GestureDetector(
       onTap: (){
         Navigator.pushReplacement(context, 
-                  MaterialPageRoute(builder: (context)=> TopicScreen(topicId: widget.topicId, ))
+                  MaterialPageRoute(builder: (context)=> TopicScreen(topicId: widget.topicId, group: widget.groupId,))
                 );
       },
       child: Padding(
@@ -51,14 +52,15 @@ class _TopicPreviewState extends State<TopicPreview> {
                 children: [
                   Text(widget.title,
                     
-                    style: genieThemeDataDemo.textTheme.displayMedium,),
+                    style:genieThemeDataDemo.textTheme.titleMedium ,),
                     
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(widget.labels,
+                        
                         overflow: TextOverflow.ellipsis,
-                        style: genieThemeDataDemo.primaryTextTheme.titleLarge),
+                        style: genieThemeDataDemo.textTheme.displayMedium),
                        ],
                   ),
                       

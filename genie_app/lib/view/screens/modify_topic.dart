@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
 class ModifyTopicScreen extends StatefulWidget {
-  const ModifyTopicScreen({super.key, required this.topic});
+  const ModifyTopicScreen({super.key, required this.topic, required this.group});
   final Topic topic;
+  final Groups group;
 
   @override
   State<ModifyTopicScreen> createState() => _ModifyTopicScreen();
@@ -96,7 +98,9 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) =>  TopicScreen(
-                      topicId: '6657d49d7dca3271d92245a1')));
+                      topicId: widget.topic.id,
+                      group: widget.group,
+                      )));
         
         }
         else{
@@ -161,8 +165,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>  TopicScreen(
-                      topicId: '6657d49d7dca3271d92245a1')));
+                  builder: (context) =>  TopicScreen(topicId: widget.topic.id, group: widget.group,)));
         
         }
         else{
@@ -210,8 +213,8 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const TopicScreen(
-                                  topicId: '6657d49d7dca3271d92245a1')));
+                              builder: (context) =>  TopicScreen(
+                                  topicId: widget.topic.id, group: widget.group,)));
                     },
                     child: Row(
                       children: [
