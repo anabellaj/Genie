@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/add_forum.dart';
+import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import '../theme.dart';
-import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
 
 
 
 class ForumsListPage extends StatefulWidget{
-  const ForumsListPage({super.key});
+  final Groups groupId;
+  const ForumsListPage({super.key, required this.groupId});
 
   @override
   State<ForumsListPage> createState()=> _ForumsListPageState();
@@ -21,7 +23,7 @@ class _ForumsListPageState extends State<ForumsListPage>{
   late Widget previews;
 
   void getForums()async {
-    Widget p = await Controller.getForums();
+    Widget p = await Controller.getForums(widget.groupId);
     setState(() {
       previews= p;
       isLoading=false;
@@ -61,9 +63,7 @@ class _ForumsListPageState extends State<ForumsListPage>{
                     
                     onPressed: () {
                       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                      Navigator.pushReplacement(context, 
-                        MaterialPageRoute(builder: (context)=>const AddGroupScreen())
-                      );
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> GroupView(group: widget.groupId)));
                     },
                     child:Row(
                       children: [
@@ -93,7 +93,7 @@ class _ForumsListPageState extends State<ForumsListPage>{
                         ),
                         onPressed: ()=>{
                           Navigator.pushReplacement(context, 
-                            MaterialPageRoute(builder: (context)=>const AddForum())
+                            MaterialPageRoute(builder: (context)=> AddForum(groupId: widget.groupId,))
                           )   
                         }, 
                         icon: const Icon(Icons.add))

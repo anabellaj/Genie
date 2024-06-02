@@ -36,20 +36,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children:[
-            FilledButton(onPressed: (){
-              Navigator.pushReplacement(context, 
-              MaterialPageRoute(
-                builder: (context) => const TopicScreen(topicId: '6657d49d7dca3271d92245a1'),)
-                );}
-          
-              , child: Text('Temas')),
-            FilledButton(onPressed: (){
-              Navigator.pushReplacement(context, 
-              MaterialPageRoute(
-                builder: (context) => const ForumsListPage(),)
-                );}
-          
-              , child: Text('Foros')),
+            
+
           ]
         )
 

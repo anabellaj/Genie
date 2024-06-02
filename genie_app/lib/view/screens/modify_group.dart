@@ -5,6 +5,7 @@ import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/validator.dart';
 
@@ -53,6 +54,7 @@ final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      appBar: TopBar(),
       body:Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),

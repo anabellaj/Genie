@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/register.dart';
 import 'package:genie_app/viewModel/authentication.dart';

@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
@@ -10,7 +11,8 @@ import 'package:genie_app/viewModel/controller.dart';
 
 
 class AddForum extends StatefulWidget{
-  const AddForum({super.key});
+  final Groups groupId;
+  const AddForum({super.key, required this.groupId});
 
   @override
   State<AddForum> createState() =>  _AddForum();
@@ -39,7 +41,7 @@ class _AddForum extends State<AddForum>{
                     onPressed: () {
                       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                       Navigator.pushReplacement(context, 
-                        MaterialPageRoute(builder: (context)=>const ForumsListPage())
+                        MaterialPageRoute(builder: (context)=> ForumsListPage(groupId: widget.groupId,))
                       );
                     },
                     child:Row(
@@ -173,7 +175,7 @@ class _AddForum extends State<AddForum>{
                                     setState(() {
                                       isLoading=true;
                                     });
-                                    String answer = await Controller.createNewForum(title, description);
+                                    String answer = await Controller.createNewForum(title, description, widget.groupId);
                                     if(answer=="success"){  
                                       setState(() {
                                         isLoading=false;

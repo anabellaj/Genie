@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/create_group.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
 class JoinedGroups extends StatefulWidget{
@@ -33,10 +33,21 @@ class _JoinedGroupsState extends State<JoinedGroups> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
+        appBar: TopBar(),
         body:  isLoading?
                     const Center(child: CircularProgressIndicator()):
 
-              Column(children: [Expanded(child: groups)]),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                  
+                  Text('Grupos de Estudio',
+                    style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
+                  ),
+                  Expanded(child: groups)]),
+                )
     );
 
   }
