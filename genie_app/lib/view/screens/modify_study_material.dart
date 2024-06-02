@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/study_material.dart';
-import 'package:genie_app/models/topic.dart';
-import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
