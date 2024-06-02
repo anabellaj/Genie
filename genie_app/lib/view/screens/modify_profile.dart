@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
@@ -398,7 +398,7 @@ class _ModifyProfile extends State<ModifyProfile>{
               ,
             ])
         ),
-        );
+        bottomNavigationBar: BottomNavBar());
     
   }
 }

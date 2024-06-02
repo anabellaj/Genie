@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/group.dart';
+import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/home.dart';
+import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 
-class GroupPreview extends StatefulWidget{
-  final String name;
-  final String membersQty;
-  final String description;
-  final Groups group;
+class TopicPreview extends StatefulWidget{
+  final String title;
+  final String labels;
+  final String topicId;
+  final String groupId;
 
-  const GroupPreview({super.key, required this.name, required this.membersQty, required this.description, required this.group});
+  const TopicPreview({super.key, required this.title, required this.labels, required this.topicId, required this.groupId});
 
   @override
-  State<GroupPreview> createState() => _GroupPreviewState();
+  State<TopicPreview> createState() => _TopicPreviewState();
 }
 
-class _GroupPreviewState extends State<GroupPreview> {
+class _TopicPreviewState extends State<TopicPreview> {
   
   @override
   Widget build(BuildContext context){
     return GestureDetector(
       onTap: (){
         Navigator.pushReplacement(context, 
-                  MaterialPageRoute(builder: (context)=> GroupView(group: widget.group))
+                  MaterialPageRoute(builder: (context)=> TopicScreen(topicId: widget.topicId, ))
                 );
       },
       child: Padding(
@@ -48,18 +49,19 @@ class _GroupPreviewState extends State<GroupPreview> {
                 child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text(widget.title,
+                    
+                    style: genieThemeDataDemo.textTheme.displayMedium,),
+                    
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(widget.name,
+                      Text(widget.labels,
                         overflow: TextOverflow.ellipsis,
                         style: genieThemeDataDemo.primaryTextTheme.titleLarge),
                        ],
                   ),
-                  Text("Miembros: " + widget.membersQty,
-                    
-                    style: genieThemeDataDemo.textTheme.displayMedium,)
-                        
+                      
                 ],),
               ),
             ),

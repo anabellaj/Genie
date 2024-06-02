@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/add_group.dart';
+import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/screens/login.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/authentication.dart';
 import 'package:genie_app/viewModel/validator.dart';
 import '../theme.dart';
@@ -195,7 +196,7 @@ class _MyHomePageState extends State<RegisterPage> {
                           if(answer=='success'){
                             Navigator.pushReplacement(
                               context, 
-                            MaterialPageRoute(builder: (context)=> const AddGroupScreen()))}
+                            MaterialPageRoute(builder: (context)=> const JoinedGroups()))}
                           else if(answer=="user_exists"){
                             ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Ya hay un usuario con esta cuenta')
@@ -240,7 +241,8 @@ class _MyHomePageState extends State<RegisterPage> {
             ),
             ],)
            
-    ));
+    ),
+    bottomNavigationBar: BottomNavBar());
             
           
           

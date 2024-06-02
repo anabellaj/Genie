@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 
 
 class StudyMaterialViewer extends StatefulWidget{
@@ -31,6 +32,6 @@ class _StudyMaterialViewer extends State<StudyMaterialViewer>{
         body: PDFView(
           filePath: widget.filePath,
         ),
-      );
+      bottomNavigationBar: BottomNavBar());
   }
 }

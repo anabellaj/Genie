@@ -3,6 +3,7 @@ import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 
 class CreateTopicScreen extends StatefulWidget {
   const CreateTopicScreen({super.key});
@@ -197,6 +198,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     }
     return Scaffold(
         appBar: TopBar(),
-        body: content);
+        body: content,
+        bottomNavigationBar: BottomNavBar());
   }
 }

@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:genie_app/view/screens/add_group.dart';
+import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/modify_topic.dart';
 import 'package:genie_app/view/screens/pdf_viewer.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -114,10 +115,7 @@ class _TopicScreenState extends State<TopicScreen> {
                   children: [
                     TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AddGroupScreen()));
+                      Navigator.pop(context);
                     },
                     child: Row(
                       children: [
@@ -197,6 +195,6 @@ class _TopicScreenState extends State<TopicScreen> {
               ),
             );
           }),
-    );
+    bottomNavigationBar: BottomNavBar());
   }
 }

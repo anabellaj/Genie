@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 
 import 'package:genie_app/models/group.dart';
+import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
+import 'package:genie_app/view/screens/create_group.dart';
+import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
 
 import 'package:genie_app/models/forum.dart';
-import 'package:genie_app/models/user.dart';
-import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/screens/forum_view.dart';
 import 'package:genie_app/view/widgets/forum_preview.dart';
 import 'package:genie_app/view/widgets/forum_reply.dart';
 import 'package:genie_app/models/forum_reply.dart';
+import 'package:genie_app/view/widgets/topic_preview.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -217,15 +219,15 @@ class Controller{
     }
   }
 
-  static Future<Widget> getForums()async{
-    List forums = await Connection.returnForums("66552c763656b63721956447");
+  static Future<Widget> getForums(String groupId)async{
+    List forums = await Connection.returnForums(groupId);
 
     List<Widget> previews = [];
 
     for (var forum in forums) {
       Forum f = Forum.fromJson(forum);
       previews.add(
-        MessagePreview(id:f.id, title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description, creator_id: f.creator_id,)
+        MessagePreview(id:f.id, title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description, creator_id: f.creator_id, group_id: groupId,)
       );
     }
 
@@ -332,6 +334,35 @@ static Future<ForumView> getForum(String forumId)async{
   } catch (e) {
     return ForumView(date: "", description: "", id: "", title: "", creator: "", creator_id: "");
   }
+}
+
+static Widget manageNavigation(int index){
+  switch (index) {
+    case 0:
+      return const JoinedGroups();
+    case 1:
+      return const CreateGroupPage();
+    default:
+      return const JoinedGroups();
+  }
+}
+
+static Future<List<Widget>> getTopics(String groupId)async{
+
+  print('hola');
+
+  List result = await Connection.getTopics(groupId);
+  List<Widget> topics=[];
+
+  for (var t in result) {
+    Topic top = Topic.forPreview(t);
+
+    topics.add(
+      TopicPreview(title: top.name, labels: top.label, topicId: top.id, groupId: groupId,)
+    );
+    
+  }
+  return topics;
 }
 
 }

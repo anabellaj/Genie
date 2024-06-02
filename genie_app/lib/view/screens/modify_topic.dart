@@ -349,6 +349,6 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
             ])
           );
     })
-    );
+    , bottomNavigationBar: const BottomAppBar());
   }
 }
