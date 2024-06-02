@@ -94,11 +94,11 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
           //revisar como hay que pasar el id 
           // ObjectId id = ObjectId.fromHexString(topic.id);
           //final topicId = widget.topic.id;
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>  TopicScreen(
-                      topicId: '6657d49d7dca3271d92245a1')));
+          // Navigator.pushReplacement(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) =>  TopicScreen(
+          //             topicId: '6657d49d7dca3271d92245a1')));
         
         }
         else{
@@ -160,11 +160,11 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
           //revisar como hay que pasar el id 
           // ObjectId id = ObjectId.fromHexString(topic.id);
           //final topicId = widget.topic.id;
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>  TopicScreen(
-                      topicId: '6657d49d7dca3271d92245a1')));
+          // Navigator.pushReplacement(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) =>  TopicScreen(
+          //             topicId: '6657d49d7dca3271d92245a1')));
         
         }
         else{
@@ -209,11 +209,11 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                 // Boton de Regresar 
                 TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TopicScreen(
-                                  topicId: '6657d49d7dca3271d92245a1')));
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const TopicScreen(
+                      //             topicId: '6657d49d7dca3271d92245a1')));
                     },
                     child: Row(
                       children: [
