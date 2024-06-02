@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/topic.dart';
+import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
 class CreateTopicScreen extends StatefulWidget {
-  const CreateTopicScreen({super.key});
+  const CreateTopicScreen({super.key, required this.group});
+  final Groups group;
 
   @override
   State<CreateTopicScreen> createState() {
@@ -90,7 +93,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const CreateTopicScreen()));
+                                builder: (context) =>  GroupView( group: widget.group,)));
             },
            child: Row(
                         children: [

@@ -9,14 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/topic.dart';
+import 'package:genie_app/models/group.dart';
+
 import 'package:genie_app/view/screens/upload_study_material.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/topic_cards.dart';
 
 class TopicScreen extends StatefulWidget {
-  const TopicScreen({super.key, required this.topicId});
+  const TopicScreen({super.key, required this.topicId, required this.group});
   final String topicId;
+  final Groups group;
 
   @override
   State<TopicScreen> createState() => _TopicScreenState();
@@ -75,6 +78,7 @@ class _TopicScreenState extends State<TopicScreen> {
     Navigator.of(context).push<Map<String, String>>(MaterialPageRoute(
       builder: (ctx) => UploadStudyMaterialScreen(
         topic: topic,
+        group: widget.group,
       ),
     ));
   }
@@ -83,6 +87,7 @@ class _TopicScreenState extends State<TopicScreen> {
     Navigator.of(context).push<Map<String, String>>(MaterialPageRoute(
       builder: (ctx) => ModifyTopicScreen(
         topic: topic,
+        group: widget.group,
       ),
     ));
   }
@@ -114,7 +119,9 @@ class _TopicScreenState extends State<TopicScreen> {
                   children: [
                     TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(context, 
+                        MaterialPageRoute(builder: (context)=> GroupView(group: widget.group))
+                      );
                     },
                     child: Row(
                       children: [

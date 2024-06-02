@@ -193,15 +193,15 @@ class Controller{
     }
   }
 
-  static Future<Widget> getForums(String groupId)async{
-    List forums = await Connection.returnForums(groupId);
+  static Future<Widget> getForums(Groups groupId)async{
+    List forums = await Connection.returnForums(groupId.id.oid.toString());
 
     List<Widget> previews = [];
 
     for (var forum in forums) {
       Forum f = Forum.fromJson(forum);
       previews.add(
-        MessagePreview(id:f.id, title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description, creator_id: f.creator_id, group_id: groupId,)
+        MessagePreview(id:f.id, title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description, creator_id: f.creator_id, group: groupId,)
       );
     }
 
@@ -321,11 +321,11 @@ static Widget manageNavigation(int index){
   }
 }
 
-static Future<List<Widget>> getTopics(String groupId)async{
+static Future<List<Widget>> getTopics(Groups groupId)async{
 
   print('hola');
 
-  List result = await Connection.getTopics(groupId);
+  List result = await Connection.getTopics(groupId.id.oid.toString());
   List<Widget> topics=[];
 
   for (var t in result) {

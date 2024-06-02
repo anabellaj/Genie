@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/screens/forum_view.dart';
 import 'package:genie_app/view/theme.dart';
@@ -6,14 +7,14 @@ import 'package:genie_app/viewModel/controller.dart';
 
 
 class MessagePreview extends StatefulWidget{
-  final String group_id;
+  final Groups group;
   final String id;
   final String title;
   final String creator;
   final String date;
   final String description;
   final String creator_id;
-  const MessagePreview({super.key, required this.id, required this.title, required this.creator, required this.date, required this.description, required this.creator_id, required this.group_id});
+  const MessagePreview({super.key, required this.id, required this.title, required this.creator, required this.date, required this.description, required this.creator_id, required this.group});
 
   @override
   State<MessagePreview> createState()=> _MessagePreview();
@@ -108,7 +109,7 @@ class _MessagePreview extends State<MessagePreview>{
                       if(res=='success'){
                       
                        Navigator.pushReplacement(context, 
-                       MaterialPageRoute(builder: (context)=> ForumsListPage(groupId: widget.group_id)));
+                       MaterialPageRoute(builder: (context)=> ForumsListPage(groupId: widget.group)));
                      }else{
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Hubo un error'))

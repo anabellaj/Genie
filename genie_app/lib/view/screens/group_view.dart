@@ -47,7 +47,7 @@ class _GroupViewState extends State<GroupView> {
 
   void getTopics()async{
     
-    List<Widget> r = await Controller.getTopics(widget.group.id.oid.toString());
+    List<Widget> r = await Controller.getTopics(widget.group);
     setState(() {
       topics = r;
       isLoading= false;
@@ -157,7 +157,7 @@ class _GroupViewState extends State<GroupView> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                   ForumsListPage(groupId: widget.group.id.oid.toString(),))); //CAMBIAR ROUTE A foro
+                                   ForumsListPage(groupId: widget.group,))); //CAMBIAR ROUTE A foro
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: genieThemeDataDemo.colorScheme.secondary,
@@ -182,7 +182,7 @@ class _GroupViewState extends State<GroupView> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const CreateTopicScreen())); //CAMBIAR ROUTE A create_topic
+                                     CreateTopicScreen(group: widget.group,))); //CAMBIAR ROUTE A create_topic
                       },
                       style: mainButtonStyle,
                       child: const Text('Crear nuevo tema'),
