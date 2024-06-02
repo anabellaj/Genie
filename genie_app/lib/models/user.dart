@@ -48,7 +48,7 @@ class User {
 
     };
   User.fromJson(Map<String,dynamic> json):
-    id = json["_id"] is String?  json['_id']:json['_id'].oid.toString(),
+    id = json["_id"] is String?  json['_id']:json['_id'].toString(),
     name = json['name'],
     email = json['email'],
     password = json['password'],

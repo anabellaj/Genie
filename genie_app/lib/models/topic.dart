@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:genie_app/models/study_material.dart';
 
 class Topic {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/create_group.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
 import 'package:genie_app/view/theme.dart';
 

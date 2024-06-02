@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:genie_app/view/screens/home.dart';
-
-import 'package:genie_app/models/study_material.dart';
-import 'package:genie_app/models/topic.dart';
-import 'package:genie_app/view/screens/create_topic.dart';
 import 'package:genie_app/view/screens/initial.dart';
-import 'package:genie_app/view/screens/topic.dart';
-import 'package:genie_app/view/screens/upload_study_material.dart';
 import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
-
 import 'dart:async';
 
 void main() {

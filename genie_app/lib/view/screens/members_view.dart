@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/code.dart';
 import 'package:genie_app/view/screens/group_view.dart';
-import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/create_topic.dart';
 import 'package:genie_app/view/screens/forum_list.dart';
-import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/screens/members_view.dart';
 import 'package:genie_app/view/screens/modify_group.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import '../theme.dart';
-import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/viewModel/controller.dart';
-
-// import 'package:genie_app/view/screens/modify_profile.dart';
 
 class AlignedText extends StatelessWidget {
   final String text;
@@ -38,6 +33,7 @@ class GroupView extends StatefulWidget {
   const GroupView({super.key, required this.group});
 
   @override
+  // ignore: library_private_types_in_public_api
   _GroupViewState createState() => _GroupViewState();
 }
 
@@ -137,7 +133,7 @@ class _GroupViewState extends State<GroupView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Text("Miembros: " + widget.group.members.length.toString(), // SACAR DE LA BASE DE DATOS
+                    Text("Miembros: ${widget.group.members.length}", // SACAR DE LA BASE DE DATOS
                         style: genieThemeDataDemo.textTheme.displayMedium),
                     TextButton(
                       onPressed: () {
