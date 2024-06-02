@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/group_view.dart';
-import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/validator.dart';
 
+// ignore: must_be_immutable
 class ModifyGroupPage extends StatefulWidget {
   Groups currentGroup;
   ModifyGroupPage({super.key, required this.currentGroup});

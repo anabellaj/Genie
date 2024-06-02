@@ -1,11 +1,4 @@
-
-import 'package:genie_app/viewModel/controller.dart';
-import 'package:uuid/uuid.dart';
-
 import 'group.dart';
-
-
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:genie_app/models/forum_reply.dart';
 import 'package:genie_app/models/object_id_converter.dart';
@@ -14,7 +7,6 @@ import 'package:genie_app/models/topic.dart';
 import 'user.dart';
 import 'forum.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-
 
 class Connection {
   /*User queries*/
@@ -33,9 +25,9 @@ class Connection {
     return result;
   }
 
-  static void removeGroupMember(String memberId, Groups group) async{
-
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static void removeGroupMember(String memberId, Groups group) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
     var groupCollection = db.collection('studyGroup');
@@ -46,34 +38,38 @@ class Connection {
 
     List admins = group.admins;
 
-    if(admins.contains(memberId)){
-    admins.remove(memberId);
+    if (admins.contains(memberId)) {
+      admins.remove(memberId);
     }
 
-    final docUser = await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
+    final docUser =
+        await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
     User groupMember = User.fromJson(docUser as Map<String, dynamic>);
     List studyGroups = groupMember.studyGroups;
     print(studyGroups);
     studyGroups.remove(group.id.oid);
     print(studyGroups);
 
-    final groupUpdate = ModifierBuilder().set("members", members).set("admins", admins);
+    final groupUpdate =
+        ModifierBuilder().set("members", members).set("admins", admins);
     final userUpdate = ModifierBuilder().set("studyGroups", studyGroups);
 
     groupCollection.updateOne(where.eq("_id", group.id), groupUpdate);
-    userCollection.updateOne(where.eq("_id", ObjectId.fromHexString(memberId)), userUpdate);
+    userCollection.updateOne(
+        where.eq("_id", ObjectId.fromHexString(memberId)), userUpdate);
 
     db.close();
-
   }
 
-  static Future<List<User>> getGroupMembers(List groupMembers) async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static Future<List<User>> getGroupMembers(List groupMembers) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
     var userCollection = db.collection("user");
     List<User> groupMembs = [];
-    for (String memberId in groupMembers){
-      final docUser = await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
+    for (String memberId in groupMembers) {
+      final docUser = await userCollection
+          .findOne({"_id": ObjectId.fromHexString(memberId)});
       User groupMember = User.fromJson(docUser as Map<String, dynamic>);
       groupMember.id = memberId;
       groupMembs.add(groupMember);
@@ -82,44 +78,40 @@ class Connection {
     return groupMembs;
   }
 
-  static Future<List> checkStudyGroup(String groupId) async{
+  static Future<List> checkStudyGroup(String groupId) async {
     ObjectId grId = ObjectId.fromHexString(groupId);
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
     var groupCollection = db.collection('studyGroup');
-    List result = await groupCollection.find(where.eq(
-        "_id", grId
-      )).toList();
+    List result = await groupCollection.find(where.eq("_id", grId)).toList();
     await db.close();
     return result;
-    
   }
 
-  static Future<String> checkStudyGroupCode(String enterCode) async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static Future<String> checkStudyGroupCode(String enterCode) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
     var groupCollection = db.collection("studyGroup");
-    List result = await groupCollection.find(where.eq(
-      "entrance_code",enterCode
-    )).toList();
+    List result = await groupCollection
+        .find(where.eq("entrance_code", enterCode))
+        .toList();
 
-    if(result.isNotEmpty){
-    ObjectId objId = result[0]["_id"];
-    String toReturn = objId.oid;
-    return toReturn;
+    if (result.isNotEmpty) {
+      ObjectId objId = result[0]["_id"];
+      String toReturn = objId.oid;
+      return toReturn;
     } else {
       return "no success";
     }
-    
-
   }
 
- 
-
-  static Future<String> insertNewUser(User user) async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static Future<String> insertNewUser(User user) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
     var userCollection = db.collection('user');
@@ -170,7 +162,7 @@ class Connection {
     final response = await topicCollection.findOne(where.eq('_id', castedId));
     print(response);
     List<StudyMaterial> studyMaterials = [];
-    for (var studyMaterial in response!['studyMaterials']) {
+    for (var studyMaterial in response!['studyMaterial']) {
       studyMaterials.add(StudyMaterial(
           id: ObjectIdConverter.convertToId(studyMaterial['_id']),
           title: studyMaterial['title'] as String,
@@ -193,10 +185,8 @@ class Connection {
       var topicCollection = db.collection('topic');
       WriteResult insert = await topicCollection.insertOne(topic.toJson());
       var groupCollection = db.collection('studyGroup');
-      await groupCollection.updateOne(
-        where.eq('_id', group.id)
-        , ModifierBuilder().push('topics', insert.id));
-
+      await groupCollection.updateOne(where.eq('_id', group.id),
+          ModifierBuilder().push('topics', insert.id));
 
       db.close();
       return 'success';
@@ -245,102 +235,230 @@ class Connection {
     final studyMaterialCollection = db.collection('studyMaterial');
     final response =
         await studyMaterialCollection.findOne(where.eq('_id', convertedId));
-    print(response!['fileContent'].runtimeType);
     List<int> pdfContent1 = List<int>.from(response!['fileContent']);
     final pdfContent = Uint8List.fromList(pdfContent1.cast());
     return pdfContent;
   }
 
+  /*Topic Queries */
   static Future updateTopic(Topic topic, String previous) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();  
+    await db.open();
     final topicCollection = db.collection('topic');
-    try{await topicCollection.update(
-      where.eq('name', previous),
-      ModifierBuilder()
-        .set('name', topic.name)
-        .set('label', topic.label),
-    );
-  
-    await db.close();
-    return 'success';
-    } on Exception catch (e){
-        return e;
+    try {
+      await topicCollection.update(
+        where.eq('name', previous),
+        ModifierBuilder().set('name', topic.name).set('label', topic.label),
+      );
+
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      return e;
     }
   }
 
-  static Future deleteTopic(String strId) async{
-      final db = await Db.create(
+  static Future deleteTopic(String strId) async {
+    final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-     await db.open();
-    try{
-    ObjectId id = ObjectId.fromHexString(strId);
-    var topicCollection = db.collection('topic');
-    await topicCollection.remove(where.eq('_id', id));
-    await db.close();
-    return 'success';
-    } on Exception catch (e){
-      return e; 
+    await db.open();
+    try {
+      ObjectId id = ObjectId.fromHexString(strId);
+      var topicCollection = db.collection('topic');
+      await topicCollection.remove(where.eq('_id', id));
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      return e;
     }
   }
 
-  static Future addNewForum(Forum forum, Groups group)async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static Future<List> getTopics(String groupId) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    final groupCollection = db.collection('studyGroup');
+    final topicCollection = db.collection('topic');
+
+    Map<String, dynamic>? result = await groupCollection
+        .findOne(where.eq("_id", ObjectId.fromHexString(groupId)));
+
+    List allTopics = [];
+
+    if (result != null) {
+      for (var t in result['topics']) {
+        Map<String, dynamic>? topic =
+            await topicCollection.findOne(where.eq("_id", t));
+        if (topic != null) {
+          allTopics.add(topic);
+        }
+      }
+    }
+
+    return allTopics;
+  }
+
+  /*Forum Queries */
+  static Future addNewForum(Forum forum, Groups group) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
     var forumCollection = db.collection('forum');
-    WriteResult result = await forumCollection.insertOne(
-      {
-        'title':forum.title,
-        'description':forum.description,
-        'creator':forum.creator,
-        'creator_id': forum.creator_id,
-        'date':forum.date,
-        'answers':forum.answers
-      }
-    );
+    WriteResult result = await forumCollection.insertOne({
+      'title': forum.title,
+      'description': forum.description,
+      'creator': forum.creator,
+      'creator_id': forum.creator_id,
+      'date': forum.date,
+      'answers': forum.answers
+    });
 
     var studyGroupsCollection = db.collection('studyGroup');
-    // Hacer dinamico con el grupo de estudio en el que estas 
+    // Hacer dinamico con el grupo de estudio en el que estas
     await studyGroupsCollection.updateOne(
-      where.eq("_id", group.id), 
-      ModifierBuilder().push('forums', result.id)
-    );
-
+        where.eq("_id", group.id), ModifierBuilder().push('forums', result.id));
   }
 
-  static Future<List> returnForums(String groupId)async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static Future<Forum> refreshForum(String forumId) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final forumCollection = db.collection('forum');
+
+    Map<String, dynamic>? result = await forumCollection
+        .findOne(where.eq("_id", ObjectId.fromHexString(forumId)));
+
+    return Forum.fromJson(result!);
+  }
+
+  static Future<List> returnForums(String groupId) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
     final studyGroupCollection = db.collection('studyGroup');
-    Map<String,dynamic>? result = await studyGroupCollection.findOne(
-      where.eq('_id', ObjectId.fromHexString(groupId))
-    );
-   
+    Map<String, dynamic>? result = await studyGroupCollection
+        .findOne(where.eq('_id', ObjectId.fromHexString(groupId)));
 
-    if(result != null){
-      List forumList=[];
+    if (result != null) {
+      List forumList = [];
       final forumCollection = db.collection('forum');
       for (var id in result['forums']) {
-        Map<String,dynamic>? forumFound = await forumCollection.findOne(
-          where.eq('_id', id)
-        );
-        if(forumFound!=null){
+        Map<String, dynamic>? forumFound =
+            await forumCollection.findOne(where.eq('_id', id));
+        if (forumFound != null) {
           forumList.add(forumFound);
         }
       }
 
       return forumList;
-    }else{
+    } else {
       return [];
     }
-
   }
 
-  static Future insertNewGroup(User user, Groups group) async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static Future removeForum(String forum, String group) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    final forumReplyCollection = db.collection('forumAnswer');
+    final forumCollection = db.collection('forum');
+
+    Map<String, dynamic>? found = await forumCollection
+        .findOne(where.eq('_id', ObjectId.fromHexString(forum)));
+
+    await forumCollection
+        .deleteOne(where.eq('_id', ObjectId.fromHexString(forum)));
+
+    for (var ans in found!['answers']) {
+      await forumReplyCollection.deleteOne(where.eq('_id', ans));
+    }
+
+    final studyGroupCollection = db.collection('studyGroup');
+
+    await studyGroupCollection.updateOne(
+        where.eq('_id', ObjectId.fromHexString(group)),
+        ModifierBuilder().pull('forums', ObjectId.fromHexString(forum)));
+
+    db.close();
+  }
+
+  static Future<List> returnAnswers(String forumId) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    final forumCollection = db.collection('forum');
+    Map<String, dynamic>? result = await forumCollection
+        .findOne(where.eq('_id', ObjectId.fromHexString(forumId)));
+
+    if (result != null) {
+      List replyList = [];
+      final forumAnswerCollection = db.collection('forumAnswer');
+      for (var id in result['answers']) {
+        Map<String, dynamic>? replyFound =
+            await forumAnswerCollection.findOne(where.eq('_id', id));
+        if (replyFound != null) {
+          replyList.add(replyFound);
+        }
+      }
+      await db.close();
+
+      return replyList;
+    } else {
+      return [];
+    }
+  }
+
+  static Future<String> addNewReply(ForumReply newReply, String forumId) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    final forumReplyCollection = db.collection('forumAnswer');
+    final forumCollection = db.collection('forum');
+
+    WriteResult result = await forumReplyCollection.insertOne({
+      'creator': newReply.creator,
+      'date': newReply.date,
+      'message': newReply.message,
+      'creator_id': newReply.creator_id,
+    });
+
+    await forumCollection.updateOne(
+        where.eq('_id', ObjectId.fromHexString(forumId)),
+        ModifierBuilder().push('answers', result.id));
+
+    db.close();
+    return result.id.oid.toString();
+  }
+
+  static Future removeAnswer(String answer, String forum) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    final forumReply = db.collection('forumAnswer');
+
+    await forumReply.deleteOne(where.eq('_id', ObjectId.fromHexString(answer)));
+
+    final forumCollection = db.collection('forum');
+
+    await forumCollection.updateOne(
+        where.eq("_id", ObjectId.fromHexString(forum)),
+        ModifierBuilder().pull('answers', ObjectId.fromHexString(answer)));
+
+    db.close();
+  }
+
+  /*Study Goup Queries Queries */
+  static Future insertNewGroup(User user, Groups group) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
     var result = await checkUser(user);
     ObjectId id = result[0]["_id"];
@@ -348,195 +466,46 @@ class Connection {
     //String enterCode = objIdString.substring(2,10);
     var groupCollection = db.collection("studyGroup");
     WriteResult writeResult = await groupCollection.insertOne({
-      "name":group.name,
-      "description":group.description,
-      "creator":objIdString,
-      "forums":[],
-      "members":[objIdString],
-      "topics":[],
-      "admins":[objIdString],
-      "profile_picture":"",
-      "entrance_code":"",
+      "name": group.name,
+      "description": group.description,
+      "creator": objIdString,
+      "forums": [],
+      "members": [objIdString],
+      "topics": [],
+      "admins": [objIdString],
+      "profile_picture": "",
+      "entrance_code": "",
     });
-    
+
     ObjectId insertedStGroupId = await writeResult.id;
-    String enterCode = insertedStGroupId.oid.substring(2,10);
-    groupCollection.updateOne(where.eq("_id", insertedStGroupId), modify.set("entrance_code", enterCode));
+    String enterCode = insertedStGroupId.oid.substring(2, 10);
+    groupCollection.updateOne(where.eq("_id", insertedStGroupId),
+        modify.set("entrance_code", enterCode));
     await db.close();
     return insertedStGroupId.oid;
-
   }
 
-  static void updateGroupMembers(String groupId, List members) async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static void updateGroupMembers(String groupId, List members) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
     var groupCollection = db.collection("studyGroup");
     ObjectId objId = ObjectId.fromHexString(groupId);
-    groupCollection.updateOne(where.eq("_id", objId), modify.set("members", members));
+    groupCollection.updateOne(
+        where.eq("_id", objId), modify.set("members", members));
     db.close();
-
   }
 
-  static void setNewGroupInfo(String name, String description, String groupId) async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+  static void setNewGroupInfo(
+      String name, String description, String groupId) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
     var groupCollection = db.collection("studyGroup");
     ObjectId objId = ObjectId.fromHexString(groupId);
-    final update = ModifierBuilder().set("name", name).set("description", description);
+    final update =
+        ModifierBuilder().set("name", name).set("description", description);
     groupCollection.updateOne(where.eq("_id", objId), update);
     db.close();
   }
-
-
-  static Future<List> returnAnswers(String forumId)async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();
-
-    final forumCollection = db.collection('forum');
-    Map<String,dynamic>? result = await forumCollection.findOne(
-      where.eq('_id', ObjectId.fromHexString(forumId))
-    );
-
-    if(result != null){
-      List replyList=[];
-      final forumAnswerCollection = db.collection('forumAnswer');
-      for (var id in result['answers']) {
-        Map<String,dynamic>? replyFound = await forumAnswerCollection.findOne(
-          where.eq('_id', id)
-        );
-        if(replyFound!=null){
-          replyList.add(replyFound);
-        }
-      }
-      await db.close();
-
-      return replyList;
-    }else{
-      return [];
-    }
-
-  }
-
-  static Future<String> addNewReply(ForumReply newReply, String forumId)async{
-      final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-      await db.open();
-
-      final forumReplyCollection = db.collection('forumAnswer');
-      final forumCollection = db.collection('forum');
-
-      WriteResult result = await forumReplyCollection.insertOne(
-        {
-          'creator': newReply.creator,
-          'date': newReply.date,
-          'message': newReply.message,
-          'creator_id':newReply.creator_id,
-        }
-      );
-
-      await forumCollection.updateOne(
-        where.eq('_id', ObjectId.fromHexString(forumId)
-      	), 
-          ModifierBuilder().push(
-            'answers', result.id
-          )
-        );
-
-        db.close();
-      return result.id.oid.toString();
-  }
-
-  static Future removeForum(String forum, String group)async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();
-
-    final forumReplyCollection = db.collection('forumAnswer');
-    final forumCollection = db.collection('forum');
-
-    Map<String,dynamic>? found = await forumCollection.findOne(where.eq('_id', ObjectId.fromHexString(forum)));
-
-    await forumCollection.deleteOne(
-      where.eq('_id', ObjectId.fromHexString(forum))
-    );
-
-    for (var ans in found!['answers']) {
-      await forumReplyCollection.deleteOne(
-        where.eq('_id', ans)
-      );
-      
-    }
-
-    final studyGroupCollection = db.collection('studyGroup');
-
-    await studyGroupCollection.updateOne(
-      where.eq('_id', ObjectId.fromHexString(group))
-      , ModifierBuilder().pull('forums', ObjectId.fromHexString(forum)));
-
-   db.close();
-  }
-
-  static Future removeAnswer(String answer, String forum)async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();
-
-    final forumReply = db.collection('forumAnswer');
-
-    await forumReply.deleteOne(
-      where.eq('_id', ObjectId.fromHexString(answer))
-    );
-
-    final forumCollection = db.collection('forum');
-
-    await forumCollection.updateOne(
-      where.eq("_id", ObjectId.fromHexString(forum))
-      , 
-      ModifierBuilder().pull('answers', ObjectId.fromHexString(answer)));
-    
-    db.close();
-  }
-
-  static Future<Forum> refreshForum(String forumId)async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();
-    final forumCollection = db.collection('forum');
-
-    Map<String,dynamic>? result = await forumCollection.findOne(
-      where.eq("_id", ObjectId.fromHexString(forumId))
-    );
-
-
-    return Forum.fromJson(result!);
-
-  }
-
-  static Future<List> getTopics(String groupId)async{
-    final db =  await Db.create("mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();  
-
-    final groupCollection = db.collection('studyGroup');
-    final topicCollection = db.collection('topic');
-
-    Map<String,dynamic>? result = await groupCollection.findOne(
-      where.eq("_id", ObjectId.fromHexString(groupId))
-    );
-
-    List allTopics=[];
-
-    if(result!=null){
-      for (var t in result['topics']) {
-        Map<String,dynamic>? topic = await topicCollection.findOne(
-          where.eq( "_id", t)
-        );
-        if(topic!=null){
-          allTopics.add(topic);
-        }
-      }
-    }
-
-    return allTopics;
-
-  }
-
-
-
-
 }
