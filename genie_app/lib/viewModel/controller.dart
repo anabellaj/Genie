@@ -163,7 +163,7 @@ class Controller{
     }
   }
 
-  static Future<String> createNewForum(String title, String description)async {
+  static Future<String> createNewForum(String title, String description, Groups group)async {
     
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -176,7 +176,7 @@ class Controller{
         Forum newForum = Forum(title, description, creator, loggedUser.id, date);
         newForum.initialize();
 
-       await Connection.addNewForum(newForum);
+       await Connection.addNewForum(newForum, group);
 
 
         return 'success';

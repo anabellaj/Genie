@@ -175,7 +175,7 @@ class _AddForum extends State<AddForum>{
                                     setState(() {
                                       isLoading=true;
                                     });
-                                    String answer = await Controller.createNewForum(title, description);
+                                    String answer = await Controller.createNewForum(title, description, widget.groupId);
                                     if(answer=="success"){  
                                       setState(() {
                                         isLoading=false;

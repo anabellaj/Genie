@@ -52,14 +52,15 @@ class _TopicPreviewState extends State<TopicPreview> {
                 children: [
                   Text(widget.title,
                     
-                    style: genieThemeDataDemo.textTheme.displayMedium,),
+                    style:genieThemeDataDemo.textTheme.titleMedium ,),
                     
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(widget.labels,
+                        
                         overflow: TextOverflow.ellipsis,
-                        style: genieThemeDataDemo.primaryTextTheme.titleLarge),
+                        style: genieThemeDataDemo.textTheme.displayMedium),
                        ],
                   ),
                       

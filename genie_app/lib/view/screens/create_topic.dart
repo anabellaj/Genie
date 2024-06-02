@@ -43,17 +43,18 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     print('PASE 2');
     final topic = Topic(
         name: _titleController.text,
-        label: otherLabelController.text,
+        label: otherLabelController.text.isEmpty? "":otherLabelController.text,
         files: []);
     setState(() {
       isLoading = true;
     });
-    final result = await Connection.createTopic(topic);
+    print(topic);
+    final result = await Connection.createTopic(topic, widget.group);
     setState(() {
       isLoading = false;
     });
     if (result == 'success') {
-      Navigator.of(context).pop<Topic>();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>GroupView(group: widget.group)));
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

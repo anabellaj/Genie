@@ -18,6 +18,7 @@ class Topic {
     return {
       'name': name,
       'label': label,
+      'studyMaterials':[]
     };
   }
 
@@ -31,5 +32,5 @@ class Topic {
       : id = json["_id"] is String?  json['_id']:json['_id'].oid.toString(),
         name = json['name'],
         label = json['label'],
-        files = json['files'];
+        files = json['studyMaterials'];
 }
