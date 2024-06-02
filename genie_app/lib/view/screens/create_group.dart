@@ -193,7 +193,7 @@ final _formKey = GlobalKey<FormState>();
                             setState(() {
                               isLoading = true;
                             }),
-                            loggedUser = await Controller.getUserInfo(),
+                             loggedUser = await Controller.getUserInfo(),
                             newGroup = Groups(description, name),
                             insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup),
                             loggedUser.studyGroups.add(insertedStGroupId),

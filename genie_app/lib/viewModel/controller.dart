@@ -348,6 +348,13 @@ static Widget manageNavigation(int index){
   }
 }
 
+static void groupInsertion(String description, String name, User loggedUser) async{
+  Groups newGroup = Groups(description, name);
+  String insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup);
+  loggedUser.studyGroups.add(insertedStGroupId);
+  Controller.updateUserInfo(loggedUser);
+}
+
 static Future<List<Widget>> getTopics(Groups groupId)async{
 
   print('hola');
