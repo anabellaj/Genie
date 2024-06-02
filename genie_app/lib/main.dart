@@ -43,10 +43,10 @@ class _myAppState extends State<MyApp> {
 
     checkState();
 
-    
+
     Timer(
       const Duration(seconds: 3),
-      ()=>Navigator.pushReplacement(
+      () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context)=>
           isUser? 

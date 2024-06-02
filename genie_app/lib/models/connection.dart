@@ -240,6 +240,25 @@ class Connection {
     return pdfContent;
   }
 
+  static Future<StudyMaterial?> getStudyMaterial(String id) async {
+    ObjectId convertedId = ObjectId.fromHexString(id);
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final studyMaterialCollection = db.collection('studyMaterial');
+    final response =
+        await studyMaterialCollection.findOne(where.eq('_id', convertedId));
+
+    if (response != null){
+      StudyMaterial studyMaterial = StudyMaterial(
+      id: response['id'].toString(),
+      title: response['title'],
+      description: response['description'],
+    );  return studyMaterial;
+    }  else{
+      return null;
+    }
+  }
   /*Topic Queries */
   static Future updateTopic(Topic topic, String previous) async {
     final db = await Db.create(
@@ -267,6 +286,68 @@ class Connection {
       ObjectId id = ObjectId.fromHexString(strId);
       var topicCollection = db.collection('topic');
       await topicCollection.remove(where.eq('_id', id));
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      return e;
+    }
+  }
+
+  static Future updateFile(StudyMaterial material, String id, String idTopic, int i) async {
+    ObjectId convertedId = ObjectId.fromHexString(id);
+    ObjectId topicId = ObjectId.fromHexString(idTopic);
+
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final materialCollection = db.collection('studyMaterial');
+    final topicCollection = db.collection('topic');
+    try {
+      await materialCollection.update(
+        where.eq('_id', convertedId),
+        ModifierBuilder().set('title', material.title).set('description', material.description),
+      );
+      final topic = await topicCollection.findOne(where.eq('_id', topicId));
+      if (topic != null){
+            List materials = topic['studyMaterial'];
+            materials[i]['title'] = material.title;
+            materials[i]['description'] = material.description;
+            await topicCollection.update(
+              where.eq('_id', topicId),
+              ModifierBuilder().set('studyMaterial', materials),
+        );
+      }
+    
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      return e;
+    }
+  }
+
+    static Future deleteFile(String id, String idTopic, int i) async {
+    ObjectId convertedId = ObjectId.fromHexString(id);
+    ObjectId topicId = ObjectId.fromHexString(idTopic);
+
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final materialCollection = db.collection('studyMaterial');
+    final topicCollection = db.collection('topic');
+    try {
+      await materialCollection.remove(
+        where.eq('_id', convertedId)
+      );
+      final topic = await topicCollection.findOne(where.eq('_id', topicId));
+      if (topic != null){
+            List materials = topic['studyMaterial'];
+            materials.removeAt(i);
+            await topicCollection.update(
+              where.eq('_id', topicId),
+              ModifierBuilder().set('studyMaterial', materials),
+            );
+      
+      }
       await db.close();
       return 'success';
     } on Exception catch (e) {
