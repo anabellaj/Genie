@@ -42,7 +42,9 @@ class _TopicScreenState extends State<TopicScreen> {
             mainAxisSize: MainAxisSize.max,
             children: [
               CircularProgressIndicator(),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Text('Se está abriendo el archivo...'),
             ],
           ),
@@ -104,94 +106,96 @@ class _TopicScreenState extends State<TopicScreen> {
                 );
               }
               return Padding(
-                padding: const EdgeInsets.all(27.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        GroupView(group: widget.group)));
-                          },
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.chevron_left,
-                                color: genieThemeDataDemo.colorScheme.secondary,
-                              ),
-                              Text(
-                                'Regresar',
-                                style: TextStyle(
-                                    color: genieThemeDataDemo
-                                        .colorScheme.secondary),
-                              )
-                            ],
-                          )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            snapshot.data!.name,
-                            style: genieThemeDataDemo.textTheme.displayMedium!
-                                .copyWith(
-                                    fontSize: 32, fontWeight: FontWeight.w700),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                modificarArchivo(snapshot.data!);
-                              },
-                              icon: const Icon(Icons.more_horiz))
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 10),
-                        decoration: BoxDecoration(
-                            color: genieThemeDataDemo.colorScheme.secondary,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20))),
-                        child: Text(
-                          snapshot.data!.label,
-                          style: genieThemeDataDemo.textTheme.headlineLarge!
-                              .copyWith(color: Colors.white, fontSize: 14),
+                  padding: const EdgeInsets.all(27.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          GroupView(group: widget.group)));
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.chevron_left,
+                                  color:
+                                      genieThemeDataDemo.colorScheme.secondary,
+                                ),
+                                Text(
+                                  'Regresar',
+                                  style: TextStyle(
+                                      color: genieThemeDataDemo
+                                          .colorScheme.secondary),
+                                )
+                              ],
+                            )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              snapshot.data!.name,
+                              style: genieThemeDataDemo.textTheme.displayMedium!
+                                  .copyWith(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w700),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  modificarArchivo(snapshot.data!);
+                                },
+                                icon: const Icon(Icons.more_horiz))
+                          ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            subirArchivo(snapshot.data!);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                genieThemeDataDemo.colorScheme.primary,
-                          ),
-                          child: const Text(
-                            'Subir archivo',
-                            style: TextStyle(color: Colors.white),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          decoration: BoxDecoration(
+                              color: genieThemeDataDemo.colorScheme.secondary,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20))),
+                          child: Text(
+                            snapshot.data!.label,
+                            style: genieThemeDataDemo.textTheme.headlineLarge!
+                                .copyWith(color: Colors.white, fontSize: 14),
                           ),
                         ),
-                      ),
-                      TopicCards(
-                        studyMaterial: snapshot.data!.files,
-                        viewFile: (String id, String title) {
-                          createPdfFile(id, title);
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              );
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              subirArchivo(snapshot.data!);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  genieThemeDataDemo.colorScheme.primary,
+                            ),
+                            child: const Text(
+                              'Subir archivo',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        TopicCards(
+                          studyMaterial: snapshot.data!.files,
+                          viewFile: (String id, String title) {
+                            createPdfFile(id, title);
+                          },
+                          topicId: snapshot.data!.id,
+                        )
+                      ],
+                    ),
+                  ));
             }),
         bottomNavigationBar: BottomNavBar());
   }
