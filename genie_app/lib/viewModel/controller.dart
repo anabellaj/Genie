@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 
 import 'package:genie_app/models/group.dart';
+import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
+import 'package:genie_app/view/screens/create_group.dart';
+import 'package:genie_app/view/screens/join_or_create.dart';
+import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
 
 import 'package:genie_app/models/forum.dart';
-import 'package:genie_app/models/user.dart';
-import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/screens/forum_view.dart';
 import 'package:genie_app/view/widgets/forum_preview.dart';
 import 'package:genie_app/view/widgets/forum_reply.dart';
 import 'package:genie_app/models/forum_reply.dart';
+import 'package:genie_app/view/widgets/topic_preview.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -51,21 +54,26 @@ class Controller{
       }
       }
   }
-  static Future<Widget> obtainGroupMembers(List groupMembers) async{
+  static Future<Widget> obtainGroupMembers(List groupMembers,Groups group) async{
     List<User> members = await Connection.getGroupMembers(groupMembers);
     List<Widget> obtainedMembers = [];
     for (User u in members){
-      obtainedMembers.add(MemberPreview(name: u.name, member: u));
+      obtainedMembers.add(MemberPreview(name: u.name, member: u, group: group));
     }
-    print("ACAAA");
     return ListView(
       children: obtainedMembers,
     );
   }
 
-  //static Future<bool> checkAdmin(String userId){
-   // return true;
-  //}
+  static Future<String> deleteMember(String memberId, Groups group) async{
+    try{
+    Connection.removeGroupMember(memberId, group);
+    return "success";
+    }catch (e){
+      return "no_success";
+    }
+  }
+
   static Future<Widget> getUserGroups() async{
     User loggedUser = await Controller.getUserInfo();
     List stGroups = loggedUser.studyGroups;
@@ -110,6 +118,27 @@ class Controller{
     }
   }
 
+  static Future<bool> checkAdminCurrUser(String memberId) async{
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+
+    if(logUser[0]["_id"].oid == memberId){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> checkIsAdmin(Groups group) async{
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+    String logUserId = logUser[0]["_id"].oid;
+    print(logUserId);
+    print(group.admins);
+    bool res = group.admins.contains(logUserId);
+    print(res);
+    return res;
+  }
   static String getListInfo(List<dynamic> list){
     String res='';
     for(var i in list){
@@ -161,7 +190,7 @@ class Controller{
     }
   }
 
-  static Future<String> createNewForum(String title, String description)async {
+  static Future<String> createNewForum(String title, String description, Groups group)async {
     
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -174,7 +203,7 @@ class Controller{
         Forum newForum = Forum(title, description, creator, loggedUser.id, date);
         newForum.initialize();
 
-       await Connection.addNewForum(newForum);
+       await Connection.addNewForum(newForum, group);
 
 
         return 'success';
@@ -191,15 +220,15 @@ class Controller{
     }
   }
 
-  static Future<Widget> getForums()async{
-    List forums = await Connection.returnForums("66552c763656b63721956447");
+  static Future<Widget> getForums(Groups groupId)async{
+    List forums = await Connection.returnForums(groupId.id.oid.toString());
 
     List<Widget> previews = [];
 
     for (var forum in forums) {
       Forum f = Forum.fromJson(forum);
       previews.add(
-        MessagePreview(id:f.id, title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description, creator_id: f.creator_id,)
+        MessagePreview(id:f.id, title: f.title, creator: f.creator, date: DateFormat.yMd().format(f.date), description: f.description, creator_id: f.creator_id, group: groupId,)
       );
     }
 
@@ -306,6 +335,35 @@ static Future<ForumView> getForum(String forumId)async{
   } catch (e) {
     return ForumView(date: "", description: "", id: "", title: "", creator: "", creator_id: "");
   }
+}
+
+static Widget manageNavigation(int index){
+  switch (index) {
+    case 0:
+      return const JoinedGroups();
+    case 1:
+      return const JoinOrCreate();
+    default:
+      return const JoinedGroups();
+  }
+}
+
+static Future<List<Widget>> getTopics(Groups groupId)async{
+
+  print('hola');
+
+  List result = await Connection.getTopics(groupId.id.oid.toString());
+  List<Widget> topics=[];
+
+  for (var t in result) {
+    Topic top = Topic.forPreview(t);
+
+    topics.add(
+      TopicPreview(title: top.name, labels: top.label, topicId: top.id, groupId: groupId,)
+    );
+    
+  }
+  return topics;
 }
 
 }

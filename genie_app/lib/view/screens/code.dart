@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
-import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/register.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/authentication.dart';
 import 'package:genie_app/viewModel/validator.dart';
 import '../theme.dart';
@@ -15,6 +16,7 @@ class CodePage extends StatelessWidget{
 
   Widget build(BuildContext context){
     return Scaffold(
+      appBar: TopBar(),
       body:
       Center(
         child: Padding(
@@ -46,7 +48,6 @@ class CodePage extends StatelessWidget{
                               Container(
                                 height: MediaQuery.of(context).size.height/2.3,
                                 width: MediaQuery.of(context).size.width,
-          
                                 decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.onPrimaryContainer,
                                 borderRadius: BorderRadius.circular(10.0), // Add some border radius for better effect
@@ -70,7 +71,7 @@ class CodePage extends StatelessWidget{
                                     textAlign: TextAlign.start),
                                     const SizedBox(height: 20),
                                     Text('El código de invitación para tu grupo de estudio es:',
-                                    style: Theme.of(context).textTheme.displayMedium,
+                                    style: Theme.of(context).textTheme.displayLarge,
                                     textAlign: TextAlign.start),
                                     const SizedBox(height: 20),
                                     Text(group.entranceCode,
@@ -85,6 +86,7 @@ class CodePage extends StatelessWidget{
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 

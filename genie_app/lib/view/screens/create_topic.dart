@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/topic.dart';
+import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 
 class CreateTopicScreen extends StatefulWidget {
-  const CreateTopicScreen({super.key});
+  const CreateTopicScreen({super.key, required this.group});
+  final Groups group;
 
   @override
   State<CreateTopicScreen> createState() {
@@ -40,17 +44,18 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     print('PASE 2');
     final topic = Topic(
         name: _titleController.text,
-        label: otherLabelController.text,
+        label: otherLabelController.text.isEmpty? "":otherLabelController.text,
         files: []);
     setState(() {
       isLoading = true;
     });
-    final result = await Connection.createTopic(topic);
+    print(topic);
+    final result = await Connection.createTopic(topic, widget.group);
     setState(() {
       isLoading = false;
     });
     if (result == 'success') {
-      Navigator.of(context).pop<Topic>();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>GroupView(group: widget.group)));
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -90,7 +95,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const CreateTopicScreen()));
+                                builder: (context) =>  GroupView( group: widget.group,)));
             },
            child: Row(
                         children: [
@@ -197,6 +202,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     }
     return Scaffold(
         appBar: TopBar(),
-        body: content);
+        body: content,
+        bottomNavigationBar: BottomNavBar());
   }
 }

@@ -12,7 +12,6 @@ import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
 import 'dart:async';
-import 'package:genie_app/view/screens/add_group.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,29 +51,30 @@ class _myAppState extends State<MyApp> {
 
     checkState();
 
+
     Timer(
       const Duration(seconds: 3),
       () => Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => isUser
-              // ? const HomeScreen()
-              ? const TopicScreen(topicId: '6657d49d7dca3271d92245a1')
-              : const SplashPage(title: "SplashPage") )));
-          }
+        MaterialPageRoute(builder: (context)=>
+          isUser? 
+            const HomeScreen(): 
+            const SplashPage(title: "SplashPage"))));
 
-    // This widget is the root of your application.
-    @override
-    Widget build(BuildContext context) {
-      return MaterialApp(
-        title: "genie",
-        debugShowCheckedModeBanner: false,
-        theme: genieThemeDataDemo,
-        home: const Scaffold(
-            body: Center(
-          child: CircularProgressIndicator(),
-        )),
-      );
-    }
   }
+    
 
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "genie",
+      debugShowCheckedModeBanner: false,
+      theme: genieThemeDataDemo,
+      home: const Scaffold(
+          body: Center(
+        child: CircularProgressIndicator(),
+      )),
+    );
+  }
+}

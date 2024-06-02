@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:genie_app/view/screens/add_group.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/register.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/authentication.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/validator.dart';
@@ -161,6 +161,7 @@ class _JoinGroupState extends State<JoinGroupPage> {
             ),
           ),
         )
-    ]))));
+    ]))),
+    bottomNavigationBar: BottomNavBar(),);
   }
 }

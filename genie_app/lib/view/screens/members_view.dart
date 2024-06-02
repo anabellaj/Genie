@@ -5,6 +5,7 @@ import 'package:genie_app/view/screens/code.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import '../theme.dart';
 // import 'package:genie_app/view/screens/modify_profile.dart';
@@ -39,7 +40,7 @@ class _MembersViewState extends State<MembersView> {
   late Widget members;
 
   void getMembers() async{
-    Widget g = await Controller.obtainGroupMembers(widget.group.members);
+    Widget g = await Controller.obtainGroupMembers(widget.group.members, widget.group);
     if(mounted){
     setState(() {
       members = g;
@@ -116,6 +117,6 @@ class _MembersViewState extends State<MembersView> {
               ])),
         Expanded(child:members)])
         
-    );
+    , bottomNavigationBar: BottomNavBar());
   }
 }
