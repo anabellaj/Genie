@@ -46,7 +46,7 @@ class _TopicScreenState extends State<TopicScreen> {
           
           children: [
             CircularProgressIndicator(),
-            Text('Se está abriendo el archivo...'),
+            Text('   Se está abriendo el archivo...'),
           ],
         ),
       );
@@ -190,7 +190,7 @@ class _TopicScreenState extends State<TopicScreen> {
                       studyMaterial: snapshot.data!.files,
                       viewFile: (String id, String title) {
                         createPdfFile(id, title);
-                      },
+                      }, topicId: snapshot.data!.id,
                     )
                   ],
                 ),
