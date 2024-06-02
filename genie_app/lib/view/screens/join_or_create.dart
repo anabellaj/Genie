@@ -41,13 +41,13 @@ class JoinOrCreate extends StatelessWidget {
                                      child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           
                             children: [
                                 Text('Únete o crea un grupo',
                                 style: Theme.of(context).primaryTextTheme.headlineLarge,
-                                textAlign: TextAlign.start),
+                                textAlign: TextAlign.center),
                                 FilledButton(
                                   onPressed: (){
                                     Navigator.pushReplacement(context, 
