@@ -63,20 +63,19 @@ class _MessagePreview extends State<MessagePreview>{
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+
+
               Text(widget.title,
                 overflow: TextOverflow.ellipsis,
                 style: genieThemeDataDemo.primaryTextTheme.titleLarge,),
               Text(widget.date,
-                style: genieThemeDataDemo.textTheme.titleSmall,)],
-          ),
+                style: genieThemeDataDemo.textTheme.titleSmall,),
+          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(widget.creator,
                     style: genieThemeDataDemo.textTheme.titleSmall,),

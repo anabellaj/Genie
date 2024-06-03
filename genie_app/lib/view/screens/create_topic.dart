@@ -26,14 +26,14 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
   late String selectedOption;
 
   void _saveTopic() async {
+
     labelExists = true;
-    print('Entre');
+
     if (_titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Por favor llene todos los campos')));
       return;
     }
-    print('PASE 1');
     if (selectedOption == 'Agregar nueva etiqueta') {
       if (otherLabelController.text.trim().isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -49,7 +49,6 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
       }
       labelExists = false;
     }
-    print('PASE 2');
     final topic = Topic(
         name: _titleController.text,
         label: otherLabelController.text,
@@ -57,9 +56,10 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     setState(() {
       isLoading = true;
     });
-    print(topic);
+
     final result =
         await Controller.postTopic(topic, widget.group, labelExists);
+
     setState(() {
       isLoading = false;
     });
@@ -75,7 +75,6 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
           content: Text(
               'Ha ocurrido un error, por favor intenta de nuevo más tarde.')));
     }
-    print(result);
   }
 
   @override
