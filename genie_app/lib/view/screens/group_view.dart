@@ -171,31 +171,36 @@ class _GroupViewState extends State<GroupView> {
               const SizedBox(height: 12.0),
 
               //boton crear nuevo tema
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              isLoading? const Center(child: CircularProgressIndicator()):
+              Column(
                 children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                     CreateTopicScreen(group: widget.group,))); //CAMBIAR ROUTE A create_topic
-                      },
-                      style: mainButtonStyle,
-                      child: const Text('Crear nuevo tema'),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                         CreateTopicScreen(group: widget.group,))); //CAMBIAR ROUTE A create_topic
+                          },
+                          style: mainButtonStyle,
+                          child: const Text('Crear nuevo tema'),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-              isLoading? const Center(child: CircularProgressIndicator(),):
+                const SizedBox(height: 16.0),
+              
                Column(
                   children: [
                     ...topics
                   ],
-                )
+                )],
+              ),
+              
               // GENERADO PARA CADA TEMA
 
             ],

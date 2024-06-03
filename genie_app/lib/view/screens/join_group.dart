@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/home.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/validator.dart';
@@ -22,6 +23,7 @@ class _JoinGroupState extends State<JoinGroupPage> {
   @override
   Widget build (BuildContext context){
     return Scaffold(
+        appBar: TopBar(),
         body: Center(
           child: Padding(
             padding: EdgeInsets.all(12.0),
