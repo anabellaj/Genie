@@ -158,7 +158,7 @@ class _TopicScreenState extends State<TopicScreen> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
                           decoration: BoxDecoration(
-                              color: genieThemeDataDemo.colorScheme.secondary,
+                              color: snapshot.data!.label.isEmpty ? Colors.white : genieThemeDataDemo.colorScheme.secondary,
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(20))),
                           child: Text(
@@ -192,6 +192,7 @@ class _TopicScreenState extends State<TopicScreen> {
                             createPdfFile(id, title);
                           },
                           topicId: snapshot.data!.id,
+                          group: widget.group,
                         )
                       ],
                     ),

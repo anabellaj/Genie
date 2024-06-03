@@ -32,7 +32,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
       return;
     }
     print('PASE 1');
-    if (selectedOption == 'OTRO') {
+    if (selectedOption == 'Agregar nueva etiqueta') {
       for (var label in evaluationLabels) {
         if (label.toUpperCase() == otherLabelController.text) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -67,7 +67,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
   @override
   void initState() {
     evaluationLabels = ['hola'];
-    evaluationLabels.add('OTRO');
+    evaluationLabels.add('Agregar nueva etiqueta');
     setState(() {
       selectedOption = evaluationLabels.first;
       isLoading = false;
@@ -168,7 +168,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
                               });
                             },
                           ),
-                          if (selectedOption == 'OTRO')
+                          if (selectedOption == 'Agregar nueva etiqueta')
                             TextField(
                               controller: otherLabelController,
                               decoration:

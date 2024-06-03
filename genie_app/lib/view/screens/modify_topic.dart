@@ -332,7 +332,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              deleteTopic();  // comentado pq no quiero borrar el tema predeterminado jeje
+                              deleteTopic();  
                             },
                             style: const ButtonStyle(
                                 backgroundColor:

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/study_material.dart';
+import 'package:genie_app/models/topic.dart';
+import 'package:genie_app/models/group.dart';
+import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
+
 class ModifyStudyMaterial extends StatefulWidget {
-  const ModifyStudyMaterial({super.key, required this.material, required this.groupId, required this.i});
+  const ModifyStudyMaterial({super.key, required this.material, required this.topicId, required this.i, required this.group});
   final StudyMaterial material;
-  final String groupId;
-  final int i; 
+  final String topicId;
+  final int i;  
+  final Groups group;
 
   @override
   State<ModifyStudyMaterial> createState() => _ModifyStudyMaterial();
@@ -86,18 +91,15 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                 );
               },
   );
-        final result = await Connection.updateFile(newMaterial, widget.material.id, widget.groupId, widget.i);
+        final result = await Connection.updateFile(newMaterial, widget.material.id, widget.topicId, widget.i);
 
         if (result == 'success'){
           //revisar como hay que pasar el id 
-          // ObjectId id = ObjectId.fromHexString(topic.id);
-          //final topicId = widget.topic.id;
-          // Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>  TopicScreen(
-          //             topicId: '6657d49d7dca3271d92245a1')));
-        
+          
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
@@ -152,18 +154,16 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                 );
               },
   );
-        final result = await Connection.deleteFile(widget.material.id, widget.groupId, widget.i);
+        final result = await Connection.deleteFile(widget.material.id, widget.topicId, widget.i);
 
         if (result == 'success'){
           //revisar como hay que pasar el id 
           // ObjectId id = ObjectId.fromHexString(topic.id);
           //final topicId = widget.topic.id;
-          // Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>  TopicScreen(
-          //             topicId: '6657d49d7dca3271d92245a1')));
-        
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
@@ -207,11 +207,10 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                 // Boton de Regresar 
                 TextButton(
                     onPressed: () {
-                      // Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const TopicScreen(
-                      //             topicId: '6657d49d7dca3271d92245a1')));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
                     },
                     child: Row(
                       children: [

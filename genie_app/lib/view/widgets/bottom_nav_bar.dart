@@ -40,10 +40,11 @@ class _BottomNavBar extends State<BottomNavBar>{
         BottomNavigationBarItem(
           label: '',
           icon: Icon(Icons.home)
+          
         ),
         BottomNavigationBarItem(
           label: '',
-          icon: Icon(Icons.add)
+          icon: Icon(Icons.add, color: Colors.white,)
         )
       ],
 
