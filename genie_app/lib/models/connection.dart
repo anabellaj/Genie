@@ -552,6 +552,7 @@ class Connection {
       "name": group.name,
       "description": group.description,
       "creator": objIdString,
+      'labels': [],
       "forums": [],
       "members": [objIdString],
       "topics": [],

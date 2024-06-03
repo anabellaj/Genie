@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
+
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -51,6 +53,7 @@ final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      appBar: TopBar(),
       body:Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),

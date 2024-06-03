@@ -97,10 +97,8 @@ class _TopicScreenState extends State<TopicScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                print(snapshot.error);
                 //snackbar
                 ScaffoldMessenger.of(context).clearSnackBars();
-                //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
                 return Center(
                   child: Text('Ocurrió un error. ${snapshot.error.toString()}'),
                 );
