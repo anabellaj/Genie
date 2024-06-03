@@ -174,6 +174,9 @@ class _GroupViewState extends State<GroupView> {
                 ],
               ),
               const SizedBox(height: 12.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 0, bottom: 24, left: 10, right: 10),
+                child:Text(widget.group.description)),
 
               //boton crear nuevo tema
               Row(
