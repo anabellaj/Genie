@@ -348,7 +348,29 @@ class Controller {
     }
   }
 
+/*Study Material Controller */
+  static Future<File> generateFile(String id) async {
+    final pdfContent = await Connection.getFileById(id);
+    final tempDir = await getTemporaryDirectory();
+    File file = File('${tempDir.path}/data.pdf');
+    await file.writeAsBytes(pdfContent);
+    return file;
+  }
+
+  static Future<Topic> loadTopic(String id) async {
+    return await Connection.readTopic(id);
+  }
+  
+
+static void groupInsertion(String description, String name, User loggedUser) async{
+  Groups newGroup = Groups(description, name);
+  String insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup);
+  loggedUser.studyGroups.add(insertedStGroupId);
+  Controller.updateUserInfo(loggedUser);
+}
+
 /*Topic Controller */
+
   static Future<List<Widget>> getTopics(Groups groupId) async {
 
     List result = await Connection.getTopics(groupId.id.oid.toString());
@@ -366,22 +388,17 @@ class Controller {
     return topics;
   }
 
-/*Study Material Controller */
-  static Future<File> generateFile(String id) async {
-    final pdfContent = await Connection.getFileById(id);
-    final tempDir = await getTemporaryDirectory();
-    File file = File('${tempDir.path}/data.pdf');
-    await file.writeAsBytes(pdfContent);
-    return file;
-  }
+
+
+static Future<String> postTopic(Topic topic, Groups group, bool labelExists) async {
+  final response = await Connection.createTopic(topic, group, labelExists);
+  
+  return response;
 
   static Future<Topic> loadTopic(String id) async {
     return await Connection.readTopic(id);
   }
 
-  static Future<String> createNewTopic(Topic topic, Groups group)async{
-    return await Connection.createTopic(topic, group);
-  }
 
   static Future<StudyMaterial?> loadStudyMaterial(String id) async {
     return await Connection.getStudyMaterial(id);
@@ -407,3 +424,6 @@ class Controller {
     return Connection.addStudyMaterialToTopic(topic, study, pdfContent);
   }
 }
+}
+
+

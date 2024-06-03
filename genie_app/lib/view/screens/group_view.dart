@@ -179,9 +179,10 @@ class _GroupViewState extends State<GroupView> {
                 child:Text(widget.group.description)),
 
               //boton crear nuevo tema
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              isLoading? const Center(child: CircularProgressIndicator()):
+              Column(
                 children: [
+
                   Expanded(
                     child: 
                     isLoading? 
@@ -206,10 +207,13 @@ class _GroupViewState extends State<GroupView> {
                 topics.isEmpty?
                 const Center(child: Text('No hay temas disponibles', style: TextStyle(color: Color(0xffB4B6BF)),),):
                 Column(
+
                   children: [
                     ...topics
                   ],
-                )
+                )],
+              ),
+              
               // GENERADO PARA CADA TEMA
               
             ],

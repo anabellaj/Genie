@@ -177,7 +177,8 @@ class Connection {
     return topic;
   }
 
-  static Future<String> createTopic(Topic topic, Groups group) async {
+  static Future<String> createTopic(
+      Topic topic, Groups group, bool labelExists) async {
     try {
       final db = await Db.create(
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
@@ -185,8 +186,16 @@ class Connection {
       var topicCollection = db.collection('topic');
       WriteResult insert = await topicCollection.insertOne(topic.toJson());
       var groupCollection = db.collection('studyGroup');
-      await groupCollection.updateOne(where.eq('_id', group.id),
-          ModifierBuilder().push('topics', insert.id));
+      if (labelExists) {
+        await groupCollection.updateOne(where.eq('_id', group.id),
+            ModifierBuilder().push('topics', insert.id));
+      } else {
+        await groupCollection.updateOne(
+            where.eq('_id', group.id),
+            ModifierBuilder()
+                .push('topics', insert.id)
+                .push('labels', topic.label));
+      }
 
       db.close();
       return 'success';
@@ -249,18 +258,18 @@ class Connection {
     final response =
         await studyMaterialCollection.findOne(where.eq('_id', convertedId));
 
-    if (response != null){
+    if (response != null) {
       StudyMaterial studyMaterial = StudyMaterial(
-      id: response['id'].toString(),
-      title: response['title'],
-      description: response['description'],
-    );  return studyMaterial;
-    }  else{
+        id: response['id'].toString(),
+        title: response['title'],
+        description: response['description'],
+      );
+      return studyMaterial;
+    } else {
       return null;
     }
   }
 
-  
   /*Topic Queries */
   static Future updateTopic(Topic topic, String previous) async {
     final db = await Db.create(
@@ -295,7 +304,8 @@ class Connection {
     }
   }
 
-  static Future updateFile(StudyMaterial material, String id, String idTopic, int i) async {
+  static Future updateFile(
+      StudyMaterial material, String id, String idTopic, int i) async {
     ObjectId convertedId = ObjectId.fromHexString(id);
     ObjectId topicId = ObjectId.fromHexString(idTopic);
 
@@ -307,19 +317,21 @@ class Connection {
     try {
       await materialCollection.update(
         where.eq('_id', convertedId),
-        ModifierBuilder().set('title', material.title).set('description', material.description),
+        ModifierBuilder()
+            .set('title', material.title)
+            .set('description', material.description),
       );
       final topic = await topicCollection.findOne(where.eq('_id', topicId));
-      if (topic != null){
-            List materials = topic['studyMaterial'];
-            materials[i]['title'] = material.title;
-            materials[i]['description'] = material.description;
-            await topicCollection.update(
-              where.eq('_id', topicId),
-              ModifierBuilder().set('studyMaterial', materials),
+      if (topic != null) {
+        List materials = topic['studyMaterial'];
+        materials[i]['title'] = material.title;
+        materials[i]['description'] = material.description;
+        await topicCollection.update(
+          where.eq('_id', topicId),
+          ModifierBuilder().set('studyMaterial', materials),
         );
       }
-    
+
       await db.close();
       return 'success';
     } on Exception catch (e) {
@@ -327,7 +339,7 @@ class Connection {
     }
   }
 
-    static Future deleteFile(String id, String idTopic, int i) async {
+  static Future deleteFile(String id, String idTopic, int i) async {
     ObjectId convertedId = ObjectId.fromHexString(id);
     ObjectId topicId = ObjectId.fromHexString(idTopic);
 
@@ -337,18 +349,15 @@ class Connection {
     final materialCollection = db.collection('studyMaterial');
     final topicCollection = db.collection('topic');
     try {
-      await materialCollection.remove(
-        where.eq('_id', convertedId)
-      );
+      await materialCollection.remove(where.eq('_id', convertedId));
       final topic = await topicCollection.findOne(where.eq('_id', topicId));
-      if (topic != null){
-            List materials = topic['studyMaterial'];
-            materials.removeAt(i);
-            await topicCollection.update(
-              where.eq('_id', topicId),
-              ModifierBuilder().set('studyMaterial', materials),
-            );
-      
+      if (topic != null) {
+        List materials = topic['studyMaterial'];
+        materials.removeAt(i);
+        await topicCollection.update(
+          where.eq('_id', topicId),
+          ModifierBuilder().set('studyMaterial', materials),
+        );
       }
       await db.close();
       return 'success';
@@ -593,7 +602,6 @@ class Connection {
     db.close();
   }
 
-
   static Future updateLabels(String groupId, List<dynamic> labels) async {
     ObjectId convertedId = ObjectId.fromHexString(groupId);
 
@@ -605,16 +613,12 @@ class Connection {
       await groupCollection.update(
         where.eq('_id', convertedId),
         ModifierBuilder().set('labels', labels),
-      );  
-      
+      );
+
       await db.close();
       return 'success';
-
     } on Exception catch (e) {
       return e;
     }
   }
-
-
-
 }
