@@ -1,15 +1,9 @@
-
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-
 
 class StudyMaterialViewer extends StatefulWidget{
 

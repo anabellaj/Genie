@@ -396,6 +396,12 @@ static Future<List<Widget>> getTopics(Groups groupId) async {
     return topics;
   }
 
+
+static Future<String> postTopic(Topic topic, Groups group, bool labelExists) async {
+  final response = await Connection.createTopic(topic, group, labelExists);
+  
+  return response;
+}
 }
 
 
