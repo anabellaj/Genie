@@ -64,15 +64,25 @@ class _TopicPreviewState extends State<TopicPreview> {
                         widget.title,
                         style: genieThemeDataDemo.textTheme.titleMedium,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Wrap(
                         children: [
-                          Text(widget.labels,
+                          Container(
+                    
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: genieThemeDataDemo.colorScheme.secondary,
+                          borderRadius: BorderRadius.circular(50),
+                          
+                        ),
+                        child: Text(widget.labels,
                               overflow: TextOverflow.ellipsis,
                               style:
-                                  genieThemeDataDemo.textTheme.displayMedium),
+                                  genieThemeDataDemo.textTheme.displayMedium!.copyWith(color: genieThemeDataDemo.colorScheme.onSecondary),
+                      )
+                      )
+                      
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),

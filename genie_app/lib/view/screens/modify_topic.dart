@@ -20,7 +20,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
   final otherLabelController = TextEditingController();
   late List<String> evaluationLabels;
   var isLoading = true;
-  //late String selectedOption;
+  late String selectedOption;
 
   @override
   void initState() {

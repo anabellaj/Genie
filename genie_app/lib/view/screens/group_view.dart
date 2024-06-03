@@ -39,7 +39,7 @@ class GroupView extends StatefulWidget {
 
 class _GroupViewState extends State<GroupView> {
   late bool isLoading=true;
-  late List<Widget> topics;
+  late List<Widget> topics =[];
 
   void getTopics()async{
     
@@ -179,8 +179,7 @@ class _GroupViewState extends State<GroupView> {
                 child:Text(widget.group.description)),
 
               //boton crear nuevo tema
-              isLoading? const Center(child: CircularProgressIndicator()):
-              Column(
+              Row(
                 children: [
 
                   Expanded(
@@ -202,11 +201,12 @@ class _GroupViewState extends State<GroupView> {
                 ],
               ),
               const SizedBox(height: 16.0),
-              
-              isLoading? const Center(child: CircularProgressIndicator(),):
+              isLoading?
+              const Center(child: CircularProgressIndicator(),):
                 topics.isEmpty?
                 const Center(child: Text('No hay temas disponibles', style: TextStyle(color: Color(0xffB4B6BF)),),):
                 Column(
+                  mainAxisSize: MainAxisSize.max,
 
                   children: [
                     ...topics
