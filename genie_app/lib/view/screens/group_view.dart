@@ -216,10 +216,10 @@ class _GroupViewState extends State<GroupView> {
               
               // GENERADO PARA CADA TEMA
               
-            ],
+            
           ),
         ),
-      ),
+      
     bottomNavigationBar:BottomNavBar(),
     );
   }
