@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/study_material.dart';
+import 'package:genie_app/models/group.dart';
+import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/viewModel/controller.dart';
+
 
 class ModifyStudyMaterial extends StatefulWidget {
-  const ModifyStudyMaterial({super.key, required this.material, required this.groupId, required this.i});
+  const ModifyStudyMaterial({super.key, required this.material, required this.topicId, required this.i, required this.group});
   final StudyMaterial material;
-  final String groupId;
-  final int i; 
+  final String topicId;
+  final int i;  
+  final Groups group;
 
   @override
   State<ModifyStudyMaterial> createState() => _ModifyStudyMaterial();
@@ -29,7 +33,7 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
   }
 
    Future<StudyMaterial?> _loadMaterial() async {
-    return Connection.getStudyMaterial(widget.material.id);
+    return Controller.loadStudyMaterial(widget.material.id);
   }
 
   void modifyFile () async {
@@ -51,17 +55,17 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmar'),
-          content: Text('¿Desea modificar el archivo?'),
+          title: const Text('Confirmar'),
+          content: const Text('¿Desea modificar el archivo?'),
           actions: [
             ElevatedButton(
-              child: Text('Aceptar'),
+              child: const Text('Aceptar'),
               onPressed: () {
                 Navigator.of(context).pop(true); // Devuelve false cuando se cancela
               },
             ),
             ElevatedButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop(false); // Devuelve true cuando se acepta
               },
@@ -86,23 +90,20 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                 );
               },
   );
-        final result = await Connection.updateFile(newMaterial, widget.material.id, widget.groupId, widget.i);
+        final result = await Controller.updateFile(newMaterial, widget.material.id, widget.topicId, widget.i);
 
         if (result == 'success'){
           //revisar como hay que pasar el id 
-          // ObjectId id = ObjectId.fromHexString(topic.id);
-          //final topicId = widget.topic.id;
-          // Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>  TopicScreen(
-          //             topicId: '6657d49d7dca3271d92245a1')));
-        
+          
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
+            .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
         }
       } else {
         return;
@@ -117,17 +118,17 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmar'),
-          content: Text('¿Desea eliminar el archivo?'),
+          title: const Text('Confirmar'),
+          content:const  Text('¿Desea eliminar el archivo?'),
           actions: [
             ElevatedButton(
-              child: Text('Aceptar'),
+              child: const Text('Aceptar'),
               onPressed: () {
                 Navigator.of(context).pop(true); // Devuelve false cuando se cancela
               },
             ),
             ElevatedButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop(false); // Devuelve true cuando se acepta
               },
@@ -152,23 +153,21 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                 );
               },
   );
-        final result = await Connection.deleteFile(widget.material.id, widget.groupId, widget.i);
+        final result = await Controller.deleteFile(widget.material.id, widget.topicId, widget.i);
 
         if (result == 'success'){
           //revisar como hay que pasar el id 
           // ObjectId id = ObjectId.fromHexString(topic.id);
           //final topicId = widget.topic.id;
-          // Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>  TopicScreen(
-          //             topicId: '6657d49d7dca3271d92245a1')));
-        
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
+            .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
         }
       } else {
         return;
@@ -194,7 +193,7 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
               return const Center(
-                child: Text('No llego nada'),
+                child: Text('Ha ocurrido un error'),
               );
             }
           return SingleChildScrollView(
@@ -207,11 +206,10 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                 // Boton de Regresar 
                 TextButton(
                     onPressed: () {
-                      // Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const TopicScreen(
-                      //             topicId: '6657d49d7dca3271d92245a1')));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
                     },
                     child: Row(
                       children: [

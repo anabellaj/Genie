@@ -9,6 +9,7 @@ class CodePage extends StatelessWidget {
   final Groups group;
   const CodePage({super.key, required this.group});
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopBar(),

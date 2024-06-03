@@ -60,7 +60,7 @@ class _TopicScreenState extends State<TopicScreen> {
     // ignore: use_build_context_synchronously
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            StudyMaterialViewer(filePath: file.path, title: title)));
+            StudyMaterialViewer(filePath: file.path, title: title, fileId: id,)));
   }
 
   Future<Topic> _loadTopic() async {
@@ -97,10 +97,8 @@ class _TopicScreenState extends State<TopicScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                print(snapshot.error);
                 //snackbar
                 ScaffoldMessenger.of(context).clearSnackBars();
-                //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
                 return Center(
                   child: Text('Ocurrió un error. ${snapshot.error.toString()}'),
                 );
@@ -158,7 +156,7 @@ class _TopicScreenState extends State<TopicScreen> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
                           decoration: BoxDecoration(
-                              color: genieThemeDataDemo.colorScheme.secondary,
+                              color: snapshot.data!.label.isEmpty ? Colors.white : genieThemeDataDemo.colorScheme.secondary,
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(20))),
                           child: Text(
@@ -192,6 +190,7 @@ class _TopicScreenState extends State<TopicScreen> {
                             createPdfFile(id, title);
                           },
                           topicId: snapshot.data!.id,
+                          group: widget.group,
                         )
                       ],
                     ),

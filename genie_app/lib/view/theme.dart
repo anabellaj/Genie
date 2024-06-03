@@ -60,7 +60,7 @@ final ThemeData genieThemeDataDemo = ThemeData(
       fontSize: 20.0 ),
     bodySmall: TextStyle(
       fontSize: 14
-    )
+    ),
   )),
   canvasColor:const Color(0xffFFFCFF),
   cardColor: const Color(0xffFFFCFF),

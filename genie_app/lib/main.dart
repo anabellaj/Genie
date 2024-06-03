@@ -9,6 +9,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: const MyApp(),
     theme: genieThemeDataDemo,
   ));

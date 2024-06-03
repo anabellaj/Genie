@@ -21,10 +21,10 @@ class ForumsListPage extends StatefulWidget{
 
 class _ForumsListPageState extends State<ForumsListPage>{
   late bool isLoading=true;
-  late Widget previews;
+  late List<Widget> previews;
 
   void getForums()async {
-    Widget p = await Controller.getForums(widget.groupId);
+    List<Widget> p = await Controller.getForums(widget.groupId);
     setState(() {
       previews= p;
       isLoading=false;
@@ -107,7 +107,15 @@ class _ForumsListPageState extends State<ForumsListPage>{
             ),
            
                     Expanded(
-                      child:previews),
+                      child:
+                      previews.isEmpty?
+                      const Center(child: Text('No hay foros disponibles', style: TextStyle(color: Color(0xffB4B6BF)),),):
+                      ListView(
+                        children: [
+                          ...previews
+                        ],
+                      )
+                      ),
 
           ],
         ),

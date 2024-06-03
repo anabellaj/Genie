@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/view/screens/modify_study_material.dart';
 
+
 class TopicCards extends StatelessWidget {
   const TopicCards(
-      {super.key, required this.studyMaterial, required this.viewFile, required this.topicId});
+      {super.key, required this.studyMaterial, required this.viewFile, required this.topicId, required this.group});
 
   final String topicId; 
+  final Groups group;
   final List<StudyMaterial> studyMaterial;
   final Function(String id, String title) viewFile;
 
@@ -38,10 +41,10 @@ class TopicCards extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) =>  ModifyStudyMaterial(
                                       material: studyMaterial[i],
-                                      groupId: topicId,
+                                      topicId: topicId,
                                       i: i,
+                                      group: group,
                                     )));
-
                             }, 
                             icon: const Icon(Icons.more_horiz_outlined))
                           ])
