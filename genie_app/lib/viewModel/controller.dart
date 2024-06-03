@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/group.dart';
+import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/join_or_create.dart';
@@ -73,7 +75,7 @@ class Controller {
     }
   }
 
-  static Future<Widget> getUserGroups() async {
+  static Future<List<Widget>> getUserGroups() async {
     User loggedUser = await Controller.getUserInfo();
     List stGroups = loggedUser.studyGroups;
     List<Widget> obtainedGroups = [];
@@ -88,9 +90,7 @@ class Controller {
       }
     }
 
-    return ListView(
-      children: obtainedGroups,
-    );
+    return obtainedGroups;
   }
 
   /*User Controller */
@@ -136,10 +136,7 @@ class Controller {
     User loggedUser = await Controller.getUserInfo();
     List logUser = await Connection.checkUser(loggedUser);
     String logUserId = logUser[0]["_id"].oid;
-    print(logUserId);
-    print(group.admins);
     bool res = group.admins.contains(logUserId);
-    print(res);
     return res;
   }
 
@@ -215,7 +212,7 @@ class Controller {
     }
   }
 
-  static Future<Widget> getForums(Groups groupId) async {
+  static Future<List<Widget>> getForums(Groups groupId) async {
     List forums = await Connection.returnForums(groupId.id.oid.toString());
 
     List<Widget> previews = [];
@@ -233,9 +230,7 @@ class Controller {
       ));
     }
 
-    return ListView(
-      children: previews,
-    );
+    return previews;
   }
 
   static Future<List<ForumReplyShow>> getReplys(String forumId) async {
@@ -306,7 +301,6 @@ class Controller {
       await Connection.removeForum(forumId, "66552c763656b63721956447");
       return 'success';
     } catch (e) {
-      print(e);
       return 'error';
     }
   }
@@ -317,7 +311,6 @@ class Controller {
 
       return 'success';
     } catch (e) {
-      print(e);
       return 'error';
     }
   }
@@ -334,7 +327,7 @@ class Controller {
           creator: forum.creator,
           creator_id: forum.creator_id);
     } catch (e) {
-      return ForumView(
+      return const ForumView(
           date: "",
           description: "",
           id: "",
@@ -357,14 +350,12 @@ class Controller {
 
 /*Topic Controller */
   static Future<List<Widget>> getTopics(Groups groupId) async {
-    print('hola');
 
     List result = await Connection.getTopics(groupId.id.oid.toString());
     List<Widget> topics = [];
 
     for (var t in result) {
       Topic top = Topic.forPreview(t);
-      print(top.id);
       topics.add(TopicPreview(
         title: top.name,
         labels: top.label,
@@ -386,5 +377,33 @@ class Controller {
 
   static Future<Topic> loadTopic(String id) async {
     return await Connection.readTopic(id);
+  }
+
+  static Future<String> createNewTopic(Topic topic, Groups group)async{
+    return await Connection.createTopic(topic, group);
+  }
+
+  static Future<StudyMaterial?> loadStudyMaterial(String id) async {
+    return await Connection.getStudyMaterial(id);
+  }
+
+  static Future<dynamic> updateFile(StudyMaterial studymaterial, String id, String topicId,int i)async{
+    return Connection.updateFile(studymaterial, id, topicId, i);
+  }
+
+  static Future<dynamic> deleteFile(String id, String topicId, int i)async{
+    return Connection.deleteFile(id, topicId, i);
+  }
+
+  static Future<dynamic> updateTopic(Topic topic, String name)async{
+    return Connection.updateTopic(topic, name);
+  }
+
+  static Future<dynamic> deleteTopic(String topicId)async{
+    return Connection.deleteTopic(topicId);
+  }
+
+  static Future<String> addNewMaterial(Topic topic, StudyMaterial study, Uint8List pdfContent){
+    return Connection.addStudyMaterialToTopic(topic, study, pdfContent);
   }
 }

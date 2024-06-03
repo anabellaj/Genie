@@ -3,12 +3,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
+import '../theme.dart';
+
 
 
 class StudyMaterialViewer extends StatefulWidget{
@@ -43,7 +43,7 @@ class StudyMaterialViewer extends StatefulWidget{
 //   }
 // }
 
-  Future<void> downloadPDF(String id) async {
+  Future<String> downloadPDF(String id) async {
     try {
       File pdfFile = await Controller.generateFile(id);
 
@@ -59,13 +59,12 @@ class StudyMaterialViewer extends StatefulWidget{
 
       // Delete the original file
       await pdfFile.delete();
-
-      print (newFile.path);
+      return 'success';
       } else {
-        print('Downloads directory not found.');
+        return 'error';
       }
     } catch (e) {
-      print('Error saving file: $e');
+      return 'error';
     }
   }
 
@@ -77,15 +76,35 @@ class _StudyMaterialViewer extends State<StudyMaterialViewer>{
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-          icon: Icon(Icons.arrow_back, color:Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back, color:Colors.white),
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              Navigator.of(context).pop();
+            } 
           ), 
           title: Text(widget.title, style: TextStyle(fontSize: 18),),
           actions: [
          IconButton(
-          icon: Icon(Icons.download, color: Colors.white),
-          onPressed: () {
-            downloadPDF(widget.fileId);
+          icon: const Icon(Icons.download, color: Colors.white),
+          onPressed: ()async {
+            String res = await downloadPDF(widget.fileId);
+            if(res=='success'){
+              ScaffoldMessenger.of(context).showMaterialBanner(
+                MaterialBanner(
+                                        backgroundColor: genieThemeDataDemo.colorScheme.secondary,
+                                        contentTextStyle: TextStyle(
+                                          color: genieThemeDataDemo.colorScheme.onSecondary,
+                                          fontSize: 12
+                                        ),
+                                        content: const Text("Cambios guardados con éxito"), 
+                                        actions: [IconButton(
+                                          onPressed: ()=>
+                                            ScaffoldMessenger.of(context).hideCurrentMaterialBanner(), 
+                                            icon: Icon(Icons.check, color: genieThemeDataDemo.colorScheme.onSecondary,))])
+              );
+            }else{
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: const Text('Hubo un error')));
+            }
           },
         ),
       ],

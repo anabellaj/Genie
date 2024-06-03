@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+import 'package:genie_app/viewModel/controller.dart';
 
 class CreateTopicScreen extends StatefulWidget {
   const CreateTopicScreen({super.key, required this.group});
@@ -25,13 +25,11 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
   late String selectedOption;
 
   void _saveTopic() async {
-    print('Entre');
     if (_titleController.text.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor llene todos los campos'))); 
       return;
     }
-    print('PASE 1');
     if (selectedOption == 'Agregar nueva etiqueta') {
       for (var label in evaluationLabels) {
         if (label.toUpperCase() == otherLabelController.text) {
@@ -41,7 +39,6 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
         }
       }
     }
-    print('PASE 2');
     final topic = Topic(
         name: _titleController.text,
         label: otherLabelController.text.isEmpty? "":otherLabelController.text,
@@ -49,8 +46,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     setState(() {
       isLoading = true;
     });
-    print(topic);
-    final result = await Connection.createTopic(topic, widget.group);
+    final result = await Controller.createNewTopic(topic, widget.group);
     setState(() {
       isLoading = false;
     });
@@ -61,7 +57,6 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Ha ocurrido un error, por favor intenta de nuevo más tarde.')));
     }
-    print(result);
   }
 
   @override

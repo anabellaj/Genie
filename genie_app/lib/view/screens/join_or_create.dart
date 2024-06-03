@@ -8,13 +8,14 @@ import '../theme.dart';
 class JoinOrCreate extends StatelessWidget {
   const JoinOrCreate({super.key});
 
+  @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: TopBar(),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
                             height: MediaQuery.of(context).size.height/2.3,
@@ -33,16 +34,18 @@ class JoinOrCreate extends StatelessWidget {
                                     ],
                                     ),
                                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                           
                             children: [
                                 Text('Únete o crea un grupo',
                                 style: Theme.of(context).primaryTextTheme.headlineLarge,
                                 textAlign: TextAlign.center),
-                                FilledButton(
+                        Container(
+                          margin: const EdgeInsets.only(top:24),
+                          child: FilledButton(
                                   onPressed: (){
                                     Navigator.pushReplacement(context, 
                             MaterialPageRoute(builder: (context)=>const CreateGroupPage()));
@@ -50,14 +53,17 @@ class JoinOrCreate extends StatelessWidget {
                           style: mainButtonStyle,
                           child: const Text(
                           'Crear un grupo'
-                        )),Container(
+                        )),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 10),
                           
                           child: FilledButton(
                                     onPressed: (){
                                       Navigator.pushReplacement(context, 
                               MaterialPageRoute(builder: (context)=>const JoinGroupPage()));
                                     },
-                            style: mainButtonStyle,
+                            style: secondaryButtonStyle,
                             child: const Text(
                             'Unirse a un grupo'
                           )),

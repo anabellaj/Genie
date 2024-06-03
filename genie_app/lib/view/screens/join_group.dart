@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/home.dart';
+import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -27,7 +28,7 @@ class _JoinGroupState extends State<JoinGroupPage> {
         appBar: TopBar(),
         body: Center(
           child: Padding(
-            padding: EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12.0),
             child: isLoading? 
           const Center(child: CircularProgressIndicator())
           :Column(
@@ -36,7 +37,7 @@ class _JoinGroupState extends State<JoinGroupPage> {
                             onPressed: () {
                                 ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                                 Navigator.pushReplacement(context, 
-                                MaterialPageRoute(builder: (context)=>const HomeScreen())
+                                MaterialPageRoute(builder: (context)=>const JoinOrCreate())
                                 );  
                               },
                               child:Row(
@@ -132,17 +133,14 @@ class _JoinGroupState extends State<JoinGroupPage> {
                               isLoading = true;
                             }),
                             answer = await Controller.updateUsersGroupsAndMembers(code),
-                            print(answer),
                             if(answer == "success"){
                               
                             Navigator.pushReplacement(context, 
                             MaterialPageRoute(builder: (context)=>const HomeScreen()))
                             } else if(answer == "no success"){
-                              print("no existe el grupo"),
                               ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Código inválido')))
                             } else {
-                              print("ya estás en el grupo"),
                               ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Ya estás añadido al grupo')))
                             },

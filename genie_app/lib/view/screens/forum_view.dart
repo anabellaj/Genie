@@ -73,6 +73,7 @@ class _ForumView extends State<ForumView>{
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  isLoading? SizedBox.shrink():
                   TextButton(
                     
                     onPressed: () {
@@ -134,6 +135,8 @@ class _ForumView extends State<ForumView>{
         Expanded(
           child: isLoading?
             const Center( child:CircularProgressIndicator()):
+            replys.isEmpty?
+            const Center(child: Text('No hay respuestas al foro', style: TextStyle(color: Color(0xffB4B6BF)),),):
             ListView(
               children: [
                 ...replys

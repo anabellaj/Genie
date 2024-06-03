@@ -14,8 +14,8 @@ class AlignedText extends StatelessWidget {
   final String text;
   final TextStyle? style;
 
-  const AlignedText({Key? key, required this.text, this.style})
-      : super(key: key);
+  const AlignedText({super.key, required this.text, this.style});
+      
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +75,7 @@ class _GroupViewState extends State<GroupView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // boton de regresar
+              isLoading? SizedBox.shrink():
               TextButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
@@ -106,6 +107,8 @@ class _GroupViewState extends State<GroupView> {
                     style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
                     textAlign: TextAlign.start,
                   ),
+                  isLoading? 
+                  SizedBox.shrink():
                   PopupMenuButton(
                     child: const Icon(Icons.more_horiz_outlined),
                     
@@ -150,6 +153,8 @@ class _GroupViewState extends State<GroupView> {
                   ]),
 
                   //boton discutir
+                  isLoading? 
+                  SizedBox.shrink():
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
@@ -162,7 +167,7 @@ class _GroupViewState extends State<GroupView> {
                       backgroundColor: genieThemeDataDemo.colorScheme.secondary,
                       foregroundColor: genieThemeDataDemo.colorScheme.onPrimary,
                       textStyle: genieThemeDataDemo.textTheme.bodyMedium,
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
                     ),
                     child: const Text('Discutir'),
                   )
@@ -175,7 +180,10 @@ class _GroupViewState extends State<GroupView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: TextButton(
+                    child: 
+                    isLoading? 
+                    SizedBox.shrink():
+                    TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(
                             context,
@@ -190,14 +198,17 @@ class _GroupViewState extends State<GroupView> {
                 ],
               ),
               const SizedBox(height: 16.0),
+              
               isLoading? const Center(child: CircularProgressIndicator(),):
-               Column(
+                topics.isEmpty?
+                const Center(child: Text('No hay temas disponibles', style: TextStyle(color: Color(0xffB4B6BF)),),):
+                Column(
                   children: [
                     ...topics
                   ],
                 )
               // GENERADO PARA CADA TEMA
-
+              
             ],
           ),
         ),
