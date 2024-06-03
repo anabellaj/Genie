@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/screens/login.dart';
-import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/authentication.dart';
 import 'package:genie_app/viewModel/validator.dart';
 import '../theme.dart';

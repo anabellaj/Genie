@@ -394,10 +394,7 @@ static Future<String> postTopic(Topic topic, Groups group, bool labelExists) asy
   final response = await Connection.createTopic(topic, group, labelExists);
   
   return response;
-
-  static Future<Topic> loadTopic(String id) async {
-    return await Connection.readTopic(id);
-  }
+}
 
 
   static Future<StudyMaterial?> loadStudyMaterial(String id) async {
@@ -423,7 +420,6 @@ static Future<String> postTopic(Topic topic, Groups group, bool labelExists) asy
   static Future<String> addNewMaterial(Topic topic, StudyMaterial study, Uint8List pdfContent){
     return Connection.addStudyMaterialToTopic(topic, study, pdfContent);
   }
-}
 }
 
 
