@@ -259,6 +259,8 @@ class Connection {
       return null;
     }
   }
+
+  
   /*Topic Queries */
   static Future updateTopic(Topic topic, String previous) async {
     final db = await Db.create(
@@ -550,6 +552,7 @@ class Connection {
       "name": group.name,
       "description": group.description,
       "creator": objIdString,
+      'labels': [],
       "forums": [],
       "members": [objIdString],
       "topics": [],
@@ -589,4 +592,29 @@ class Connection {
     groupCollection.updateOne(where.eq("_id", objId), update);
     db.close();
   }
+
+
+  static Future updateLabels(String groupId, List<dynamic> labels) async {
+    ObjectId convertedId = ObjectId.fromHexString(groupId);
+
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final groupCollection = db.collection('studyGroup');
+    try {
+      await groupCollection.update(
+        where.eq('_id', convertedId),
+        ModifierBuilder().set('labels', labels),
+      );  
+      
+      await db.close();
+      return 'success';
+
+    } on Exception catch (e) {
+      return e;
+    }
+  }
+
+
+
 }
