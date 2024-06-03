@@ -27,6 +27,7 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
 
   void _saveTopic() async {
     labelExists = true;
+    var label = selectedOption;
     print('Entre');
     if (_titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -41,18 +42,20 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
         return;
       }
       for (var label in evaluationLabels) {
-        if (label.toUpperCase() == otherLabelController.text) {
+        if (label.toUpperCase() == otherLabelController.text.toUpperCase()) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('La etiqueta ingresada ya existe. ')));
           return;
         }
       }
+      label = otherLabelController.text;
       labelExists = false;
     }
+    
     print('PASE 2');
     final topic = Topic(
         name: _titleController.text,
-        label: otherLabelController.text,
+        label: label,
         files: []);
     setState(() {
       isLoading = true;
