@@ -60,7 +60,7 @@ class _TopicScreenState extends State<TopicScreen> {
     // ignore: use_build_context_synchronously
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            StudyMaterialViewer(filePath: file.path, title: title)));
+            StudyMaterialViewer(filePath: file.path, title: title, fileId: id,)));
   }
 
   Future<Topic> _loadTopic() async {
