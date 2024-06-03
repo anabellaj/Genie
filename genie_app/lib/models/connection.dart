@@ -127,7 +127,7 @@ class Connection {
       "studyGroups": [],
     });
     await db.close();
-    return result.id.iod.toString();
+    return result.id.oid.toString();
   }
 
   static Future updateUser(User user) async {

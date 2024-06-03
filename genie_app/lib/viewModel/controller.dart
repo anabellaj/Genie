@@ -421,5 +421,3 @@ static Future<String> postTopic(Topic topic, Groups group, bool labelExists) asy
     return Connection.addStudyMaterialToTopic(topic, study, pdfContent);
   }
 }
-
-

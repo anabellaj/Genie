@@ -37,8 +37,8 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-  late bool isLoading = true;
-  late List<Widget> topics;
+  late bool isLoading=true;
+  late List<Widget> topics =[];
 
   void getTopics() async {
     List<Widget> r = await Controller.getTopics(widget.group);

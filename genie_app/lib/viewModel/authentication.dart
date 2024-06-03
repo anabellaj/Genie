@@ -28,6 +28,7 @@ class Authenticate{
         return "user_exists";
       }
     } catch (e) {
+      print(e);
       return "error";
     }
   }
