@@ -14,8 +14,8 @@ class AlignedText extends StatelessWidget {
   final String text;
   final TextStyle? style;
 
-  const AlignedText({super.key, required this.text, this.style});
-      
+  const AlignedText({Key? key, required this.text, this.style})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,6 @@ class AlignedText extends StatelessWidget {
 }
 
 class GroupView extends StatefulWidget {
-  
   final Groups group;
   const GroupView({super.key, required this.group});
 
@@ -38,19 +37,17 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-  late bool isLoading=true;
+  late bool isLoading = true;
   late List<Widget> topics;
 
-  void getTopics()async{
-    
+  void getTopics() async {
     List<Widget> r = await Controller.getTopics(widget.group);
-    if(mounted){
-    setState(() {
-      topics = r;
-      isLoading= false;
-    });
+    if (mounted) {
+      setState(() {
+        topics = r;
+        isLoading = false;
+      });
     }
-
   }
 
   @override
@@ -58,9 +55,7 @@ class _GroupViewState extends State<GroupView> {
     super.initState();
 
     getTopics();
-
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +70,6 @@ class _GroupViewState extends State<GroupView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // boton de regresar
-              isLoading? SizedBox.shrink():
               TextButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
@@ -102,28 +96,25 @@ class _GroupViewState extends State<GroupView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.group.name, 
+                    widget.group.name,
                     overflow: TextOverflow.ellipsis,
                     style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
                     textAlign: TextAlign.start,
                   ),
-                  isLoading? 
-                  SizedBox.shrink():
                   PopupMenuButton(
                     child: const Icon(Icons.more_horiz_outlined),
-                    
                     itemBuilder: (context) => [
                       PopupMenuItem(
                         value: "Modificar Grupo",
                         child: const Text("Modificar Grupo"),
                         onTap: () {
                           Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ModifyGroupPage(currentGroup: widget.group)));
-                        },),
-                        
-                        
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ModifyGroupPage(
+                                      currentGroup: widget.group)));
+                        },
+                      ),
                     ],
                   ),
                 ],
@@ -136,7 +127,8 @@ class _GroupViewState extends State<GroupView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Text("Miembros: ${widget.group.members.length}", // SACAR DE LA BASE DE DATOS
+                    Text(
+                        "Miembros: ${widget.group.members.length}", // SACAR DE LA BASE DE DATOS
                         style: genieThemeDataDemo.textTheme.displayMedium),
                     TextButton(
                       onPressed: () {
@@ -145,7 +137,9 @@ class _GroupViewState extends State<GroupView> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MembersView(group: widget.group))); //CAMBIAR ROUTE A members_view
+                                builder: (context) => MembersView(
+                                    group: widget
+                                        .group))); //CAMBIAR ROUTE A members_view
                       },
                       style: linkButtonStyle,
                       child: const AlignedText(text: 'Ver miembros'),
@@ -153,69 +147,65 @@ class _GroupViewState extends State<GroupView> {
                   ]),
 
                   //boton discutir
-                  isLoading? 
-                  SizedBox.shrink():
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                   ForumsListPage(groupId: widget.group,))); //CAMBIAR ROUTE A foro
+                              builder: (context) => ForumsListPage(
+                                    groupId: widget.group,
+                                  ))); //CAMBIAR ROUTE A foro
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: genieThemeDataDemo.colorScheme.secondary,
                       foregroundColor: genieThemeDataDemo.colorScheme.onPrimary,
                       textStyle: genieThemeDataDemo.textTheme.bodyMedium,
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                     ),
                     child: const Text('Discutir'),
                   )
                 ],
               ),
               const SizedBox(height: 12.0),
-              Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 24, left: 10, right: 10),
-                child:Text(widget.group.description)),
 
               //boton crear nuevo tema
-              isLoading? const Center(child: CircularProgressIndicator()):
-              Column(
-                children: [
-
-                  Expanded(
-                    child: 
-                    isLoading? 
-                    SizedBox.shrink():
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                     CreateTopicScreen(group: widget.group,))); //CAMBIAR ROUTE A create_topic
-                      },
-                      style: mainButtonStyle,
-                      child: const Text('Crear nuevo tema'),
+              isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CreateTopicScreen(
+                                                group: widget.group,
+                                              ))); //CAMBIAR ROUTE A create_topic
+                                },
+                                style: mainButtonStyle,
+                                child: const Text('Crear nuevo tema'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16.0),
+                        Column(
+                          children: [...topics],
+                        )
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-              
-              isLoading? const Center(child: CircularProgressIndicator(),):
-                topics.isEmpty?
-                const Center(child: Text('No hay temas disponibles', style: TextStyle(color: Color(0xffB4B6BF)),),):
-                Column(
 
-                  children: [
-                    ...topics
-                  ],
-                )],
-              ),
+              // GENERADO PARA CADA TEMA
+            ],
           ),
         ),
-    bottomNavigationBar:BottomNavBar(),
-      );
+      ),
+      bottomNavigationBar: BottomNavBar(),
+    );
   }
 }

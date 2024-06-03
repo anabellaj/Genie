@@ -177,33 +177,6 @@ class Connection {
     return topic;
   }
 
-  static Future<String> createTopic(
-      Topic topic, Groups group, bool labelExists) async {
-    try {
-      final db = await Db.create(
-          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-      await db.open();
-      var topicCollection = db.collection('topic');
-      WriteResult insert = await topicCollection.insertOne(topic.toJson());
-      var groupCollection = db.collection('studyGroup');
-      if (labelExists) {
-        await groupCollection.updateOne(where.eq('_id', group.id),
-            ModifierBuilder().push('topics', insert.id));
-      } else {
-        await groupCollection.updateOne(
-            where.eq('_id', group.id),
-            ModifierBuilder()
-                .push('topics', insert.id)
-                .push('labels', topic.label));
-      }
-
-      db.close();
-      return 'success';
-    } on Exception catch (e) {
-      return 'Ocurrio un error $e';
-    }
-  }
-
   /*StudyMaterials queries*/
   static Future<String> addStudyMaterialToTopic(
       Topic topic, StudyMaterial studyMaterial, Uint8List fileContent) async {
@@ -271,17 +244,53 @@ class Connection {
   }
 
   /*Topic Queries */
-  static Future updateTopic(Topic topic, String previous) async {
-    final db = await Db.create(
-        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-    await db.open();
-    final topicCollection = db.collection('topic');
-    try {
-      await topicCollection.update(
-        where.eq('name', previous),
-        ModifierBuilder().set('name', topic.name).set('label', topic.label),
-      );
 
+  static Future<String> createTopic(
+      Topic topic, Groups group, bool labelExists) async {
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open();
+      var topicCollection = db.collection('topic');
+      WriteResult insert = await topicCollection.insertOne(topic.toJson());
+      var groupCollection = db.collection('studyGroup');
+      if (labelExists) {
+        await groupCollection.updateOne(where.eq('_id', group.id),
+            ModifierBuilder().push('topics', insert.id));
+      } else {
+        await groupCollection.updateOne(
+            where.eq('_id', group.id),
+            ModifierBuilder()
+                .push('topics', insert.id)
+                .push('labels', topic.label));
+      }
+
+      db.close();
+      return 'success';
+    } on Exception catch (e) {
+      return 'Ocurrio un error $e';
+    }
+  }
+
+  static Future updateTopic(
+      Topic newTopic, Topic oldTopic, bool labelExists, Groups group) async {
+    try {
+      ObjectId convertedId = ObjectId.fromHexString(oldTopic.id);
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open();
+      final topicCollection = db.collection('topic');
+      await topicCollection.update(
+        where.eq('_id', convertedId),
+        ModifierBuilder().set('name', newTopic.name).set('label', newTopic.label),
+      );
+      if (!labelExists){
+          final groupCollection = db.collection('studyGroup');
+          await groupCollection.updateOne(
+            where.eq('_id', group.id),
+            ModifierBuilder()
+                .push('labels', newTopic.label));
+      }
       await db.close();
       return 'success';
     } on Exception catch (e) {

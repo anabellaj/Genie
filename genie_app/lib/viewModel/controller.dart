@@ -409,8 +409,8 @@ static Future<String> postTopic(Topic topic, Groups group, bool labelExists) asy
     return Connection.deleteFile(id, topicId, i);
   }
 
-  static Future<dynamic> updateTopic(Topic topic, String name)async{
-    return Connection.updateTopic(topic, name);
+  static Future<dynamic> updateTopic(Topic newTopic, Topic oldTopic, bool labelExists, Groups group) async{
+    return Connection.updateTopic(newTopic, oldTopic,labelExists, group);
   }
 
   static Future<dynamic> deleteTopic(String topicId)async{
