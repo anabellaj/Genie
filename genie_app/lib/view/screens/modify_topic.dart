@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/viewModel/controller.dart';
 
 class ModifyTopicScreen extends StatefulWidget {
   const ModifyTopicScreen({super.key, required this.topic, required this.group});
@@ -31,7 +31,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
   }
 
    Future<Topic> _loadTopic() async {
-    return Connection.readTopic(widget.topic.id);
+    return Controller.loadTopic(widget.topic.id);
   }
 
   void modifyTopic () async {
@@ -53,17 +53,17 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmar'),
-          content: Text('¿Desea modificar el tema?'),
+          title: const Text('Confirmar'),
+          content: const Text('¿Desea modificar el tema?'),
           actions: [
             ElevatedButton(
-              child: Text('Aceptar'),
+              child: const Text('Aceptar'),
               onPressed: () {
                 Navigator.of(context).pop(true); // Devuelve false cuando se cancela
               },
             ),
             ElevatedButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop(false); // Devuelve true cuando se acepta
               },
@@ -88,7 +88,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                 );
               },
   );
-        final result = await Connection.updateTopic(newTopic, widget.topic.name);
+        final result = await Controller.updateTopic(newTopic, widget.topic.name);
 
         if (result == 'success'){
           //revisar como hay que pasar el id 
@@ -156,7 +156,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                 );
               },
   );
-        final result = await Connection.deleteTopic(widget.topic.id);
+        final result = await Controller.deleteTopic(widget.topic.id);
 
         if (result == 'success'){
           //revisar como hay que pasar el id 
@@ -197,7 +197,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
               return const Center(
-                child: Text('No llego nada'),
+                child: Text('Ha ocurrido un error'),
               );
             }
           return SingleChildScrollView(

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/group.dart';
@@ -10,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/screens/topic.dart';
+import 'package:genie_app/viewModel/controller.dart';
 
 class UploadStudyMaterialScreen extends StatefulWidget {
   const UploadStudyMaterialScreen({super.key, required this.topic, required this.group});
@@ -48,7 +48,7 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
       title: _titleController.text,
       description: _descriptionController.text,
     );
-    var result = await Connection.addStudyMaterialToTopic(
+    var result = await Controller.addNewMaterial(
         widget.topic, studyMaterial, pdfContent);
     setState(() {
       _isLoading = false;
