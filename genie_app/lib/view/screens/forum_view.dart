@@ -127,6 +127,7 @@ class _ForumView extends State<ForumView>{
                 ],
               ),
               Text(widget.description,
+               maxLines: 100,
                 style: genieThemeDataDemo.textTheme.displayMedium,
               )
             ],
