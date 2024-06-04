@@ -135,14 +135,14 @@ class _TopicScreenState extends State<TopicScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            Expanded(child: Text(
                               snapshot.data!.name,
                               maxLines: 100,
                               style: genieThemeDataDemo.textTheme.displayMedium!
                                   .copyWith(
                                       fontSize: 32,
                                       fontWeight: FontWeight.w700),
-                            ),
+                            ),),
                             IconButton(
                                 onPressed: () {
                                   modificarArchivo(snapshot.data!);
