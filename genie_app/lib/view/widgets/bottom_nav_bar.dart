@@ -28,6 +28,7 @@ class _BottomNavBar extends State<BottomNavBar>{
       showSelectedLabels: false,
       showUnselectedLabels: false,
       onTap: (int index){
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
         setState(() {
           selIndex=index;
         });
