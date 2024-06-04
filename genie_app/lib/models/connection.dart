@@ -290,14 +290,14 @@ class Connection {
       final topicCollection = db.collection('topic');
       await topicCollection.update(
         where.eq('_id', convertedId),
-        ModifierBuilder().set('name', newTopic.name).set('label', newTopic.label),
+        ModifierBuilder()
+            .set('name', newTopic.name)
+            .set('label', newTopic.label),
       );
-      if (!labelExists){
-          final groupCollection = db.collection('studyGroup');
-          await groupCollection.updateOne(
-            where.eq('_id', group.id),
-            ModifierBuilder()
-                .push('labels', newTopic.label));
+      if (!labelExists) {
+        final groupCollection = db.collection('studyGroup');
+        await groupCollection.updateOne(where.eq('_id', group.id),
+            ModifierBuilder().push('labels', newTopic.label));
       }
       await db.close();
       return 'success';
