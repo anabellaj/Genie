@@ -137,6 +137,7 @@ class _TopicScreenState extends State<TopicScreen> {
                           children: [
                             Text(
                               snapshot.data!.name,
+                              maxLines: 100,
                               style: genieThemeDataDemo.textTheme.displayMedium!
                                   .copyWith(
                                       fontSize: 32,
