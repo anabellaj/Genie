@@ -54,7 +54,6 @@ class TopicCards extends StatelessWidget {
                                 ),
                               ),
                               Column(children: [
-                                // const Icon(Icons.file_open_outlined),
                                 IconButton(
                                     onPressed: () {
                                       Navigator.pushReplacement(
