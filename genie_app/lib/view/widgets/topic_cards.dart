@@ -17,7 +17,12 @@ class TopicCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return
+    studyMaterial.isEmpty?
+    const Center(child: Column(
+      children: [Text('No hay archivos publicados', style: TextStyle(color: Color(0xffB4B6BF))), Text("¡Sé el primero!", style: TextStyle(color: Color(0xffB4B6BF)))],
+    ),):
+     Column(
       children: [
         for (int i = 0; i < studyMaterial.length; i++)
           GestureDetector(
