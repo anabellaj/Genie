@@ -25,13 +25,15 @@ class _JoinGroupState extends State<JoinGroupPage> {
   Widget build (BuildContext context){
     return Scaffold(
         appBar: TopBar(),
-        body: SingleChildScrollView(
+        body: 
+         isLoading? 
+            const Center(child: CircularProgressIndicator())
+            :
+        SingleChildScrollView(
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: isLoading? 
-            const Center(child: CircularProgressIndicator())
-            :Column(
+              child:Column(
                 children: [
                   TextButton(
                               onPressed: () {

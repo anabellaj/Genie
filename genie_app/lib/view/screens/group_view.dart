@@ -95,12 +95,13 @@ class _GroupViewState extends State<GroupView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  Expanded(child: Text(
                     widget.group.name,
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 100,
                     style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
                     textAlign: TextAlign.start,
-                  ),
+                  )),
                   PopupMenuButton(
                     child: const Icon(Icons.more_horiz_outlined),
                     itemBuilder: (context) => [
@@ -167,6 +168,9 @@ class _GroupViewState extends State<GroupView> {
                 ],
               ),
               const SizedBox(height: 12.0),
+              Padding(padding: EdgeInsets.only(left: 12,right: 12, top: 0, bottom: 18),
+                child: Text(widget.group.description, style: genieThemeDataDemo.textTheme.bodySmall, maxLines: 100,),
+              ),
 
               //boton crear nuevo tema
               isLoading
@@ -193,6 +197,8 @@ class _GroupViewState extends State<GroupView> {
                             ),
                           ],
                         ),
+                        topics.isEmpty?
+                        Center(child: Text('No hay temas disponibles', style: TextStyle(color: Color(0xffB4B6BF)),),):
                         const SizedBox(height: 16.0),
                         Column(
                           children: [...topics],

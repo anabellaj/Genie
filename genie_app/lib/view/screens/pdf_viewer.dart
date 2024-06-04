@@ -94,7 +94,7 @@ class _StudyMaterialViewer extends State<StudyMaterialViewer>{
                                           color: genieThemeDataDemo.colorScheme.onSecondary,
                                           fontSize: 12
                                         ),
-                                        content: const Text("Cambios guardados con éxito"), 
+                                        content: const Text("Archivo descargado"), 
                                         actions: [IconButton(
                                           onPressed: ()=>
                                             ScaffoldMessenger.of(context).hideCurrentMaterialBanner(), 

@@ -109,6 +109,7 @@ class _ForumView extends State<ForumView>{
             children: [
              
                   Text(widget.title,
+                  maxLines: 100,
                 style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
               ),
               
