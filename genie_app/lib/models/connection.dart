@@ -149,6 +149,14 @@ class Connection {
 
     var userCollection = db.collection('user');
     await userCollection.remove(where.eq('email', user.email));
+    var studyGroupCollection= db.collection('studyGroup');
+    for (var id in user.studyGroups) {
+      await studyGroupCollection.updateOne(where.eq('_id', ObjectId.fromHexString(id)),
+        ModifierBuilder().pull("members", user.id)
+      );
+
+    }
+     
     await db.close();
   }
 

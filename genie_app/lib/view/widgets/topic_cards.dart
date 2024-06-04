@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/view/screens/modify_study_material.dart';
+import 'package:genie_app/view/theme.dart';
+
 
 
 class TopicCards extends StatelessWidget {
@@ -32,7 +34,11 @@ class TopicCards extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(studyMaterial[i].title),
+                          Container(
+                            width:200,
+                            child: Text(studyMaterial[i].title,overflow: TextOverflow.ellipsis, style: genieThemeDataDemo.primaryTextTheme.titleLarge,),
+                          ),
+                          
                           Column(children: [
                             // const Icon(Icons.file_open_outlined),
                             IconButton(onPressed: ( ) {
@@ -50,7 +56,7 @@ class TopicCards extends StatelessWidget {
                           ])
                         ],
                       ),
-                      Text(studyMaterial[i].description),
+                      Text(studyMaterial[i].description, maxLines: 100,),
                     ],
                   ),
                 ),
