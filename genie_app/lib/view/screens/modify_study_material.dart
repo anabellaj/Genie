@@ -259,8 +259,18 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                         TextField(
                           controller: _titleController,
                           maxLength: 50,
-                          decoration: const InputDecoration(
-                            label: Text('Nombre'),
+                          decoration:  InputDecoration(
+                            hintText: 'Nombre',
+                            enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),)
                             
                           ),
                         ),
@@ -273,8 +283,18 @@ class _ModifyStudyMaterial extends State<ModifyStudyMaterial> {
                         TextField(
                           controller: _descLabelController,
                           maxLength: 50,
-                          decoration: const InputDecoration(
-                            label: Text('Descripcion'),
+                          decoration:  InputDecoration(
+                            hintText: 'Descripcion',
+                            enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),)
                           ),
                         ),
                         

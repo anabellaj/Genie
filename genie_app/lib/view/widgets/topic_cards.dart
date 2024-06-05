@@ -32,6 +32,8 @@ class TopicCards extends StatelessWidget {
               viewFile(studyMaterial[i].id, studyMaterial[i].title);
             },  
             child: Card(
+              shadowColor: genieThemeDataDemo.colorScheme.onSurface,
+              elevation: 4,
               color: Color.fromARGB(255, 255, 255, 255),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -41,14 +43,11 @@ class TopicCards extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: 200,
+                         
+                              Expanded(
                                 child: Text(
                                   studyMaterial[i].title,
-                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 100,
                                   style: genieThemeDataDemo
                                       .primaryTextTheme.titleLarge,
                                 ),
@@ -69,14 +68,16 @@ class TopicCards extends StatelessWidget {
                                     },
                                     icon: const Icon(Icons.more_horiz_outlined))
                               ])
-                            ],
-                          ),
-                          Text(
-                            studyMaterial[i].description,
-                            maxLines: 100,
-                          ),
+                           
+                          
                         ],
                       ),
+                      Text(
+                            
+                            studyMaterial[i].description,
+                            style: genieThemeDataDemo.textTheme.displayMedium,
+                            maxLines: 100,
+                          ),
       ]),
                   ),
                 ),

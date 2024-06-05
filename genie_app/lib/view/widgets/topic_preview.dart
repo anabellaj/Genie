@@ -45,12 +45,11 @@ class _TopicPreviewState extends State<TopicPreview> {
                       10.0), // Add some border radius for better effect
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(
-                          0.5), // Shadow color with some transparency
-                      spreadRadius: 3.0, // Adjusts how far the shadow spreads
-                      blurRadius: 6.0, // Adjusts how blurry the shadow is
+                      color: genieThemeDataDemo.colorScheme.onSurface.withOpacity(0.25), // Shadow color with some transparency
+                      spreadRadius: 0, // Adjusts how far the shadow spreads
+                      blurRadius: 12.0, // Adjusts how blurry the shadow is
                       offset: const Offset(
-                          0.0, 4.0), // Shifts the shadow position (optional)
+                          0.0, 3.0), // Shifts the shadow position (optional)
                     ),
                   ],
                 ),
@@ -62,12 +61,12 @@ class _TopicPreviewState extends State<TopicPreview> {
                     children: [
                       Text(
                         widget.title,
-                        style: genieThemeDataDemo.textTheme.titleMedium,
+                        style: genieThemeDataDemo.primaryTextTheme.titleLarge,
                       ),
                       Wrap(
                         children: [
                           Container(
-                    
+                          margin: const EdgeInsets.only(top:8),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: genieThemeDataDemo.colorScheme.secondary,

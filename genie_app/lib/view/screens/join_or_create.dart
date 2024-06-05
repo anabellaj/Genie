@@ -26,10 +26,10 @@ class JoinOrCreate extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10.0), // Add some border radius for better effect
                             boxShadow: [
                                   BoxShadow(
-                                  color: Colors.grey.withOpacity(0.7), // Shadow color with some transparency
-                                  spreadRadius: 5.0, // Adjusts how far the shadow spreads
-                                  blurRadius: 6.0, // Adjusts how blurry the shadow is
-                                        offset: const Offset(0.0, 4.0), // Shifts the shadow position (optional)
+                                  color: genieThemeDataDemo.colorScheme.onSurface.withOpacity(0.25), // Shadow color with some transparency
+                                  spreadRadius: 0, // Adjusts how far the shadow spreads
+                                  blurRadius: 12.0, // Adjusts how blurry the shadow is
+                                        offset: const Offset(0.0, 3.0), // Shifts the shadow position (optional)
                                       ),
                                     ],
                                     ),

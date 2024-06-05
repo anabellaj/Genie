@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
+import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/theme.dart';
@@ -65,7 +66,7 @@ final _formKey = GlobalKey<FormState>();
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                           Navigator.pushReplacement(context, 
-                            MaterialPageRoute(builder: (context)=>const HomeScreen())
+                            MaterialPageRoute(builder: (context)=>const JoinOrCreate())
                           );  
                         },
                         child:Row(
@@ -92,10 +93,10 @@ final _formKey = GlobalKey<FormState>();
                           borderRadius: BorderRadius.circular(10.0), // Add some border radius for better effect
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.5), // Shadow color with some transparency
-                              spreadRadius: 3.0, // Adjusts how far the shadow spreads
-                              blurRadius: 6.0, // Adjusts how blurry the shadow is
-                              offset: const Offset(0.0, 4.0), // Shifts the shadow position (optional)
+                              color:genieThemeDataDemo.colorScheme.onSurface.withOpacity(0.25), // Shadow color with some transparency
+                                  spreadRadius: 0, // Adjusts how far the shadow spreads
+                                  blurRadius: 12.0, // Adjusts how blurry the shadow is
+                                  offset: const Offset(0.0, 3.0), // Shifts the shadow position (optional)
                             ),
                             ],
                             ),

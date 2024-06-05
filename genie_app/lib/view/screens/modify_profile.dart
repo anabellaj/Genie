@@ -89,7 +89,7 @@ class _ModifyProfile extends State<ModifyProfile>{
                   elevation: 4,
                   child: 
                     Padding(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
                       child: ListView(
                         children:[ 
                           Column(

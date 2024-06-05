@@ -272,8 +272,18 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                         TextField(
                           controller: _titleController,
                           maxLength: 50,
-                          decoration: const InputDecoration(
-                            label: Text('Nombre del Tema'),
+                          decoration:  InputDecoration(
+                            hintText: 'Nombre del Tema',
+                            enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),)
                           ),
                         ),
                         const SizedBox(
@@ -283,6 +293,19 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                         Column(
                           children: [
                             DropdownButtonFormField(
+                              decoration: InputDecoration(
+                                helperText: 'Agrega una etiqueta al tema',
+                                enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),)
+                              ),
                               value: selectedOption,
                               items: evaluationLabels
                                   .map(

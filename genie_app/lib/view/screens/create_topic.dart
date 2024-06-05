@@ -134,11 +134,12 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: Colors.white,
-              boxShadow: const [
+              boxShadow:  [
                 BoxShadow(
-                  color: Color.fromARGB(255, 172, 174, 188),
-                  spreadRadius: 1,
-                  blurRadius: 10,
+                  color: genieThemeDataDemo.colorScheme.onSurface.withOpacity(0.25),
+                  spreadRadius: 0,
+                  blurRadius: 12,
+                  offset: const Offset(0, 3)
                 )
               ]),
           child: Padding(
@@ -152,19 +153,44 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
                     Text('Crear Tema',
                         style:
                             genieThemeDataDemo.primaryTextTheme.headlineMedium),
-                    TextField(
-                      controller: _titleController,
-                      maxLength: 50,
-                      decoration: const InputDecoration(
-                        label: Text('Nombre del Tópico'),
-                      ),
-                    ),
-                    const SizedBox(
+                            const SizedBox(
                       height: 20,
                     ),
+                    TextField(
+                      
+                      controller: _titleController,
+                      maxLength: 50,
+                      decoration:  InputDecoration(
+                        hintText: 'Nombre del Tópico',
+                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),
+                      ),
+                    ),),
+                    
                     Column(
                       children: [
                         DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            helperText: 'Escoja una etiqueta para el tema',
+                            enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),
+                          ),),
                           value: selectedOption,
                           items: evaluationLabels
                               .map(

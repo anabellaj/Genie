@@ -26,7 +26,7 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   File? _uploadedFile;
-  Widget content = const Text('No hay archivo seleccionado.');
+  Widget content = const Text('No hay archivo seleccionado.', style: TextStyle(fontSize: 14, color: Color(0xffB4B6BF)),);
   var _isLoading = false;
 
   void uploadStudyMaterial() async {
@@ -54,9 +54,7 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
       _isLoading = false;
     });
     if (result == 'success') {
-      //Navigator.of(context).pop();
-      print('FIN');
-                     // ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -120,7 +118,6 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
                 ),
                 TextButton(
                     onPressed: () {
-                     // ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -148,11 +145,12 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
                       borderRadius: BorderRadius.circular(
                           20.0), 
                       color: Colors.white,
-                      boxShadow: const [
+                      boxShadow:  [
                         BoxShadow(
-                          color: Color.fromARGB(255, 172, 174, 188),
-                          spreadRadius: 1,
-                          blurRadius: 10,
+                          color:  genieThemeDataDemo.colorScheme.onSurface.withOpacity(0.25),
+                          spreadRadius: 0,
+                          blurRadius: 12,
+                          offset: const Offset(0, 3)
                         )
                       ]),
                   child: Padding(
@@ -163,61 +161,86 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
                           Text('Subir Nuevo Archivo',
                               style: genieThemeDataDemo
                                   .primaryTextTheme.headlineMedium),
+                          const SizedBox(
+                            height: 20,
+                          ),
                           TextField(
                             controller: _titleController,
                             decoration:
-                                const InputDecoration(label: Text('Título')),
+                                 InputDecoration(
+                                  hintText: 'Título',
+                                  enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),
+                                  ),),
                             maxLength: 50,
                           ),
                           TextField(
                             controller: _descriptionController,
                             decoration:
-                                const InputDecoration(label: Text('Descripción')),
+                                 InputDecoration(
+                                  hintText: 'Descripción',
+                                  enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.secondary
+                                          ),
+                                        
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context).colorScheme.primary
+                                          ),)
+                                  
+                                  ),
                             maxLength: 250,
                             minLines: 1,
                             maxLines: 5,
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          
                           content,
                           const SizedBox(
                             height: 20,
                           ),
-                          ElevatedButton(
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
                               onPressed: selectFile,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     genieThemeDataDemo.colorScheme.primary,
-                                elevation: 10.0, // Adjust shadow elevation
-                                shadowColor:
-                                    const Color.fromARGB(255, 118, 115, 115)
-                                        .withOpacity(0.5), // Set shadow color
+                                
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 90),
-                                child: Text(
+                              child:  Text(
                                   'Seleccionar Archivo',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color:genieThemeDataDemo.colorScheme.onPrimary),
                                 ),
-                              )),
+                              ),
+                          ),
                           const SizedBox(
                             height: 5,
                           ),
-                          ElevatedButton(
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
                               onPressed: uploadStudyMaterial,
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       genieThemeDataDemo.colorScheme.secondary),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 100),
-                                child: Text(
+                              child: 
+                               Text(
                                   'Guardar Archivo',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: genieThemeDataDemo.colorScheme.onPrimary,
                                   ),
                                 ),
-                              )),
+                              ),)
                         ],
                       ),
                     ),

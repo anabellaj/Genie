@@ -213,7 +213,8 @@ class Controller {
   }
 
   static Future<List<Widget>> getForums(Groups groupId) async {
-    List forums = await Connection.returnForums(groupId.id.oid.toString());
+    try {
+      List forums = await Connection.returnForums(groupId.id.oid.toString());
 
     List<Widget> previews = [];
 
@@ -231,10 +232,15 @@ class Controller {
     }
 
     return previews;
+    } catch (e) {
+      return [];
+    }
+    
   }
 
   static Future<List<ForumReplyShow>> getReplys(String forumId) async {
-    List replys = await Connection.returnAnswers(forumId);
+    try {
+      List replys = await Connection.returnAnswers(forumId);
 
     List<ForumReplyShow> messages = [];
 
@@ -251,6 +257,10 @@ class Controller {
     }
 
     return messages;
+    } catch (e) {
+      return [];
+    }
+    
   }
 
   static Future<List<ForumReplyShow>> newAnswer(
@@ -358,22 +368,32 @@ class Controller {
   }
 
   static Future<Topic> loadTopic(String id) async {
-    return await Connection.readTopic(id);
+    try {
+      return await Connection.readTopic(id);
+    } catch (e) {
+      return Topic(name: "", label: "", files: []);
+    }
+    
   }
   
 
 static void groupInsertion(String description, String name, User loggedUser) async{
-  Groups newGroup = Groups(description, name);
+  try {
+    Groups newGroup = Groups(description, name);
   String insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup);
   loggedUser.studyGroups.add(insertedStGroupId);
   Controller.updateUserInfo(loggedUser);
+  } catch (e) {
+    
+  }
+  
 }
 
 /*Topic Controller */
 
   static Future<List<Widget>> getTopics(Groups groupId) async {
-
-    List result = await Connection.getTopics(groupId.id.oid.toString());
+    try {
+      List result = await Connection.getTopics(groupId.id.oid.toString());
     List<Widget> topics = [];
 
     for (var t in result) {
@@ -386,38 +406,78 @@ static void groupInsertion(String description, String name, User loggedUser) asy
       ));
     }
     return topics;
+    } catch (e) {
+      return [];
+    }
+
+    
   }
 
 
 
 static Future<String> postTopic(Topic topic, Groups group, bool labelExists) async {
-  final response = await Connection.createTopic(topic, group, labelExists);
+  try {
+    final response = await Connection.createTopic(topic, group, labelExists);
   
   return response;
+  } catch (e) {
+    return 'error';
+  }
+  
 }
 
 
   static Future<StudyMaterial?> loadStudyMaterial(String id) async {
-    return await Connection.getStudyMaterial(id);
+    try {
+      return await Connection.getStudyMaterial(id);
+    } catch (e) {
+      return null;
+    }
+    
   }
 
   static Future<dynamic> updateFile(StudyMaterial studymaterial, String id, String topicId,int i)async{
-    return Connection.updateFile(studymaterial, id, topicId, i);
+    try {
+      return Connection.updateFile(studymaterial, id, topicId, i);
+    } catch (e) {
+      return null;
+    }
+    
   }
 
   static Future<dynamic> deleteFile(String id, String topicId, int i)async{
-    return Connection.deleteFile(id, topicId, i);
+    
+    try {
+      return Connection.deleteFile(id, topicId, i);
+    } catch (e) {
+      return "error";
+    }
   }
 
   static Future<dynamic> updateTopic(Topic newTopic, Topic oldTopic, bool labelExists, Groups group) async{
-    return Connection.updateTopic(newTopic, oldTopic,labelExists, group);
+    try {
+      return Connection.updateTopic(newTopic, oldTopic,labelExists, group);
+    } catch (e) {
+      return 'error';
+    }
+    
   }
 
   static Future<dynamic> deleteTopic(String topicId)async{
-    return Connection.deleteTopic(topicId);
+    try {
+      return Connection.deleteTopic(topicId);
+    } catch (e) {
+      return 'error';
+    }
+    
   }
 
-  static Future<String> addNewMaterial(Topic topic, StudyMaterial study, Uint8List pdfContent){
-    return Connection.addStudyMaterialToTopic(topic, study, pdfContent);
+  static Future<String> addNewMaterial(Topic topic, StudyMaterial study, Uint8List pdfContent)async{
+    try{
+      return await Connection.addStudyMaterialToTopic(topic, study, pdfContent);
+    }catch(e){
+      return 'error';
+    }
+    
   }
 }

@@ -70,8 +70,9 @@ class _ForumReply extends State<ForumReplyShow>{
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.message,
-                 style: genieThemeDataDemo.textTheme.displayMedium,),
+                Expanded(child: Text(widget.message,
+                maxLines: 100,
+                 style: genieThemeDataDemo.textTheme.displayMedium,)),
                  PopupMenuButton(
                   icon: const Icon(Icons.delete_outline),
                   itemBuilder: 

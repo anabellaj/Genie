@@ -185,6 +185,9 @@ class _TopicScreenState extends State<TopicScreen> {
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         TopicCards(
                           studyMaterial: snapshot.data!.files,
                           viewFile: (String id, String title) {

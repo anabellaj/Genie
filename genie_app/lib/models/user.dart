@@ -1,6 +1,4 @@
-import 'package:uuid/uuid.dart';
 
-const uuid = Uuid();
 
 class User {
  User(String emailPam, String passwordPam,){
