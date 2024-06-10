@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/viewModel/validator.dart';
 
 class CreateCardScreen extends StatefulWidget {
   const CreateCardScreen({super.key});
@@ -15,6 +17,28 @@ class CreateCardScreen extends StatefulWidget {
 class _CreateCardScreenState extends State<CreateCardScreen> {
   final _terminoController = TextEditingController();
   final _defController = TextEditingController();
+  bool _validateTerm = false;
+   bool _validateDefinition = false;
+
+  void _saveCard()async{
+    if(Validator.validateController(_terminoController)){
+      setState(() {
+        _validateTerm=true;
+      });
+    }
+    if(Validator.validateController(_defController)){
+      setState(() {
+        _validateDefinition=true;
+      });
+    }
+    if(_validateDefinition&&_validateTerm){
+      print(
+        'validada'
+      );
+    }
+  }
+
+
 
 
 
@@ -85,13 +109,17 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                       controller: _terminoController,
                       maxLines: null,
                       maxLength: 250,
-                      decoration: const InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
+                      decoration:  InputDecoration(
+                            errorText: _validateTerm? null:"Campo Obligatorio",
+                            errorStyle: TextStyle(
+                                          color: genieThemeDataDemo.colorScheme.onError,
+                                        ),
+                            focusedBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color.fromARGB(255, 221, 221, 221), // Set the desired color here
                               ),
                     ), enabledBorder: const UnderlineInputBorder(
-                            borderSide: const BorderSide(color: Color.fromARGB(255, 221, 221, 221)),
+                            borderSide:  BorderSide(color: Color.fromARGB(255, 221, 221, 221)),
                           ),
                     )
                     ),
@@ -114,13 +142,17 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                       controller: _defController,
                       maxLines: null,
                       maxLength: 500,
-                      decoration: const InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
+                      decoration:  InputDecoration(
+                            errorText:  _validateDefinition? null:"Campo Obligatorio",
+                            errorStyle: TextStyle(
+                                          color: genieThemeDataDemo.colorScheme.onError,
+                                        ),
+                            focusedBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color.fromARGB(255, 221, 221, 221), // Set the desired color here
                               ),
                     ), enabledBorder: const UnderlineInputBorder(
-                            borderSide: const BorderSide(color: Color.fromARGB(255, 221, 221, 221)),
+                            borderSide:  BorderSide(color: Color.fromARGB(255, 221, 221, 221)),
                           ),
                     )),
 
@@ -137,6 +169,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                 width: 350,
                 child: ElevatedButton(
                   onPressed: () {
+                    _saveCard();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
