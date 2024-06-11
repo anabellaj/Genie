@@ -11,7 +11,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const MyApp(),
+    home: const CreateCardScreen(),
     theme: genieThemeDataDemo,
   ));
 }

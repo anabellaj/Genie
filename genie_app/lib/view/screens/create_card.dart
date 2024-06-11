@@ -3,6 +3,7 @@ import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:genie_app/viewModel/validator.dart';
 
 class CreateCardScreen extends StatefulWidget {
@@ -17,24 +18,54 @@ class CreateCardScreen extends StatefulWidget {
 class _CreateCardScreenState extends State<CreateCardScreen> {
   final _terminoController = TextEditingController();
   final _defController = TextEditingController();
-  bool _validateTerm = false;
-   bool _validateDefinition = false;
+   bool _validateTerm = true;
+   bool _validateDefinition = true;
+   bool isLoading = false;
 
   void _saveCard()async{
-    if(Validator.validateController(_terminoController)){
+    if(!Validator.validateController(_terminoController)){
+      setState(() {
+        _validateTerm=false;
+      });
+    }else{
       setState(() {
         _validateTerm=true;
       });
     }
-    if(Validator.validateController(_defController)){
+    if(!Validator.validateController(_defController)){
+      setState(() {
+        _validateDefinition=false;
+      });
+    }else{
       setState(() {
         _validateDefinition=true;
       });
     }
     if(_validateDefinition&&_validateTerm){
-      print(
-        'validada'
-      );
+      setState(() {
+        isLoading=true;
+      });
+      String res =await  ControllerStudy.addNewFlashCard(_terminoController.text, _defController.text, "665e2318f29fdd64c7000000");
+      setState(() {
+        isLoading=false;
+      });
+      if(res == 'success'){
+        ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
+          backgroundColor: genieThemeDataDemo.colorScheme.secondary,
+          contentTextStyle: TextStyle(
+            color: genieThemeDataDemo.colorScheme.onSecondary,
+            fontSize: 12
+          ),
+          content: const Text("Ficha creada con éxito"), 
+          actions: [IconButton(
+            onPressed: ()=>
+              ScaffoldMessenger.of(context).hideCurrentMaterialBanner(), 
+            icon: Icon(Icons.check, color: genieThemeDataDemo.colorScheme.onSecondary,))]));
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Hubo un error')
+        ));
+      }
     }
   }
 
@@ -46,14 +77,20 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopBar(),
-      body: SingleChildScrollView(
+      body: isLoading?
+      const Center(child: CircularProgressIndicator(),):
+      
+      SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
           const SizedBox(
                       height: 20,
                     ),
           TextButton(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                Navigator.pop(context);
+              },
               child: Row(
                 children: [
                   Icon(

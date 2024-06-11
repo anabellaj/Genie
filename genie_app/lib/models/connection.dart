@@ -1,3 +1,4 @@
+import 'package:genie_app/models/flashcard.dart';
 import 'group.dart';
 import 'dart:typed_data';
 import 'package:genie_app/models/forum_reply.dart';
@@ -638,4 +639,26 @@ class Connection {
       return e;
     }
   }
+
+  static Future addNewFlashCard(Flashcard flash, String topicID)async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final flashcardCollection = db.collection('flashcard');
+
+    WriteResult res = await flashcardCollection.insertOne(
+      {
+        "term":flash.term,
+        "definition": flash.definition
+      }
+    );
+
+    final topicCollection = db.collection('topic');
+    await topicCollection.updateOne(
+      where.eq("_id", ObjectId.fromHexString(topicID))
+      , ModifierBuilder().push('flashCards', res.id));
+      await db.close();
+
+  }
+
 }

@@ -20,6 +20,7 @@ class User {
   late List<dynamic> interests;
   late List<dynamic> chats;
   late List<dynamic> studyGroups;
+  late List<dynamic> flashCardsStudied;
 
   void initialize(){
       career="";
@@ -29,6 +30,7 @@ class User {
       interests = [];
       chats = [];
       studyGroups= []; 
+      flashCardsStudied=[];
     }
 
   Map<String, dynamic> toJson()=>
@@ -42,7 +44,8 @@ class User {
       "career":career,
       "interests":interests,
       "chats": chats,
-      "studyGroups":studyGroups
+      "studyGroups":studyGroups,
+      "flashCardsStudied":flashCardsStudied
 
     };
   User.fromJson(Map<String,dynamic> json):
@@ -55,7 +58,8 @@ class User {
     career = json['career'] ?? "",
     interests = json['interests'] ?? [],
     chats = json['chats'] ?? [],
-    studyGroups = json['studyGroups'] ?? [];
+    studyGroups = json['studyGroups'] ?? [],
+    flashCardsStudied= json['flashCardsStudied']??[];
   
   
   
