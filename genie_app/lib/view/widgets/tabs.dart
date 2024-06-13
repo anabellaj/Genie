@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/group.dart';
-import 'package:genie_app/view/screens/create_topic.dart';
-import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
-import 'package:genie_app/view/screens/members_view.dart';
-import 'package:genie_app/view/screens/modify_group.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import '../theme.dart';
-import 'package:genie_app/viewModel/controller.dart';
 
 class Tabs extends StatefulWidget {
-  // final Groups group;
-  const Tabs({super.key});
+  final Widget fichasContent;
+  final Widget pruebasContent;
+  const Tabs(
+      {super.key, required this.fichasContent, required this.pruebasContent});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -54,6 +50,7 @@ class _TapBarState extends State<Tabs> {
             TabBar(
               indicator: BoxDecoration(color: Colors.transparent),
               dividerColor: Colors.transparent,
+              dividerHeight: 2.0,
               tabs: [
                 Tab(
                   child: Container(
@@ -65,7 +62,7 @@ class _TapBarState extends State<Tabs> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Align(
-                      alignment: Alignment.center,
+                      // alignment: Alignment.center,
                       child: Text(
                         'Fichas',
                         style: genieThemeDataDemo.primaryTextTheme.bodyMedium,
@@ -76,14 +73,14 @@ class _TapBarState extends State<Tabs> {
                 Tab(
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 32),
+                    // padding:
+                    //     const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                     decoration: BoxDecoration(
                       color: genieThemeDataDemo.primaryColor,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Align(
-                      alignment: Alignment.center,
+                      // alignment: Alignment.center,
                       child: Text(
                         'Pruebas',
                         style: genieThemeDataDemo.primaryTextTheme.bodyMedium,
@@ -95,8 +92,8 @@ class _TapBarState extends State<Tabs> {
             ),
             Expanded(
               child: TabBarView(children: [
-                Container(child: (Center(child: Text('Contenido Fichas')))),
-                Container(child: (Center(child: Text('Contenido Pruebas'))))
+                Container(width: double.infinity, child: widget.fichasContent),
+                Container(width: double.infinity, child: widget.pruebasContent)
               ]),
             )
           ]),
