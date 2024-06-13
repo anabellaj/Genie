@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/add_forum.dart';
+import 'package:genie_app/view/screens/create_card.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+import 'package:genie_app/view/widgets/flashcard_preview.dart';
 import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/viewModel/controllerStudy.dart';
 import '../theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
@@ -11,9 +16,10 @@ import 'package:genie_app/view/widgets/appbar.dart';
 
 
 class FlashcardListPage extends StatefulWidget{
-  final Groups groupId;
-  const FlashcardListPage({super.key, required this.groupId});
-
+  
+  const FlashcardListPage({super.key, required this.topicId});
+  final String topicId;
+  
   @override
   State<FlashcardListPage> createState()=> _FlashcardListPageState();
 
@@ -21,12 +27,13 @@ class FlashcardListPage extends StatefulWidget{
 
 class _FlashcardListPageState extends State<FlashcardListPage>{
   late bool isLoading=true;
-  late List<Widget> previews;
+  late List<Flashcard> flashcards;
 
-  void getForums()async {
-    List<Widget> p = await Controller.getForums(widget.groupId);
+  void getFlashcards()async {
+    List<Flashcard> flashcardsList = await ControllerStudy.getFlashcards('665e2318f29fdd64c7000000');
+    print(flashcardsList);
     setState(() {
-      previews= p;
+      flashcards= flashcardsList;
       isLoading=false;
     });
 
@@ -36,7 +43,8 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
   void initState() {
     super.initState();
     
-    getForums();
+    getFlashcards();
+
   }
 
 
@@ -63,8 +71,8 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                   TextButton(
                     
                     onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> GroupView(group: widget.groupId)));
+                      // ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> GroupView(group: widget.groupId)));
                     },
                     child:Row(
                       children: [
@@ -85,7 +93,7 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                     child:Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Foros',
+                      Text('Todas las Fichas',
                       style: genieThemeDataDemo.primaryTextTheme.headlineSmall,),
                       IconButton(
                         style: ButtonStyle(
@@ -94,7 +102,7 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                         ),
                         onPressed: ()=>{
                           Navigator.pushReplacement(context, 
-                            MaterialPageRoute(builder: (context)=> AddForum(groupId: widget.groupId,))
+                            MaterialPageRoute(builder: (context)=> CreateCardScreen(topicId: widget.topicId))
                           )   
                         }, 
                         icon: const Icon(Icons.add))
@@ -107,14 +115,10 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
             ),
            
                     Expanded(
-                      child:
-                      previews.isEmpty?
-                      const Center(child: Text('No hay foros disponibles', style: TextStyle(color: Color(0xffB4B6BF)),),):
-                      ListView(
-                        children: [
-                          ...previews
-                        ],
-                      )
+                      child: FlashcardPreview(
+                            flashcards: flashcards,
+                            topicId: '665e2318f29fdd64c7000000',
+                      ),
                       ),
 
           ],

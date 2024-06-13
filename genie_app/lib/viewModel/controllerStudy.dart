@@ -17,4 +17,24 @@ class ControllerStudy {
     }
   }
 
+    static Future<List<Flashcard>> getFlashcards(String topicID)async{
+    try {
+
+      return await Connection.getFlashCards(topicID);
+      
+    } catch (e) {
+      return [];
+    }
+  }
+
+    static Future <String> updateFlashcard(Flashcard newFlashcard, String id)async{
+        try {
+
+          return await Connection.updateFlashcard(newFlashcard, id);
+          
+        } catch (e) {
+          return 'error';
+        }
+      }
+
 }

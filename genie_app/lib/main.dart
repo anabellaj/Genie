@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/view/screens/create_card.dart';
+import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
 import 'view/theme.dart';
@@ -11,7 +13,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const CreateCardScreen(),
+    home: const FlashcardListPage(topicId: '665e2318f29fdd64c7000000'),
     theme: genieThemeDataDemo,
   ));
 }
@@ -52,8 +54,7 @@ class _myAppState extends State<MyApp> {
         context,
         MaterialPageRoute(builder: (context)=>
           isUser? 
-            // const HomeScreen(): 
-            const CreateCardScreen():
+            const HomeScreen(): 
             const SplashPage(title: "SplashPage"))));
 
   }

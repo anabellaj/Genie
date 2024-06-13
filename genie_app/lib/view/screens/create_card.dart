@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -7,7 +9,8 @@ import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:genie_app/viewModel/validator.dart';
 
 class CreateCardScreen extends StatefulWidget {
-  const CreateCardScreen({super.key});
+  const CreateCardScreen({super.key, required this.topicId});
+  final String topicId;
 
   @override
   State<CreateCardScreen> createState() {
