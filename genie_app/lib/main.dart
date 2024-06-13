@@ -11,7 +11,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const CreateCardScreen(),
+    home: const MyApp(),
     theme: genieThemeDataDemo,
   ));
 }
@@ -52,8 +52,7 @@ class _myAppState extends State<MyApp> {
         context,
         MaterialPageRoute(builder: (context)=>
           isUser? 
-            // const HomeScreen(): 
-            const CreateCardScreen():
+            const HomeScreen(): 
             const SplashPage(title: "SplashPage"))));
 
   }

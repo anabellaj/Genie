@@ -50,6 +50,7 @@ class _ForumsListPageState extends State<ForumsListPage>{
         appBar:TopBar(),
         body:  isLoading?
                     const Center(child: CircularProgressIndicator()):
+        
         Column(
           mainAxisSize: MainAxisSize.max,
           children: [
