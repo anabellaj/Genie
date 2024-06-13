@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:genie_app/models/flashcard.dart';
 import 'group.dart';
 import 'dart:typed_data';
@@ -676,12 +678,9 @@ class Connection {
             .toList();
           
             final List<Flashcard> flashcardObjects = flashcards.map((flashcard) {
-              final term = flashcard['term'];
-              final definition = flashcard['definition'];
-            return Flashcard(term, definition);
+            return Flashcard.fromJson(flashcard);
           }).toList();
-            
-            
+           
             return flashcardObjects;
 
         } on Exception catch (e) {
