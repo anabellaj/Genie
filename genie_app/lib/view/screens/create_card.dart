@@ -91,8 +91,10 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                     ),
           TextButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                Navigator.pop(context);
+                 Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId)));
               },
               child: Row(
                 children: [
