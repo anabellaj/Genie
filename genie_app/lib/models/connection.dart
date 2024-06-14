@@ -710,5 +710,35 @@ class Connection {
       return e;
     }
   }
+    static Future <dynamic> deleteFlashcard(
+      String flashcardId, String topicId, int i) async {
+    try {
+      ObjectId convertedIdFlashcard = ObjectId.fromHexString(flashcardId);
+      ObjectId convertedIdTopic = ObjectId.fromHexString(topicId);
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+      final flashcardCollection = db.collection('flashcard');
+      final topicCollection = db.collection('topic');
+      await flashcardCollection.remove(where.eq('_id', convertedIdFlashcard));
+
+      final topic = await topicCollection.findOne(where.eq('_id', convertedIdTopic));
+      if (topic != null) {
+        List flashcards = topic['flashCards'];
+        flashcards.removeAt(i);
+        await topicCollection.update(
+          where.eq('_id', convertedIdTopic),
+          ModifierBuilder().set('flashCards', flashcards),
+        );
+      }
+
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      print (e);
+      return e;
+    }
+  }
 
 }

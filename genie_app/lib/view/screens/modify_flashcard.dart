@@ -11,9 +11,10 @@ import 'package:genie_app/viewModel/controllerStudy.dart';
 
 
 class ModifyFlashcard extends StatefulWidget {
-  const ModifyFlashcard({super.key, required this.flashcard, required this.topicId});
+  const ModifyFlashcard({super.key, required this.flashcard, required this.topicId, required this.i});
   final Flashcard flashcard;
   final String topicId;
+  final int i;
  
 
   @override
@@ -90,11 +91,11 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
       final result = await ControllerStudy.updateFlashcard(newFlashCard, widget.flashcard.id);
       print (result);
         if (result == 'success'){
-          print ('success') ;         
-          // Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
+                  
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
@@ -109,69 +110,69 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
 
   }
 
-  // void deleteFile() async{
-  //   //confirm dialog
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Confirmar'),
-  //         content:const  Text('¿Desea eliminar el archivo?'),
-  //         actions: [
-  //           ElevatedButton(
-  //             child: const Text('Aceptar'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop(true); // Devuelve false cuando se cancela
-  //             },
-  //           ),
-  //           ElevatedButton(
-  //             child: const Text('Cancelar'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop(false); // Devuelve true cuando se acepta
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   ).then((value) async {
-  //     if (value != null && value){
-  //       showDialog(
-  //             context: context,
-  //             barrierDismissible: false,
-  //             builder: (BuildContext context) {
-  //               return const AlertDialog(
-  //                 content: Row(
-  //                   children: [
-  //                     CircularProgressIndicator(),
-  //                     SizedBox(width: 20),
-  //                     Text('Eliminando archivo...'),
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  // );
-  //       final result = await Controller.deleteFile(widget.material.id, widget.topicId, widget.i);
+  void deleteFile() async{
+    //confirm dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar'),
+          content:const  Text('¿Desea eliminar la ficha?'),
+          actions: [
+            ElevatedButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop(true); // Devuelve false cuando se cancela
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop(false); // Devuelve true cuando se acepta
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) async {
+      if (value != null && value){
+        showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return const AlertDialog(
+                  content: Row(
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 20),
+                      Text('Eliminando ficha...'),
+                    ],
+                  ),
+                );
+              },
+  );
+        final result = await ControllerStudy.deleteFlashcard(widget.flashcard.id, widget.topicId, widget.i);
 
-  //       if (result == 'success'){
-  //         //revisar como hay que pasar el id 
-  //         // ObjectId id = ObjectId.fromHexString(topic.id);
-  //         //final topicId = widget.topic.id;
-  //         Navigator.pushReplacement(
-  //             context,
-  //             MaterialPageRoute(
-  //                 builder: (context) =>  TopicScreen(topicId: widget.topicId, group: widget.group)));
-  //       }
-  //       else{
-  //         ScaffoldMessenger.of(context).clearSnackBars();
-  //           ScaffoldMessenger.of(context)
-  //           .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
-  //       }
-  //     } else {
-  //       return;
-  //     }
-  //   });
+        if (result == 'success'){
+          //revisar como hay que pasar el id 
+          // ObjectId id = ObjectId.fromHexString(topic.id);
+          //final topicId = widget.topic.id;
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId)));
+        }
+        else{
+          ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
+        }
+      } else {
+        return;
+      }
+    });
     
-  // }
+  }
   
 
   @override
@@ -321,7 +322,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              // deleteFile(); 
+                              deleteFile(); 
                             },
                             style: const ButtonStyle(
                                 backgroundColor:

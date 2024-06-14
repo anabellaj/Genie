@@ -36,5 +36,14 @@ class ControllerStudy {
           return 'error';
         }
       }
+    static Future <String> deleteFlashcard(String flashcardId, String topicId, int i)async{
+        try {
+
+          return await Connection.deleteFlashcard(flashcardId, topicId, i);
+          
+        } catch (e) {
+          return 'error';
+        }
+      }
 
 }

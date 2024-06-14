@@ -86,8 +86,8 @@ class FlashcardPreview extends StatelessWidget {
                                                   builder: (context) =>
                                                       ModifyFlashcard(
                                                         flashcard: flashcards[i], 
-                                                        topicId: topicId)
-                                                      
+                                                        topicId: topicId,
+                                                        i: i)
                                                       ));
                                         },
                                         icon: const Icon(Icons.more_horiz_outlined),),
