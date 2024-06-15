@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:genie_app/models/flashcard.dart';
 import 'group.dart';
 import 'dart:typed_data';
@@ -658,7 +660,85 @@ class Connection {
       where.eq("_id", ObjectId.fromHexString(topicID))
       , ModifierBuilder().push('flashCards', res.id));
       await db.close();
+  }
 
+    static Future<List<Flashcard>> getFlashCards(String topicID)async{
+            try {
+          final db = await Db.create(
+              "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          await db.open();
+          final topicCollection = db.collection('topic');
+          final flashcardCollection = db.collection('flashcard');
+          
+          final topic = await topicCollection.findOne(where.eq("_id", ObjectId.fromHexString(topicID)));
+          final flashcardIds = topic?['flashCards'];
+          
+          final flashcards = await flashcardCollection
+            .find(where.oneFrom("_id", flashcardIds))
+            .toList();
+          
+            final List<Flashcard> flashcardObjects = flashcards.map((flashcard) {
+            return Flashcard.fromJson(flashcard);
+          }).toList();
+           
+            return flashcardObjects;
+
+        } on Exception catch (e) {
+          print('Error in all flashcards: $e');
+          return [];
+        }
+    }
+
+  static Future <dynamic> updateFlashcard(
+      Flashcard newFlashcard, String id) async {
+    try {
+      ObjectId convertedId = ObjectId.fromHexString(id);
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open();
+      final flashcardCollection = db.collection('flashcard');
+      await flashcardCollection.update(
+        where.eq('_id', convertedId),
+        ModifierBuilder()
+            .set('term', newFlashcard.term)
+            .set('definition', newFlashcard.definition),
+      );
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      print (e);
+      return e;
+    }
+  }
+    static Future <dynamic> deleteFlashcard(
+      String flashcardId, String topicId, int i) async {
+    try {
+      ObjectId convertedIdFlashcard = ObjectId.fromHexString(flashcardId);
+      ObjectId convertedIdTopic = ObjectId.fromHexString(topicId);
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+      final flashcardCollection = db.collection('flashcard');
+      final topicCollection = db.collection('topic');
+      await flashcardCollection.remove(where.eq('_id', convertedIdFlashcard));
+
+      final topic = await topicCollection.findOne(where.eq('_id', convertedIdTopic));
+      if (topic != null) {
+        List flashcards = topic['flashCards'];
+        flashcards.removeAt(i);
+        await topicCollection.update(
+          where.eq('_id', convertedIdTopic),
+          ModifierBuilder().set('flashCards', flashcards),
+        );
+      }
+
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      print (e);
+      return e;
+    }
   }
 
 }
