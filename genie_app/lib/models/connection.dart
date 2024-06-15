@@ -25,16 +25,30 @@ class Connection {
     return result;
   }
 
-  static void removeGroup(String groupId) async{
+  static void removeGroup(Groups group) async{
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
 
     var groupCollection = db.collection('studyGroup');
-    groupCollection.deleteOne(where.eq("_id", ObjectId.fromHexString(groupId)));
-
+    var userCollection = db.collection("user");
+    groupCollection.deleteOne(where.eq("_id", ObjectId.fromHexString(group.id.oid)));
+    List groupMembers = await userCollection.find({
+      "studyGroups": {
+        '\$in': [group.id.oid]
+      }
+    }).toList();
+    if (groupMembers.isNotEmpty){
+      for (var member in groupMembers){
+        List currStudyGroups = member["studyGroups"];
+        currStudyGroups.remove(group.id.oid);
+        final userUpdate = ModifierBuilder().set("studyGroups", currStudyGroups);
+        userCollection.updateOne(where.eq("_id", member["_id"]), userUpdate);
+      }
+    }
     await db.close();
   }
+
   static Future<User> removeGroupMember(String memberId, Groups group) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");

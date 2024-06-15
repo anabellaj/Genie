@@ -40,8 +40,14 @@ class GroupView extends StatefulWidget {
 class _GroupViewState extends State<GroupView> {
   late bool isOnlyMember = false;
   late bool isLoading=true;
+  late bool isAdmin = false;
   late List<Widget> topics =[];
-
+  void checkAdmin() async{
+  bool check = await Controller.checkAdminCurrUser(widget.group.admins[0]);
+  setState(() {
+    isAdmin = check;
+  });
+  }
   void getTopics() async {
     List<Widget> r = await Controller.getTopics(widget.group);
     if (mounted) {
@@ -57,6 +63,7 @@ class _GroupViewState extends State<GroupView> {
       isOnlyMember = true;
     }
   }
+
   void leaveGroup() async {
     //confirm dialog
     showDialog(
@@ -102,8 +109,71 @@ class _GroupViewState extends State<GroupView> {
         );
         final result = await Controller.leaveGroup(widget.group);
         if(isOnlyMember){
-          Controller.deleteGroup(widget.group.id.oid);
+          Controller.deleteGroup(widget.group);
         }
+        if (result == 'success') {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const HomeScreen()));
+        } else {
+          Navigator.of(context)
+                    .pop(false);
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
+
+        }
+      } else {
+        return;
+      }
+    });
+  }
+  void deleteGroup() async {
+    //confirm dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar'),
+          content: const Text("¿Desea eliminar el grupo?"),
+          actions: [
+            ElevatedButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true); // Devuelve false cuando se cancela
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(false); // Devuelve true cuando se acepta
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) async {
+      if (value != null && value) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const AlertDialog(
+              content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 20),
+                  Text('Saliendo del grupo...'),
+                ],
+              ),
+            );
+          },
+        );
+        
+        String result = await Controller.deleteGroup(widget.group);
         if (result == 'success') {
           Navigator.pushReplacement(
               context,
@@ -126,7 +196,9 @@ class _GroupViewState extends State<GroupView> {
   @override
   void initState() {
     super.initState();
+    checkAdmin();
     checkMembers();
+    
     getTopics();
 
   }
@@ -176,6 +248,7 @@ class _GroupViewState extends State<GroupView> {
                     style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
                     textAlign: TextAlign.start,
                   )),
+                  isAdmin?
                   PopupMenuButton(
                     child: const Icon(Icons.more_horiz_outlined),
                     itemBuilder: (context) => [
@@ -196,9 +269,38 @@ class _GroupViewState extends State<GroupView> {
                         onTap: () {
                           leaveGroup();
                         }
+                      ),
+                      PopupMenuItem(
+                        value: "Eliminar Grupo",
+                        child: const Text("Eliminar Grupo"),
+                        onTap: (){
+                          deleteGroup();
+                        }
                       )
                     ],
-                  ),
+                  ) : PopupMenuButton(
+                    child: const Icon(Icons.more_horiz_outlined),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: "Modificar Grupo",
+                        child: const Text("Modificar Grupo"),
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ModifyGroupPage(
+                                      currentGroup: widget.group)));
+                        },
+                      ),
+                      PopupMenuItem(
+                        value: "Salir del Grupo",
+                        child: const Text("Salir del Grupo"),
+                        onTap: () {
+                          leaveGroup();
+                        }
+                      ),
+                    ],
+                  )
                 ],
               ),
 
