@@ -13,7 +13,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const FlashcardListPage(topicId: '665e2318f29fdd64c7000000'),
+    home: const MyApp(),
     theme: genieThemeDataDemo,
   ));
 }

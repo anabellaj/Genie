@@ -73,7 +73,7 @@ class _ForumView extends State<ForumView>{
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  isLoading? SizedBox.shrink():
+                  isLoading? const SizedBox.shrink():
                   TextButton(
                     
                     onPressed: () {
