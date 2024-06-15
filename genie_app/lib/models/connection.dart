@@ -25,7 +25,7 @@ class Connection {
     return result;
   }
 
-  static void removeGroupMember(String memberId, Groups group) async {
+  static Future<User> removeGroupMember(String memberId, Groups group) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
@@ -41,15 +41,18 @@ class Connection {
     if (admins.contains(memberId)) {
       admins.remove(memberId);
     }
-
+    if (admins.isEmpty){
+      admins.add(members[0]);
+    }
+    
     final docUser =
         await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
+    
     User groupMember = User.fromJson(docUser as Map<String, dynamic>);
     List studyGroups = groupMember.studyGroups;
-    print(studyGroups);
+  
     studyGroups.remove(group.id.oid);
-    print(studyGroups);
-
+    groupMember.studyGroups.remove(group.id.oid);
     final groupUpdate =
         ModifierBuilder().set("members", members).set("admins", admins);
     final userUpdate = ModifierBuilder().set("studyGroups", studyGroups);
@@ -59,6 +62,7 @@ class Connection {
         where.eq("_id", ObjectId.fromHexString(memberId)), userUpdate);
 
     db.close();
+    return groupMember;
   }
 
   static Future<List<User>> getGroupMembers(List groupMembers) async {

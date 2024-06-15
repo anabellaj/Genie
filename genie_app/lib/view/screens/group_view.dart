@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/create_topic.dart';
 import 'package:genie_app/view/screens/forum_list.dart';
+import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/screens/members_view.dart';
 import 'package:genie_app/view/screens/modify_group.dart';
@@ -48,6 +49,69 @@ class _GroupViewState extends State<GroupView> {
         isLoading = false;
       });
     }
+  }
+
+  void leaveGroup() async {
+    //confirm dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar'),
+          content: const Text('¿Desea salirse del grupo?'),
+          actions: [
+            ElevatedButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true); // Devuelve false cuando se cancela
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(false); // Devuelve true cuando se acepta
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) async {
+      if (value != null && value) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const AlertDialog(
+              content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 20),
+                  Text('Saliendo del grupo...'),
+                ],
+              ),
+            );
+          },
+        );
+        final result = await Controller.leaveGroup(widget.group);
+        print(result);
+        if (result == 'success') {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const HomeScreen()));
+        } else {
+          Navigator.of(context)
+                    .pop(false);
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
+        }
+      } else {
+        return;
+      }
+    });
   }
 
   @override
@@ -116,6 +180,13 @@ class _GroupViewState extends State<GroupView> {
                                       currentGroup: widget.group)));
                         },
                       ),
+                      PopupMenuItem(
+                        value: "Salir del Grupo",
+                        child: const Text("Salir del Grupo"),
+                        onTap: () {
+                          leaveGroup();
+                        }
+                      )
                     ],
                   ),
                 ],
