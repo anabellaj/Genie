@@ -7,10 +7,13 @@ import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:genie_app/viewModel/validator.dart';
+import 'package:genie_app/models/flashcard.dart';
+
 
 class CreateCardScreen extends StatefulWidget {
-  const CreateCardScreen({super.key, required this.topicId});
+  const CreateCardScreen({super.key, required this.topicId, required this.flashcard});
   final String topicId;
+  final List<Flashcard> flashcard;
 
   @override
   State<CreateCardScreen> createState() {
@@ -48,7 +51,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
       setState(() {
         isLoading=true;
       });
-      String res =await  ControllerStudy.addNewFlashCard(_terminoController.text, _defController.text, "665e2318f29fdd64c7000000");
+      String res =await  ControllerStudy.addNewFlashCard(_terminoController.text, _defController.text, widget.topicId);
       setState(() {
         isLoading=false;
       });
@@ -94,7 +97,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                  Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId)));
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcard,)));
               },
               child: Row(
                 children: [

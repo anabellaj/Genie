@@ -11,10 +11,11 @@ import 'package:genie_app/viewModel/controllerStudy.dart';
 
 
 class ModifyFlashcard extends StatefulWidget {
-  const ModifyFlashcard({super.key, required this.flashcard, required this.topicId, required this.i});
+  const ModifyFlashcard({super.key, required this.flashcard, required this.topicId, required this.i, required this.flashcards});
   final Flashcard flashcard;
   final String topicId;
   final int i;
+  final List<Flashcard> flashcards;
  
 
   @override
@@ -95,7 +96,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId)));
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards,)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
@@ -160,7 +161,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId)));
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards,)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
@@ -208,7 +209,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>  FlashcardListPage(topicId: widget.topicId)));
+                              builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards)));
                     },
                     child: Row(
                       children: [

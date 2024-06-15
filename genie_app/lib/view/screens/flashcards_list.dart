@@ -17,8 +17,9 @@ import 'package:genie_app/view/widgets/appbar.dart';
 
 class FlashcardListPage extends StatefulWidget{
   
-  const FlashcardListPage({super.key, required this.topicId});
+  const FlashcardListPage({super.key, required this.topicId, required this.flashcards});
   final String topicId;
+  final List<Flashcard> flashcards;
   
   @override
   State<FlashcardListPage> createState()=> _FlashcardListPageState();
@@ -26,14 +27,13 @@ class FlashcardListPage extends StatefulWidget{
 }
 
 class _FlashcardListPageState extends State<FlashcardListPage>{
-  late bool isLoading=true;
-  late List<Flashcard> flashcards;
-
+   late bool isLoading=true;
+  late List<Flashcard> flashcardsFound=widget.flashcards;
+  
   void getFlashcards()async {
-    List<Flashcard> flashcardsList = await ControllerStudy.getFlashcards('665e2318f29fdd64c7000000');
-    print(flashcardsList);
+    List<Flashcard> flashcardsList = await ControllerStudy.getFlashcards(widget.topicId);
     setState(() {
-      flashcards= flashcardsList;
+      flashcardsFound= flashcardsList;
       isLoading=false;
     });
 
@@ -47,6 +47,8 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
 
   }
 
+  
+
 
 
   @override
@@ -56,8 +58,8 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
 
     return Scaffold(
         appBar:TopBar(),
-        body:  isLoading?
-                    const Center(child: CircularProgressIndicator()):
+        body:  
+        isLoading?Center(child: CircularProgressIndicator(),):
         Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -102,7 +104,7 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                         ),
                         onPressed: ()=>{
                           Navigator.pushReplacement(context, 
-                            MaterialPageRoute(builder: (context)=> CreateCardScreen(topicId: widget.topicId))
+                            MaterialPageRoute(builder: (context)=> CreateCardScreen(topicId: widget.topicId, flashcard: widget.flashcards))
                           )   
                         }, 
                         icon: const Icon(Icons.add))
@@ -116,8 +118,8 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
            
                     Expanded(
                       child: FlashcardPreview(
-                            flashcards: flashcards,
-                            topicId: '665e2318f29fdd64c7000000',
+                            flashcards: flashcardsFound,
+                            topicId: widget.topicId,
                       ),
                       ),
 

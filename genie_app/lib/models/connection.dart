@@ -741,4 +741,52 @@ class Connection {
     }
   }
 
+  static Future updateStudied(String userId, Map<String, dynamic> object)async{
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+        where.eq('_id', ObjectId.fromHexString(userId))
+        , 
+
+        ModifierBuilder().addToSet('flashCardsStudied', object)); 
+      await db.close();
+    } catch (e) {
+      
+    }
+  }
+  static Future<User> getUser(String id)async{
+    final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+      final userCollection = db.collection('user');
+      Map<String, dynamic>? res = await userCollection.findOne(where.eq("_id", ObjectId.fromHexString(id)));
+      if(res!=null){
+        return User.fromJson(res);
+      }else{
+        return User("", "");
+      }
+  }
+  static Future updateUserFlashcard(String userId, List<dynamic> object)async{
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+        where.eq('_id', ObjectId.fromHexString(userId))
+        , 
+
+        ModifierBuilder().set('flashCardsStudied', object)); 
+      await db.close();
+    } catch (e) {
+      
+    }
+  }
+
 }

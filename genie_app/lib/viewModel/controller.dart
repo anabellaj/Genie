@@ -114,7 +114,6 @@ class Controller {
     User loggedUser;
     if (user != null) {
       loggedUser = User.fromJson(jsonDecode(user));
-
       return loggedUser;
     } else {
       return User("", "");

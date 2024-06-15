@@ -41,43 +41,35 @@ class FlashcardPreview extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(width: 10,),
                          
-                              IntrinsicWidth(
-                                child: Text(
+                              
+                                Text(
                                   flashcards[i].term,
                                   maxLines: 100,
                                   style: genieThemeDataDemo
                                       .primaryTextTheme.titleLarge,
                                 ),
-                              ),
+                              
 
-                              SizedBox(width: 15,),
+                          
 
                               Container(
                             width: 1.0, // Adjust width as needed
                             height: 20, // Fills available vertical space
                             color: Colors.grey, // Customize color
                           ),
-                            SizedBox(width: 15,),
+                           
                               
-                              IntrinsicWidth(
-                                child: Text(
+                             Text(
                                                             
                                 flashcards[i].definition,
                                 style: genieThemeDataDemo.textTheme.displayLarge,
                                 textAlign: TextAlign.start,
                                 maxLines: 100,
                               ),
-                              ),
-                          
-                                Expanded(
-                                  
-                                  child: Align(alignment: Alignment.topRight,
+                            Align(alignment: Alignment.topRight,
                                     child: IconButton(
                                         onPressed: () {
                                           Navigator.pushReplacement(
@@ -87,19 +79,20 @@ class FlashcardPreview extends StatelessWidget {
                                                       ModifyFlashcard(
                                                         flashcard: flashcards[i], 
                                                         topicId: topicId,
-                                                        i: i)
+                                                        i: i,
+                                                        flashcards: flashcards,)
                                                       ));
                                         },
                                         icon: const Icon(Icons.more_horiz_outlined),),
                                   ),
-                                )
+                                
                               
                            
                           
                         
                       
                       
-                    ]),
+                    
       ]),
                   ),
                 ),

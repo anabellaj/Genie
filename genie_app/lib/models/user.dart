@@ -61,6 +61,18 @@ class User {
     studyGroups = json['studyGroups'] ?? [],
     flashCardsStudied= json['flashCardsStudied']??[];
   
+  User.fromShared(Map<String,dynamic> json):
+    id = json["id"].oid.toString(),
+    name = json['name'],
+    email = json['email'],
+    password = json['password'],
+    username = json['username'] ?? "",
+    university = json['university'] ?? "",
+    career = json['career'] ?? "",
+    interests = json['interests'] ?? [],
+    chats = json['chats'] ?? [],
+    studyGroups = json['studyGroups'] ?? [],
+    flashCardsStudied= json['flashCardsStudied']??[];
   
   
 }
