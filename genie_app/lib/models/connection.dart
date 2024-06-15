@@ -25,6 +25,16 @@ class Connection {
     return result;
   }
 
+  static void removeGroup(String groupId) async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    var groupCollection = db.collection('studyGroup');
+    groupCollection.deleteOne(where.eq("_id", ObjectId.fromHexString(groupId)));
+
+    await db.close();
+  }
   static Future<User> removeGroupMember(String memberId, Groups group) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
@@ -41,7 +51,7 @@ class Connection {
     if (admins.contains(memberId)) {
       admins.remove(memberId);
     }
-    if (admins.isEmpty){
+    if (admins.isEmpty && members.isNotEmpty){
       admins.add(members[0]);
     }
     

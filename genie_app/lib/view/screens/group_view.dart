@@ -38,6 +38,7 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
+  late bool isOnlyMember = false;
   late bool isLoading=true;
   late List<Widget> topics =[];
 
@@ -51,6 +52,11 @@ class _GroupViewState extends State<GroupView> {
     }
   }
 
+  void checkMembers(){
+    if(widget.group.members.length == 1){
+      isOnlyMember = true;
+    }
+  }
   void leaveGroup() async {
     //confirm dialog
     showDialog(
@@ -58,7 +64,7 @@ class _GroupViewState extends State<GroupView> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar'),
-          content: const Text('¿Desea salirse del grupo?'),
+          content: isOnlyMember? const Text("Eres el único usuario, ¿Deseas eliminar el grupo?"): const Text('¿Desea salirse del grupo?'),
           actions: [
             ElevatedButton(
               child: const Text('Aceptar'),
@@ -95,7 +101,9 @@ class _GroupViewState extends State<GroupView> {
           },
         );
         final result = await Controller.leaveGroup(widget.group);
-        print(result);
+        if(isOnlyMember){
+          Controller.deleteGroup(widget.group.id.oid);
+        }
         if (result == 'success') {
           Navigator.pushReplacement(
               context,
@@ -107,6 +115,7 @@ class _GroupViewState extends State<GroupView> {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
+
         }
       } else {
         return;
@@ -117,8 +126,9 @@ class _GroupViewState extends State<GroupView> {
   @override
   void initState() {
     super.initState();
-
+    checkMembers();
     getTopics();
+
   }
 
   @override

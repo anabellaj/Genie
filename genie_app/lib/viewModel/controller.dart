@@ -66,6 +66,16 @@ class Controller {
     );
   }
 
+  static Future<String> deleteGroup(String groupId) async{
+    try{
+    Connection.removeGroup(groupId);
+    return "success";
+    }
+    catch (e){
+      return "no_success";
+    }
+  }
+
   static Future<String> deleteMember(String memberId, Groups group) async {
     try {
       User currUser = await Connection.removeGroupMember(memberId, group);
