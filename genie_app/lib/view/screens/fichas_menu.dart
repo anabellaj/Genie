@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/widgets/appbar.dart';
-import 'package:genie_app/view/widgets/tabs.dart';
 
 class FichasView extends StatefulWidget {
   const FichasView({super.key});
