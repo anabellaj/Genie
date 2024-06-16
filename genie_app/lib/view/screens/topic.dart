@@ -135,14 +135,13 @@ class _TopicScreenState extends State<TopicScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: Text(
+                            Text(
                               snapshot.data!.name,
-                              maxLines: 100,
                               style: genieThemeDataDemo.textTheme.displayMedium!
                                   .copyWith(
                                       fontSize: 32,
                                       fontWeight: FontWeight.w700),
-                            ),),
+                            ),
                             IconButton(
                                 onPressed: () {
                                   modificarArchivo(snapshot.data!);
@@ -184,9 +183,6 @@ class _TopicScreenState extends State<TopicScreen> {
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
                         ),
                         TopicCards(
                           studyMaterial: snapshot.data!.files,
