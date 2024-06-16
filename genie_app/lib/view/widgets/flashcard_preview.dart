@@ -11,11 +11,11 @@ class FlashcardPreview extends StatelessWidget {
       {super.key,
       required this.flashcards,
       required this.topicId,
-      // required this.group
+      required this.group
       });
 
   final String topicId;
-  // final Groups group;
+  final Groups group;
   final List<Flashcard> flashcards;
 
   @override
@@ -44,32 +44,16 @@ class FlashcardPreview extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                          
-                              
-                                Text(
+                      Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+                        children: [
+Text(
                                   flashcards[i].term,
                                   maxLines: 100,
                                   style: genieThemeDataDemo
                                       .primaryTextTheme.titleLarge,
                                 ),
-                              
-
-                          
-
-                              Container(
-                            width: 1.0, // Adjust width as needed
-                            height: 20, // Fills available vertical space
-                            color: Colors.grey, // Customize color
-                          ),
-                           
-                              
-                             Text(
-                                                            
-                                flashcards[i].definition,
-                                style: genieThemeDataDemo.textTheme.displayLarge,
-                                textAlign: TextAlign.start,
-                                maxLines: 100,
-                              ),
-                            Align(alignment: Alignment.topRight,
+                                Align(alignment: Alignment.topRight,
                                     child: IconButton(
                                         onPressed: () {
                                           Navigator.pushReplacement(
@@ -77,6 +61,7 @@ class FlashcardPreview extends StatelessWidget {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       ModifyFlashcard(
+                                                        group: group,
                                                         flashcard: flashcards[i], 
                                                         topicId: topicId,
                                                         i: i,
@@ -85,6 +70,23 @@ class FlashcardPreview extends StatelessWidget {
                                         },
                                         icon: const Icon(Icons.more_horiz_outlined),),
                                   ),
+
+                      ],),        
+                                
+                              
+
+                          
+
+                    
+                              
+                             Text(
+                                                            
+                                flashcards[i].definition,
+                                style: genieThemeDataDemo.textTheme.displayLarge,
+                                textAlign: TextAlign.start,
+                                maxLines: 100,
+                              ),
+                            
                                 
                               
                            

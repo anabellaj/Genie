@@ -31,13 +31,13 @@ class _ForumView extends State<ForumView>{
   late bool sendingMessage = false;
   late bool isCreator= false;
   late bool isDeleting = false;
-  late List<ForumReplyShow> replys;
+  late List<Widget> replys;
   final TextEditingController _controller = TextEditingController();
 
 
   void getAnswers()async{
     bool creator = await Controller.checkIfOwner(widget.creator_id);
-    List<ForumReplyShow> r = await Controller.getReplys(widget.id);
+    List<Widget> r = await Controller.getReplys(widget.id);
     setState(() {
       replys = r;
       isLoading= false;
@@ -183,7 +183,7 @@ class _ForumView extends State<ForumView>{
                           isLoading = true;
                         });
                         FocusManager.instance.primaryFocus?.unfocus();
-                        List<ForumReplyShow> newReply = await Controller.newAnswer(_controller.text, widget.id, replys);
+                        List<Widget> newReply = await Controller.newAnswer(_controller.text, widget.id, replys);
                         _controller.clear();
                         setState(() {
                           sendingMessage=false;

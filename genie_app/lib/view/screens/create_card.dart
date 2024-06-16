@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
@@ -11,9 +12,10 @@ import 'package:genie_app/models/flashcard.dart';
 
 
 class CreateCardScreen extends StatefulWidget {
-  const CreateCardScreen({super.key, required this.topicId, required this.flashcard});
+  const CreateCardScreen({super.key, required this.topicId, required this.flashcard, required this.group});
   final String topicId;
   final List<Flashcard> flashcard;
+  final Groups group;
 
   @override
   State<CreateCardScreen> createState() {
@@ -97,7 +99,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                  Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcard,)));
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcard,group: widget.group,)));
               },
               child: Row(
                 children: [

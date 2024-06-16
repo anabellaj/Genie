@@ -24,6 +24,7 @@ class CarouselFlashcard extends StatefulWidget{
 
 class _CarouselFlashcard extends State<CarouselFlashcard>{
   int _current = 0;
+  int num_studied=0;
   final CarouselController _controller = CarouselController();
   late bool isLoading=false;
   late List<bool> studied=[];
@@ -41,9 +42,11 @@ class _CarouselFlashcard extends State<CarouselFlashcard>{
       isLoading=true;
     });
     List<bool> l = await  ControllerStudy.checkIfStudied(widget.topicId, widget.flashcards);
+    int number = await ControllerStudy.countStudied(l);
     setState(() {
       studied=l;
       isLoading=false;
+      num_studied=number;
     });
   }
  
@@ -97,6 +100,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard>{
                             context,
                             MaterialPageRoute(
                                 builder: (context) => FlashcardListPage(
+                                  group: widget.group,
                                   topicId: widget.topicId,
                                     flashcards: widget
                                         .flashcards))); //CAMBIAR ROUTE A members_view
@@ -177,12 +181,17 @@ class _CarouselFlashcard extends State<CarouselFlashcard>{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('3/${widget.flashcards.length} estudiadas'),
+              Text('${num_studied}/${widget.flashcards.length} estudiadas'),
               IconButton(
                 iconSize: 48,
                 onPressed: (){
                   setState(() {
                     studied[_current]= !studied[_current];
+                    if(studied[_current]){
+                      num_studied++;
+                    }else{
+                      num_studied--;
+                    }
                   });
                 },
                 icon:  Icon( studied[_current]? Icons.check_circle : Icons.check_circle_outline, color: genieThemeDataDemo.colorScheme.primary,))

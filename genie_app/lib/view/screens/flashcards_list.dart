@@ -4,6 +4,7 @@ import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/add_forum.dart';
 import 'package:genie_app/view/screens/create_card.dart';
+import 'package:genie_app/view/screens/flashcard_carrousel.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/flashcard_preview.dart';
@@ -17,9 +18,10 @@ import 'package:genie_app/view/widgets/appbar.dart';
 
 class FlashcardListPage extends StatefulWidget{
   
-  const FlashcardListPage({super.key, required this.topicId, required this.flashcards});
+  const FlashcardListPage({super.key, required this.topicId, required this.flashcards, required this.group});
   final String topicId;
   final List<Flashcard> flashcards;
+  final Groups group;
   
   @override
   State<FlashcardListPage> createState()=> _FlashcardListPageState();
@@ -73,8 +75,8 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                   TextButton(
                     
                     onPressed: () {
-                      // ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> GroupView(group: widget.groupId)));
+                      
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> FlashCardCarrouselPage(topicId: widget.topicId, group: widget.group,)));
                     },
                     child:Row(
                       children: [
@@ -104,7 +106,7 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                         ),
                         onPressed: ()=>{
                           Navigator.pushReplacement(context, 
-                            MaterialPageRoute(builder: (context)=> CreateCardScreen(topicId: widget.topicId, flashcard: widget.flashcards))
+                            MaterialPageRoute(builder: (context)=> CreateCardScreen(topicId: widget.topicId, flashcard: widget.flashcards, group: widget.group,))
                           )   
                         }, 
                         icon: const Icon(Icons.add))
@@ -118,6 +120,7 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
            
                     Expanded(
                       child: FlashcardPreview(
+                        group: widget.group,
                             flashcards: flashcardsFound,
                             topicId: widget.topicId,
                       ),

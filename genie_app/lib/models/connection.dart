@@ -128,6 +128,7 @@ class Connection {
       "interests": [],
       "chats": [],
       "studyGroups": [],
+      'flashCardsStudied':[]
     });
     await db.close();
     return result.id.oid.toString();
@@ -771,6 +772,7 @@ class Connection {
         return User("", "");
       }
   }
+  
   static Future updateUserFlashcard(String userId, List<dynamic> object)async{
     try {
       final db = await Db.create(

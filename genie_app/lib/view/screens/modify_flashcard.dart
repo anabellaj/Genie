@@ -11,10 +11,11 @@ import 'package:genie_app/viewModel/controllerStudy.dart';
 
 
 class ModifyFlashcard extends StatefulWidget {
-  const ModifyFlashcard({super.key, required this.flashcard, required this.topicId, required this.i, required this.flashcards});
+  const ModifyFlashcard({super.key, required this.flashcard, required this.topicId, required this.i, required this.flashcards, required this.group});
   final Flashcard flashcard;
   final String topicId;
   final int i;
+  final Groups group;
   final List<Flashcard> flashcards;
  
 
@@ -96,7 +97,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards,)));
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards, group: widget.group,)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
@@ -161,7 +162,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards,)));
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards, group: widget.group,)));
         }
         else{
           ScaffoldMessenger.of(context).clearSnackBars();
@@ -209,7 +210,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards)));
+                              builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards, group: widget.group,)));
                     },
                     child: Row(
                       children: [

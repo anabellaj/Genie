@@ -55,7 +55,7 @@ class ControllerStudy {
 
     static Future<User> getUserFromInfo()async{
       final prefs = await SharedPreferences.getInstance();
-    var user = prefs.getString("user");
+    var user = await prefs.getString("user");
     User loggedUser;
     if (user != null) {
       loggedUser = User.fromShared(jsonDecode(user));
@@ -67,25 +67,43 @@ class ControllerStudy {
 
     static Future<List<bool>> checkIfStudied(String topicID, List<Flashcard> flashcards)async{
       try {
-        User user = await Controller.getUserInfo();
-       print(user.toJson());
-      User fullUser = await Connection.getUser(user.id);
-      List<bool> studiedFlash=[];
-      for (var element in fullUser.flashCardsStudied) {
-        if(element['topic']==topicID){
-          List<dynamic> studied = element["studied"]?? [];
-          for(var el in flashcards){
-              if(studied.indexWhere((e)=> e== el.id)!=-1){
-                studiedFlash.add(true);
-              }else{
-                studiedFlash.add(false);
-              }
+        User user = await getUserFromInfo();
+        User fullUser = await Connection.getUser(user.id);
+        List<bool> studiedFlash=[];
+        if(fullUser.flashCardsStudied.isNotEmpty){
+          for (var element in fullUser.flashCardsStudied) {
+            if(element['topic']==topicID){
+              List<dynamic> studied = element["studied"]?? [];
+              for(var el in flashcards){
+                 if(studied.indexWhere((e)=> e== el.id)!=-1){
+                    studiedFlash.add(true);
+                }else{
+                  studiedFlash.add(false);
+                }
           }
-        } 
+        } else{
+          for(var el in flashcards){
+              
+                studiedFlash.add(false);
+          }
+        }
       }
+      }else{
+        for(var el in flashcards){
+              
+                studiedFlash.add(false);
+          }
+      }
+      
        return studiedFlash; 
       } catch (e) {
-        return [];
+        print(e);
+        List<bool> studiedFlash=[];
+       for(var el in flashcards){
+              
+                studiedFlash.add(false);
+          }
+        return studiedFlash;
       }
        
 
@@ -125,6 +143,16 @@ class ControllerStudy {
         
       }
 
+    }
+
+    static int countStudied(List<bool> studied){
+      int counter=0;
+      for (var bool in studied) {
+        if(bool){
+          counter++;
+        }
+      }
+      return counter;
     }
 
 }

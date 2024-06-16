@@ -49,7 +49,7 @@ class User {
 
     };
   User.fromJson(Map<String,dynamic> json):
-    id = json["_id"] is String?  json['_id']:json['_id'].toString(),
+    id = json["_id"]!=null ?  json['_id'].oid.toString():json['id'],
     name = json['name'],
     email = json['email'],
     password = json['password'],
@@ -62,7 +62,7 @@ class User {
     flashCardsStudied= json['flashCardsStudied']??[];
   
   User.fromShared(Map<String,dynamic> json):
-    id = json["id"].oid.toString(),
+    id = json["id"],
     name = json['name'],
     email = json['email'],
     password = json['password'],
