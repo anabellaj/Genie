@@ -14,20 +14,24 @@ class QuizSummary extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          Center(
-            child: Text('$score %'),
-          ),
-          ListView.builder(
-            itemCount: quiz.questions.length,
-            itemBuilder: (context, index) => Container(
-              child: Column(
-                children: [
-                  Text(quiz.questions[index].question),
-                  Text(quiz.questions[index].correctAnswer),
-                ],
+          Text('$score %'),
+          for (var index = 0; index < quiz.questions.length; index++)
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: correctGuesses.contains(index)
+                        ? Colors.green
+                        : Colors.red),
+                width: double.infinity,
+                height: double.minPositive,
+                child: Column(
+                  children: [
+                    Text(quiz.questions[index].question),
+                    Text(quiz.questions[index].correctAnswer)
+                  ],
+                ),
               ),
-            ),
-          )
+            )
         ],
       ),
     );
