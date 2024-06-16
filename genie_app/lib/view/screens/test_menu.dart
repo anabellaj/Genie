@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
-import 'package:genie_app/view/widgets/appbar.dart';
-import 'package:genie_app/view/widgets/tabs.dart';
+import 'package:genie_app/view/widgets/more_less_btns.dart';
+import 'package:genie_app/view/widgets/time_limit.dart';
 
 class TestView extends StatefulWidget {
   const TestView({super.key});
@@ -14,6 +14,7 @@ class TestView extends StatefulWidget {
 class _TestViewState extends State<TestView> {
   late bool isLoading = true;
   late List<Widget> topics = [];
+  int numQuestions = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +23,16 @@ class _TestViewState extends State<TestView> {
         padding: EdgeInsets.all(20.0), // Adjust padding as needed
         child: Column(
           children: [
+            const SizedBox(height: 26.0),
             Column(
               children: [
-                Text(
-                  'Configura tu prueba',
-                  style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
-                ),
-                const SizedBox(height: 18.0),
+                Row(children: [
+                  Text(
+                    'Configura tu prueba',
+                    style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
+                  )
+                ]),
+                const SizedBox(height: 26.0),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -36,33 +40,29 @@ class _TestViewState extends State<TestView> {
                         'Numero de preguntas',
                         style: genieThemeDataDemo.textTheme.displayLarge,
                       ),
-                      Text(
-                        '3/11',
-                        style: genieThemeDataDemo.textTheme.displayLarge,
-                      )
+                      Row(children: [
+                        IncrementButton(onPressed: () {
+                          setState(() {
+                            if (numQuestions < 11) {
+                              numQuestions++;
+                            }
+                          });
+                        }),
+                        Text(
+                          '$numQuestions/11',
+                          style: genieThemeDataDemo.textTheme.displayLarge,
+                        ),
+                        DecrementButton(onPressed: () {
+                          setState(() {
+                            if (numQuestions > 2) {
+                              numQuestions--;
+                            }
+                          });
+                        })
+                      ])
                     ]),
                 const SizedBox(height: 18.0),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Tiempo limite',
-                        style: genieThemeDataDemo.textTheme.displayLarge,
-                      ),
-                      Text(
-                        '60 min',
-                        style: genieThemeDataDemo.textTheme.displayLarge,
-                      )
-                    ]),
-                const SizedBox(height: 18.0),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Tipos de preguntas',
-                        style: genieThemeDataDemo.textTheme.displayLarge,
-                      ),
-                    ]),
+                const MyTimeLimitWidget(),
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +71,7 @@ class _TestViewState extends State<TestView> {
                       child: TextButton(
                         onPressed: () {},
                         style: mainButtonStyle,
-                        child: const Text('Crear nuevo tema'),
+                        child: const Text('Iniciar prueba'),
                       ),
                     ),
                   ],
