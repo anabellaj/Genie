@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/tf_question.dart';
 import 'package:genie_app/models/tf_quiz.dart';
+import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/quiz_summary.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -41,7 +42,6 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
         questionHasBeenAnsweredCorrectly = false;
       });
     }
-    answeredQuestions++;
   }
 
   //Devuelve una lista donde la primera posicion contiene la pregunta, la segunda la respuesta que mostrara y a tercera la respuesta correcta
@@ -62,6 +62,7 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
       qA.add(widget.quiz.answers[emergenceOrder[answeredQuestions]]);
     }
     qA.add(widget.quiz.answers[emergenceOrder[answeredQuestions]]);
+    answeredQuestions++;
     return qA;
   }
 
@@ -89,7 +90,7 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
         ),
         OutlinedButton(
             onPressed: () {
-              if (answeredQuestions != (widget.quiz.questions.length)) {
+              if (answeredQuestions <= (widget.quiz.questions.length - 1)) {
                 setState(() {
                   currentQuestion = generateQuestion();
                   questionHasBeenAnswered = false;
@@ -107,59 +108,82 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
       ],
     );
 
-    if (answeredQuestions != widget.quiz.questions.length) {
-      mainContent = Column(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              color: Colors.white,
-            ),
-            child: Center(
-              child: Column(
-                children: [
-                  Text(
-                    currentQuestion[0],
-                    textAlign: TextAlign.center,
+    if (answeredQuestions <= (widget.quiz.questions.length)) {
+      mainContent = Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Card(
+              shadowColor: genieThemeDataDemo.colorScheme.onSurface,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        currentQuestion[0],
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        currentQuestion[1],
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    currentQuestion[1],
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          OutlinedButton(
-              onPressed: () {
-                if (!questionHasBeenAnswered) userAnswered(true);
-              },
-              child: const Row(
-                children: [
-                  Text('Verdadeichon'),
-                ],
-              )),
-          const SizedBox(
-            height: 30,
-          ),
-          OutlinedButton(
-              onPressed: () {
-                if (!questionHasBeenAnswered) userAnswered(false);
-              },
-              child: const Row(
-                children: [Text('Falseichon')],
-              )),
-          if (questionHasBeenAnswered) nextButton,
-          questionHasBeenAnsweredCorrectly
-              ? const Text('Chi')
-              : questionHasBeenAnswered
-                  ? const Text('Nopi')
-                  : const Text(''),
-        ],
+            const SizedBox(
+              height: 30,
+            ),
+            OutlinedButton(
+                onPressed: () {
+                  if (!questionHasBeenAnswered) userAnswered(true);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Verdadero'),
+                    if (questionHasBeenAnswered &&
+                        currentQuestion[1] == currentQuestion[2])
+                      const Icon(Icons.check_circle_outline_outlined,
+                          color: Colors.green)
+                    else if (questionHasBeenAnswered &&
+                        !questionHasBeenAnsweredCorrectly &&
+                        currentQuestion[1] != currentQuestion[2])
+                      const Icon(Icons.close, color: Colors.red)
+                  ],
+                )),
+            const SizedBox(
+              height: 30,
+            ),
+            OutlinedButton(
+                onPressed: () {
+                  if (!questionHasBeenAnswered) userAnswered(false);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Falso'),
+                    if (questionHasBeenAnswered &&
+                        currentQuestion[1] != currentQuestion[2])
+                      const Icon(Icons.check_circle_outline_outlined,
+                          color: Colors.green)
+                    else if (questionHasBeenAnswered &&
+                        !questionHasBeenAnsweredCorrectly &&
+                        currentQuestion[1] == currentQuestion[2])
+                      const Icon(Icons.close, color: Colors.red)
+                  ],
+                )),
+            if (questionHasBeenAnswered) nextButton,
+            questionHasBeenAnsweredCorrectly
+                ? const Text('Chi')
+                : questionHasBeenAnswered
+                    ? const Text('Nopi')
+                    : const Text(''),
+          ],
+        ),
       );
     } else {
       mainContent =
@@ -168,10 +192,7 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
 
     return Scaffold(
       appBar: TopBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: mainContent,
-      ),
+      body: mainContent,
       bottomNavigationBar: BottomNavBar(),
     );
   }
