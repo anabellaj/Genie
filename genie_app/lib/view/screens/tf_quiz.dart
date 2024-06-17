@@ -22,9 +22,10 @@ class TFQuizScreen extends StatefulWidget {
 
 class _TFQuizScreenState extends State<TFQuizScreen> {
   late var currentQuestion;
-  final List<int> correctGuesses = [];
+  int correctGuesses = 0;
   final List<int> emergenceOrder = [];
   var answeredQuestions = 0;
+  List<bool> guesses = [];
   var questionHasBeenAnswered = false;
   var questionHasBeenAnsweredCorrectly = false;
 
@@ -35,13 +36,14 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
         questionHasBeenAnswered = true;
         questionHasBeenAnsweredCorrectly = true;
       });
-      correctGuesses.add(answeredQuestions);
+      correctGuesses++;
     } else {
       setState(() {
         questionHasBeenAnswered = true;
         questionHasBeenAnsweredCorrectly = false;
       });
     }
+    guesses.add(questionHasBeenAnsweredCorrectly);
   }
 
   //Devuelve una lista donde la primera posicion contiene la pregunta, la segunda la respuesta que mostrara y a tercera la respuesta correcta
@@ -186,8 +188,12 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
         ),
       );
     } else {
-      mainContent =
-          QuizSummary(quiz: widget.quiz, correctGuesses: correctGuesses);
+      mainContent = QuizSummary(
+        quiz: widget.quiz,
+        correctGuesses: correctGuesses,
+        guesses: guesses,
+        emergenceOrder: emergenceOrder,
+      );
     }
 
     return Scaffold(
