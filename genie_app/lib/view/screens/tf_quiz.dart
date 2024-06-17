@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -7,12 +8,14 @@ import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/quiz_summary.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+import 'package:genie_app/view/widgets/timer.dart';
 
 var randomGenerator = Random();
 
 class TFQuizScreen extends StatefulWidget {
-  const TFQuizScreen({super.key, required this.quiz});
+  const TFQuizScreen({super.key, required this.quiz, required this.timeLeft});
   final TFQuiz quiz;
+  final int timeLeft;
 
   @override
   State<StatefulWidget> createState() {
@@ -21,6 +24,19 @@ class TFQuizScreen extends StatefulWidget {
 }
 
 class _TFQuizScreenState extends State<TFQuizScreen> {
+  int timeLeft = 360;
+  void _startTimer() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (timeLeft > 0) {
+          timeLeft--;
+        } else {
+          timer.cancel();
+        }
+      });
+    });
+  }
+
   late var currentQuestion;
   int correctGuesses = 0;
   final List<int> emergenceOrder = [];
@@ -79,6 +95,8 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
       currentQuestion = generateQuestion();
     });
     super.initState();
+    _startTimer();
+    timeLeft = widget.timeLeft;
   }
 
   @override
@@ -115,6 +133,39 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            const SizedBox(height: 16.0),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Container(
+                // width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
+                decoration: BoxDecoration(
+                  color: genieThemeDataDemo.primaryColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Align(
+                  // alignment: Alignment.center,
+                  child: Text(
+                    Duration(seconds: timeLeft).toString().split('.').first,
+                    style: genieThemeDataDemo.primaryTextTheme.bodyMedium,
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: genieThemeDataDemo.primaryColor,
+                      width: 2.0), // Adjust border color and width
+                ),
+                padding: const EdgeInsets.all(8.0), // Adjust padding as needed
+                child: Icon(
+                  Icons.close,
+                  color: genieThemeDataDemo.primaryColor, // Adjust icon color
+                ),
+              ),
+            ]),
+            const SizedBox(height: 24.0),
             Card(
               shadowColor: genieThemeDataDemo.colorScheme.onSurface,
               child: Center(
@@ -143,6 +194,12 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
                 onPressed: () {
                   if (!questionHasBeenAnswered) userAnswered(true);
                 },
+                style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.all(20.0),
+                    side: BorderSide(
+                        color: genieThemeDataDemo.colorScheme.secondary),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -164,6 +221,12 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
                 onPressed: () {
                   if (!questionHasBeenAnswered) userAnswered(false);
                 },
+                style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.all(20.0),
+                    side: BorderSide(
+                        color: genieThemeDataDemo.colorScheme.secondary),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
