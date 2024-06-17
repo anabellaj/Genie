@@ -16,13 +16,11 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: TFQuizScreen(
-      quiz: TFQuiz(questions: [
-        TFQuestion(question: 'Venezuela', correctAnswer: 'Caracas'),
-        TFQuestion(question: 'Colombia', correctAnswer: 'Bogota'),
-        TFQuestion(question: 'Brasil', correctAnswer: 'Brasilia'),
-        TFQuestion(question: 'Honduras', correctAnswer: 'Tegucigalpa'),
-      ]),
+    home: const Tabs(
+      fichasContent:
+          FichasView(), // Custom content widget for Fichas tab (if applicable)
+      pruebasContent:
+          TestView(), // Custom content widget for Pruebas tab (if applicable)
     ),
     theme: genieThemeDataDemo,
   ));

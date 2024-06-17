@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/more_less_btns.dart';
 import 'package:genie_app/view/widgets/time_limit.dart';
-
+import 'package:genie_app/view/screens/tf_quiz.dart';
+import 'package:genie_app/models/tf_question.dart';
+import 'package:genie_app/models/tf_quiz.dart';
 
 class TestView extends StatefulWidget {
   const TestView({super.key});
@@ -70,7 +72,28 @@ class _TestViewState extends State<TestView> {
                   children: [
                     Expanded(
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TFQuizScreen(
+                                        quiz: TFQuiz(questions: [
+                                          TFQuestion(
+                                              question: 'Venezuela',
+                                              correctAnswer: 'Caracas'),
+                                          TFQuestion(
+                                              question: 'Colombia',
+                                              correctAnswer: 'Bogota'),
+                                          TFQuestion(
+                                              question: 'Brasil',
+                                              correctAnswer: 'Brasilia'),
+                                          TFQuestion(
+                                              question: 'Honduras',
+                                              correctAnswer: 'Tegucigalpa'),
+                                        ]),
+                                        timeLeft: 70,
+                                      )));
+                        },
                         style: mainButtonStyle,
                         child: const Text('Iniciar prueba'),
                       ),
