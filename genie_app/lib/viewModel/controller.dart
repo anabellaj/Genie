@@ -9,6 +9,7 @@ import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
+import 'package:genie_app/view/widgets/forum_best.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
 import 'package:genie_app/models/forum.dart';
@@ -121,7 +122,7 @@ class Controller {
   /*User Controller */
   static Future<bool> getLoggedInUser() async {
     final prefs = await SharedPreferences.getInstance();
-    var answer = prefs.getBool("isLoggedIn");
+    var answer = await prefs.getBool("isLoggedIn");
     if (answer != null) {
       if (answer) {
         return true;
@@ -135,11 +136,14 @@ class Controller {
 
   static Future<User> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-    var user = prefs.getString("user");
+    var user = await prefs.getString("user");
+    print(user);
     User loggedUser;
     if (user != null) {
+      print('decode');
+      print(jsonDecode(user));
       loggedUser = User.fromJson(jsonDecode(user));
-
+      
       return loggedUser;
     } else {
       return User("", "");
@@ -176,6 +180,8 @@ class Controller {
   static Future<String> updateUserInfo(User userInfo) async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      print('update');
+      print(userInfo.toJson());
       await prefs.setString("user", jsonEncode(userInfo.toJson()));
       await Connection.updateUser(userInfo);
       return 'success';
@@ -215,7 +221,7 @@ class Controller {
       String title, String description, Groups group) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      var user = prefs.getString("user");
+      var user = await prefs.getString("user");
       if (user != null) {
         User loggedUser = User.fromJson(jsonDecode(user));
         String creator = loggedUser.name;
@@ -263,11 +269,19 @@ class Controller {
     
   }
 
-  static Future<List<ForumReplyShow>> getReplys(String forumId) async {
+  static Future<List<Widget>> getReplys(String forumId) async {
     try {
       List replys = await Connection.returnAnswers(forumId);
 
-    List<ForumReplyShow> messages = [];
+    List<Widget> messages = [];
+    ForumReply f = ForumReply.fromJson(replys[0]);
+    messages.add(ForumBestReply(
+      creator: f.creator, 
+      date: DateFormat.yMd().format(f.date), 
+      message: f.message, 
+      creator_id: f.creator_id, id: f.id, forum: forumId));
+
+    replys.removeAt(0);
 
     for (var reply in replys) {
       ForumReply f = ForumReply.fromJson(reply);
@@ -288,8 +302,8 @@ class Controller {
     
   }
 
-  static Future<List<ForumReplyShow>> newAnswer(
-      String message, String forumId, List<ForumReplyShow> replys) async {
+  static Future<List<Widget>> newAnswer(
+      String message, String forumId, List<Widget> replys) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       var userInfo = prefs.getString('user');
@@ -394,6 +408,9 @@ class Controller {
 
   static Future<Topic> loadTopic(String id) async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      var user = await prefs.getString("user");
+      print(user);
       return await Connection.readTopic(id);
     } catch (e) {
       return Topic(name: "", label: "", files: []);

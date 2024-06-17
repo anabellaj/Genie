@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Validator{
   RegExp get _emailRegex => RegExp(r'^\S+@\S+$');
 
@@ -21,6 +23,10 @@ class Validator{
 
   bool validateEmptyMessage(String message){
     return message.isNotEmpty;
+  }
+
+  static bool validateController(TextEditingController control){
+    return control.text.isNotEmpty;
   }
 
 }
