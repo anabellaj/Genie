@@ -66,11 +66,36 @@ class Controller {
     );
   }
 
+  static Future<String> deleteGroup(Groups group) async{
+    try{
+    Connection.removeGroup(group);
+    return "success";
+    }
+    catch (e){
+      return "no_success";
+    }
+  }
+
   static Future<String> deleteMember(String memberId, Groups group) async {
     try {
-      Connection.removeGroupMember(memberId, group);
+      User currUser = await Connection.removeGroupMember(memberId, group);
+      Controller.updateUserInfo(currUser);
       return "success";
     } catch (e) {
+      print(e);
+      return "no_success";
+    }
+  }
+
+  static Future<String> leaveGroup(Groups group) async{
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+    String logUserId = logUser[0]["_id"].oid;
+    try{
+    String response = await Controller.deleteMember(logUserId, group);
+    return response;
+    } catch (e){
+      print(e);
       return "no_success";
     }
   }
