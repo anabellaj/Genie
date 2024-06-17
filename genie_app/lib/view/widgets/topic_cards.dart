@@ -34,7 +34,7 @@ class TopicCards extends StatelessWidget {
             child: Card(
               shadowColor: genieThemeDataDemo.colorScheme.onSurface,
               elevation: 4,
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
