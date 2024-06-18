@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/more_less_btns.dart';
 import 'package:genie_app/view/widgets/time_limit.dart';
@@ -7,7 +8,8 @@ import 'package:genie_app/models/tf_question.dart';
 import 'package:genie_app/models/tf_quiz.dart';
 
 class TestView extends StatefulWidget {
-  const TestView({super.key});
+  final List<Flashcard> flashcards;
+  const TestView({super.key, required this.flashcards});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,12 +18,28 @@ class TestView extends StatefulWidget {
 
 class _TestViewState extends State<TestView> {
   late bool isLoading = true;
-  late List<Widget> topics = [];
-  int numQuestions = 2;
+  late int maxQuestions;
+  int numQuestions = 1;
   int timeLimit = 360;
 
   void setTimeLimit(int minutes) {
     timeLimit = minutes * 60;
+  }
+
+  TFQuiz createTest(int questionsAmount, List<Flashcard> flashcards){
+    List <TFQuestion> quizQuestions =[];
+    flashcards.shuffle();
+    for (int i =0; i< questionsAmount; i++){
+      TFQuestion currQuestion = TFQuestion(question: flashcards[i].term, correctAnswer: flashcards[i].definition);
+      quizQuestions.add(currQuestion);
+    }
+    return TFQuiz(questions: quizQuestions);
+  }
+
+  void initState(){
+    setState(() {
+      maxQuestions = widget.flashcards.length;
+    });
   }
 
   @override
@@ -51,13 +69,13 @@ class _TestViewState extends State<TestView> {
                       Row(children: [
                         IncrementButton(onPressed: () {
                           setState(() {
-                            if (numQuestions < 11) {
+                            if (numQuestions < widget.flashcards.length) {
                               numQuestions++;
                             }
                           });
                         }),
                         Text(
-                          '$numQuestions/11',
+                          '$numQuestions/$maxQuestions',
                           style: genieThemeDataDemo.textTheme.displayLarge,
                         ),
                         DecrementButton(onPressed: () {
@@ -80,24 +98,13 @@ class _TestViewState extends State<TestView> {
                     Expanded(
                       child: TextButton(
                         onPressed: () {
+                          TFQuiz createdQuiz = createTest(numQuestions, widget.flashcards);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => TFQuizScreen(
-                                        quiz: TFQuiz(questions: [
-                                          TFQuestion(
-                                              question: 'Venezuela',
-                                              correctAnswer: 'Caracas'),
-                                          TFQuestion(
-                                              question: 'Colombia',
-                                              correctAnswer: 'Bogota'),
-                                          TFQuestion(
-                                              question: 'Brasil',
-                                              correctAnswer: 'Brasilia'),
-                                          TFQuestion(
-                                              question: 'Honduras',
-                                              correctAnswer: 'Tegucigalpa'),
-                                        ]),
+                                  builder: (context) => 
+                                  TFQuizScreen(
+                                        quiz: createdQuiz,
                                         timeLeft: timeLimit,
                                       )));
                         },

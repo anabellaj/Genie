@@ -3,6 +3,7 @@ import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/screens/modify_topic.dart';
 import 'package:genie_app/view/screens/pdf_viewer.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+import 'package:genie_app/view/widgets/percent_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/topic.dart';
@@ -165,6 +166,10 @@ class _TopicScreenState extends State<TopicScreen> {
                                 .copyWith(color: Colors.white, fontSize: 14),
                           ),
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        PercentBar(percent: 70, group: widget.group, topicId: widget.topicId,),
                         const SizedBox(
                           height: 20,
                         ),

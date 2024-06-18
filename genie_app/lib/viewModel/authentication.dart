@@ -37,6 +37,7 @@ class Authenticate{
     try {
       final prefs = await SharedPreferences.getInstance();
       User user = User(email, password);
+      user.initialize();
 
       final result = await Connection.checkUser(user);
       
@@ -44,7 +45,9 @@ class Authenticate{
         
         if(result[0]["password"]==password){
           await prefs.setBool('isLoggedIn', true);
-          await prefs.setString("user", jsonEncode(result[0]));
+          
+          print(User.fromJson(result[0]).toJson());
+          await prefs.setString("user", jsonEncode(User.fromJson(result[0])) );
           return "success";
         }else{
           return "wrong_credentials";

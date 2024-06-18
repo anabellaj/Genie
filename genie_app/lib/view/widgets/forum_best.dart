@@ -6,20 +6,20 @@ import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/view/screens/forum_view.dart';
 
 
-class ForumReplyShow extends StatefulWidget{
+class ForumBestReply extends StatefulWidget{
   final String forum;
   final String id;
   final String creator;
   final String date;
   final String message;
   final String creator_id;
-  const ForumReplyShow({super.key,required this.creator, required this.date, required this.message, required this.creator_id, required this.id, required this.forum});
+  const ForumBestReply({super.key,required this.creator, required this.date, required this.message, required this.creator_id, required this.id, required this.forum});
 
   @override
-  State<ForumReplyShow> createState()=> _ForumReply();
+  State<ForumBestReply> createState()=> _ForumReply();
 }
 
-class _ForumReply extends State<ForumReplyShow>{
+class _ForumReply extends State<ForumBestReply>{
   late bool isCreator=false;
 
   void checkCreator()async{
@@ -47,7 +47,9 @@ class _ForumReply extends State<ForumReplyShow>{
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
         decoration: BoxDecoration(
-          border: Border(bottom: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 2))
+          border: Border(bottom: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4),
+          top:BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4), left: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4),
+          right: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4))
         ), 
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -113,8 +115,8 @@ class _ForumReply extends State<ForumReplyShow>{
                       fontWeight: FontWeight.bold,),)
                   ), 
                  ],
-            ):SizedBox.shrink()]),
-             Row(
+            ):SizedBox.shrink()]), 
+            Row(
               children: [
                 IconButton(
                   onPressed: (){}, 
@@ -126,7 +128,6 @@ class _ForumReply extends State<ForumReplyShow>{
                 )
               ],
             )
-            
             
             ]
           ),
