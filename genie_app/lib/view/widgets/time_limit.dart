@@ -16,16 +16,16 @@ class _MyTimeLimitWidgetState extends State<MyTimeLimitWidget> {
   void _incrementTimeLimit() {
     setState(() {
       _timeLimit =
-          _timeLimit < 120 ? _timeLimit + 10 : _timeLimit; // Limit max value
-          widget.setTimeLimit(_timeLimit);
+          _timeLimit < 120 ? _timeLimit + 5 : _timeLimit; // Limit max value
+      widget.setTimeLimit(_timeLimit);
     });
   }
 
   void _decrementTimeLimit() {
     setState(() {
       _timeLimit =
-          _timeLimit > 10 ? _timeLimit - 10 : _timeLimit; // Limit min value
-          widget.setTimeLimit(_timeLimit);
+          _timeLimit > 10 ? _timeLimit - 5 : _timeLimit; // Limit min value
+      widget.setTimeLimit(_timeLimit);
     });
   }
 

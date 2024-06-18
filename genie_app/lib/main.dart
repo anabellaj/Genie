@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/flashcard.dart';
-import 'package:genie_app/view/screens/create_card.dart';
-import 'package:genie_app/view/screens/flashcard_carrousel.dart';
-import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
 import 'view/theme.dart';
@@ -48,18 +44,15 @@ class _myAppState extends State<MyApp> {
 
     checkState();
 
-
     Timer(
-      const Duration(seconds: 3),
-      () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context)=>
-          isUser? 
-            const HomeScreen(): 
-            const SplashPage(title: "SplashPage"))));
-
+        const Duration(seconds: 3),
+        () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => isUser
+                    ? const HomeScreen()
+                    : const SplashPage(title: "SplashPage"))));
   }
-    
 
   // This widget is the root of your application.
   @override
