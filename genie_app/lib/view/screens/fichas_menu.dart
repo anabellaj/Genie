@@ -42,7 +42,7 @@ class _FichasViewState extends State<FichasView> {
     return Scaffold(
       body: isLoading? const Center(child: CircularProgressIndicator()):
        Tabs(group: widget.group, topicId:widget.topicId, fichasContent: FlashCardCarrouselPage(flashcards: flashcards, group:widget.group, topicId: widget.topicId), 
-       pruebasContent: TestView(flashcardsQty: flashcards.length))
+       pruebasContent: TestView(flashcards: flashcards))
     );
   }
 }

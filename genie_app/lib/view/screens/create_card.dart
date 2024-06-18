@@ -58,6 +58,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
         isLoading=false;
       });
       if(res == 'success'){
+        if(mounted){
         ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
           backgroundColor: genieThemeDataDemo.colorScheme.secondary,
           contentTextStyle: TextStyle(
@@ -69,6 +70,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
             onPressed: ()=>
               ScaffoldMessenger.of(context).hideCurrentMaterialBanner(), 
             icon: Icon(Icons.check, color: genieThemeDataDemo.colorScheme.onSecondary,))]));
+        }
       }else{
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Hubo un error')

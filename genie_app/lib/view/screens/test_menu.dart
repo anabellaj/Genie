@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/more_less_btns.dart';
 import 'package:genie_app/view/widgets/time_limit.dart';
@@ -7,8 +8,8 @@ import 'package:genie_app/models/tf_question.dart';
 import 'package:genie_app/models/tf_quiz.dart';
 
 class TestView extends StatefulWidget {
-  final int flashcardsQty;
-  const TestView({super.key, required this.flashcardsQty});
+  final List<Flashcard> flashcards;
+  const TestView({super.key, required this.flashcards});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -25,9 +26,19 @@ class _TestViewState extends State<TestView> {
     timeLimit = minutes * 60;
   }
 
+  TFQuiz createTest(int questionsAmount, List<Flashcard> flashcards){
+    List <TFQuestion> quizQuestions =[];
+    flashcards.shuffle();
+    for (int i =0; i< questionsAmount; i++){
+      TFQuestion currQuestion = TFQuestion(question: flashcards[i].term, correctAnswer: flashcards[i].definition);
+      quizQuestions.add(currQuestion);
+    }
+    return TFQuiz(questions: quizQuestions);
+  }
+
   void initState(){
     setState(() {
-      maxQuestions = widget.flashcardsQty;
+      maxQuestions = widget.flashcards.length;
     });
   }
 
@@ -58,7 +69,7 @@ class _TestViewState extends State<TestView> {
                       Row(children: [
                         IncrementButton(onPressed: () {
                           setState(() {
-                            if (numQuestions < widget.flashcardsQty) {
+                            if (numQuestions < widget.flashcards.length) {
                               numQuestions++;
                             }
                           });
@@ -87,24 +98,13 @@ class _TestViewState extends State<TestView> {
                     Expanded(
                       child: TextButton(
                         onPressed: () {
+                          TFQuiz createdQuiz = createTest(numQuestions, widget.flashcards);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => TFQuizScreen(
-                                        quiz: TFQuiz(questions: [
-                                          TFQuestion(
-                                              question: 'Venezuela',
-                                              correctAnswer: 'Caracas'),
-                                          TFQuestion(
-                                              question: 'Colombia',
-                                              correctAnswer: 'Bogota'),
-                                          TFQuestion(
-                                              question: 'Brasil',
-                                              correctAnswer: 'Brasilia'),
-                                          TFQuestion(
-                                              question: 'Honduras',
-                                              correctAnswer: 'Tegucigalpa'),
-                                        ]),
+                                  builder: (context) => 
+                                  TFQuizScreen(
+                                        quiz: createdQuiz,
                                         timeLeft: timeLimit,
                                       )));
                         },
