@@ -128,7 +128,8 @@ class Connection {
       "interests": [],
       "chats": [],
       "studyGroups": [],
-      'flashCardsStudied':[]
+      'flashCardsStudied':[],
+      'replysLiked':[]
     });
     await db.close();
     return result.id.oid.toString();
@@ -540,6 +541,7 @@ class Connection {
       'date': newReply.date,
       'message': newReply.message,
       'creator_id': newReply.creator_id,
+      'num_likes':newReply.num_likes
     });
 
     await forumCollection.updateOne(
@@ -766,6 +768,7 @@ class Connection {
       await db.open();
       final userCollection = db.collection('user');
       Map<String, dynamic>? res = await userCollection.findOne(where.eq("_id", ObjectId.fromHexString(id)));
+      await db.close();
       if(res!=null){
         return User.fromJson(res);
       }else{
@@ -788,6 +791,69 @@ class Connection {
       await db.close();
     } catch (e) {
       
+    }
+  }
+
+  static Future updateLikesInReplys(List replysId)async{
+    final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+    final forumReplyCollection = db.collection('forumAnswer');
+    for(var reply in replysId){
+      await forumReplyCollection.updateOne(
+      where.eq("_id", ObjectId.fromHexString(reply)), 
+      ModifierBuilder().inc("num_likes", 1));
+    }
+    await db.close();
+    
+      
+  }
+  static Future updateUserLikedReplys(String userId, dynamic object)async{
+       try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+        where.eq('_id', ObjectId.fromHexString(userId))
+        , 
+
+        ModifierBuilder().set('replysLiked', object)); 
+      await db.close();
+    } catch (e) {
+      
+    }
+  }
+  static Future addUserLikedReplys(String userId, dynamic object)async{
+       try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+        where.eq('_id', ObjectId.fromHexString(userId))
+        , 
+
+        ModifierBuilder().addToSet('replysLiked', object)); 
+      await db.close();
+    } catch (e) {
+      
+    }
+  }
+
+  static Future removeLikes(List remove)async{
+    final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+          
+      await db.open();
+    final answerCollection = db.collection('forumAnswer');
+    for(var rem in remove){
+      await answerCollection.updateOne(
+        where.eq("_id", rem), 
+        ModifierBuilder().inc('num_likes', -1));
     }
   }
 

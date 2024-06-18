@@ -5,7 +5,9 @@ import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/forum_reply.dart';
+import 'package:genie_app/viewModel/ForumNotification.dart';
 import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/viewModel/controllerForum.dart';
 import 'package:genie_app/viewModel/validator.dart';
 
 
@@ -31,19 +33,40 @@ class _ForumView extends State<ForumView>{
   late bool sendingMessage = false;
   late bool isCreator= false;
   late bool isDeleting = false;
+  late bool backgroundP=false;
   late List<Widget> replys;
+  late List replysUpdate=[];
+  late List decreaseReplys =[];
   final TextEditingController _controller = TextEditingController();
 
 
   void getAnswers()async{
     bool creator = await Controller.checkIfOwner(widget.creator_id);
-    List<Widget> r = await Controller.getReplys(widget.id);
+    List<Widget> r = await ControllerForum.getReplys(widget.id);
     setState(() {
       replys = r;
       isLoading= false;
       isCreator= creator;
     });
 
+  }
+  void updateActions()async{
+    await ControllerForum.updateLike(widget.id, replysUpdate, decreaseReplys);
+                      
+  }
+
+  void removeAnswerToLikes(String id){
+    setState(() {
+      if(replysUpdate.isNotEmpty){
+        replysUpdate.removeWhere((e)=>e==id);
+        decreaseReplys.add(id);
+      }
+    });
+  }
+  void addAnswerToLikes(String id){
+    setState(() {
+      replysUpdate.add(id);
+    });
   }
 
   @override
@@ -57,7 +80,23 @@ class _ForumView extends State<ForumView>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return NotificationListener<LikedReply>(
+      onNotification: (n){
+        setState(() {
+          backgroundP=n.val;
+        });
+        return true;
+      },
+      child: NotificationListener<LikeState>( 
+      onNotification: (n){
+        if(n.state){
+          addAnswerToLikes(n.id);
+        }else{
+          removeAnswerToLikes(n.id);
+        }
+        return true;
+      },
+      child: Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: TopBar(),
       body: 
@@ -73,14 +112,19 @@ class _ForumView extends State<ForumView>{
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  isLoading? const SizedBox.shrink():
+                  isLoading|| backgroundP? const SizedBox.shrink():
                   TextButton(
                     
                     onPressed: () {
-                      
+                      updateActions();
+                      _controller.dispose();
+
+                     
+                       
                       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                       Navigator.pop(context);
-                      _controller.dispose();
+                      
+                     
                     },
                     child:Row(
                       children: [
@@ -183,7 +227,7 @@ class _ForumView extends State<ForumView>{
                           isLoading = true;
                         });
                         FocusManager.instance.primaryFocus?.unfocus();
-                        List<Widget> newReply = await Controller.newAnswer(_controller.text, widget.id, replys);
+                        List<Widget> newReply = await ControllerForum.newAnswer(_controller.text, widget.id, replys);
                         _controller.clear();
                         setState(() {
                           sendingMessage=false;
@@ -214,7 +258,7 @@ class _ForumView extends State<ForumView>{
         ],)
         ],),
 
-    bottomNavigationBar: BottomNavBar());
+    bottomNavigationBar: BottomNavBar())));
 
   }
 

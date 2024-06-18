@@ -4,6 +4,7 @@ import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/screens/forum_view.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/viewModel/controllerForum.dart';
 
 
 class MessagePreview extends StatefulWidget{
@@ -14,7 +15,7 @@ class MessagePreview extends StatefulWidget{
   final String date;
   final String description;
   final String creator_id;
-  const MessagePreview({super.key, required this.id, required this.title, required this.creator, required this.date, required this.description, required this.creator_id, required this.group});
+  const MessagePreview({super.key, required this.id, required this.title, required this.creator, required this.date, required this.description, required this.creator_id, required this.group, });
 
   @override
   State<MessagePreview> createState()=> _MessagePreview();
@@ -102,7 +103,7 @@ class _MessagePreview extends State<MessagePreview>{
                             ),
                           );
                         });
-                     String res = await Controller.deleteForum(widget.id);
+                     String res = await ControllerForum.deleteForum(widget.id, widget.group.id.oid);
                       Navigator.pop(context);
                       
                       if(res=='success'){
