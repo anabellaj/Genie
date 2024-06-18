@@ -44,18 +44,15 @@ class _myAppState extends State<MyApp> {
 
     checkState();
 
-
     Timer(
-      const Duration(seconds: 3),
-      () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context)=>
-          isUser? 
-            const HomeScreen(): 
-            const SplashPage(title: "SplashPage"))));
-
+        const Duration(seconds: 3),
+        () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => isUser
+                    ? const HomeScreen()
+                    : const SplashPage(title: "SplashPage"))));
   }
-    
 
   // This widget is the root of your application.
   @override

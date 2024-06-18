@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:genie_app/models/flashcard.dart';
+import 'package:genie_app/models/tf_question.dart';
+import 'package:genie_app/models/tf_quiz.dart';
+import 'package:genie_app/view/screens/tf_quiz.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/more_less_btns.dart';
 import 'package:genie_app/view/widgets/time_limit.dart';
-import 'package:genie_app/view/screens/tf_quiz.dart';
-import 'package:genie_app/models/tf_question.dart';
-import 'package:genie_app/models/tf_quiz.dart';
 
 class TestView extends StatefulWidget {
   final List<Flashcard> flashcards;
@@ -20,23 +21,25 @@ class _TestViewState extends State<TestView> {
   late bool isLoading = true;
   late int maxQuestions;
   int numQuestions = 1;
-  int timeLimit = 360;
+  int timeLimit = 3600;
 
   void setTimeLimit(int minutes) {
     timeLimit = minutes * 60;
   }
 
-  TFQuiz createTest(int questionsAmount, List<Flashcard> flashcards){
-    List <TFQuestion> quizQuestions =[];
+  TFQuiz createTest(int questionsAmount, List<Flashcard> flashcards) {
+    List<TFQuestion> quizQuestions = [];
     flashcards.shuffle();
-    for (int i =0; i< questionsAmount; i++){
-      TFQuestion currQuestion = TFQuestion(question: flashcards[i].term, correctAnswer: flashcards[i].definition);
+    for (int i = 0; i < questionsAmount; i++) {
+      TFQuestion currQuestion = TFQuestion(
+          question: flashcards[i].term,
+          correctAnswer: flashcards[i].definition);
       quizQuestions.add(currQuestion);
     }
     return TFQuiz(questions: quizQuestions);
   }
 
-  void initState(){
+  void initState() {
     setState(() {
       maxQuestions = widget.flashcards.length;
     });
@@ -67,10 +70,10 @@ class _TestViewState extends State<TestView> {
                         style: genieThemeDataDemo.textTheme.displayLarge,
                       ),
                       Row(children: [
-                        IncrementButton(onPressed: () {
+                        DecrementButton(onPressed: () {
                           setState(() {
-                            if (numQuestions < widget.flashcards.length) {
-                              numQuestions++;
+                            if (numQuestions > 2) {
+                              numQuestions--;
                             }
                           });
                         }),
@@ -78,13 +81,13 @@ class _TestViewState extends State<TestView> {
                           '$numQuestions/$maxQuestions',
                           style: genieThemeDataDemo.textTheme.displayLarge,
                         ),
-                        DecrementButton(onPressed: () {
+                        IncrementButton(onPressed: () {
                           setState(() {
-                            if (numQuestions > 2) {
-                              numQuestions--;
+                            if (numQuestions < widget.flashcards.length) {
+                              numQuestions++;
                             }
                           });
-                        })
+                        }),
                       ])
                     ]),
                 const SizedBox(height: 18.0),
@@ -98,12 +101,12 @@ class _TestViewState extends State<TestView> {
                     Expanded(
                       child: TextButton(
                         onPressed: () {
-                          TFQuiz createdQuiz = createTest(numQuestions, widget.flashcards);
+                          TFQuiz createdQuiz =
+                              createTest(numQuestions, widget.flashcards);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => 
-                                  TFQuizScreen(
+                                  builder: (context) => TFQuizScreen(
                                         quiz: createdQuiz,
                                         timeLeft: timeLimit,
                                       )));
