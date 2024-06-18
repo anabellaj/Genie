@@ -96,7 +96,7 @@ class _TestViewState extends State<TestView> {
                                               question: 'Honduras',
                                               correctAnswer: 'Tegucigalpa'),
                                         ]),
-                                        timeLeft: 70,
+                                        timeLeft: timeLimit,
                                       )));
                         },
                         style: mainButtonStyle,

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/flashcard.dart';
+import 'package:genie_app/view/screens/create_card.dart';
+import 'package:genie_app/view/screens/flashcard_carrousel.dart';
+import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/screens/fichas_menu.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
