@@ -41,8 +41,8 @@ class _FichasViewState extends State<FichasView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading? const Center(child: CircularProgressIndicator()):
-       Tabs(fichasContent: FlashCardCarrouselPage(flashcards: flashcards, group:widget.group, topicId: widget.topicId), 
-       pruebasContent: const TestView())
+       Tabs(group: widget.group, topicId:widget.topicId, fichasContent: FlashCardCarrouselPage(flashcards: flashcards, group:widget.group, topicId: widget.topicId), 
+       pruebasContent: TestView(flashcardsQty: flashcards.length))
     );
   }
 }

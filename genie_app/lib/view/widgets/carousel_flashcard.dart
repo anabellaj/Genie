@@ -43,11 +43,13 @@ class _CarouselFlashcard extends State<CarouselFlashcard>{
     });
     List<bool> l = await  ControllerStudy.checkIfStudied(widget.topicId, widget.flashcards);
     int number = await ControllerStudy.countStudied(l);
+    if(mounted){
     setState(() {
       studied=l;
       isLoading=false;
       num_studied=number;
     });
+    }
   }
  
 

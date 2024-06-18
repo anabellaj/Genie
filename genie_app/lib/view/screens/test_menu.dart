@@ -7,7 +7,8 @@ import 'package:genie_app/models/tf_question.dart';
 import 'package:genie_app/models/tf_quiz.dart';
 
 class TestView extends StatefulWidget {
-  const TestView({super.key});
+  final int flashcardsQty;
+  const TestView({super.key, required this.flashcardsQty});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,12 +17,18 @@ class TestView extends StatefulWidget {
 
 class _TestViewState extends State<TestView> {
   late bool isLoading = true;
-  late List<Widget> topics = [];
-  int numQuestions = 2;
+  late int maxQuestions;
+  int numQuestions = 1;
   int timeLimit = 360;
 
   void setTimeLimit(int minutes) {
     timeLimit = minutes * 60;
+  }
+
+  void initState(){
+    setState(() {
+      maxQuestions = widget.flashcardsQty;
+    });
   }
 
   @override
@@ -51,13 +58,13 @@ class _TestViewState extends State<TestView> {
                       Row(children: [
                         IncrementButton(onPressed: () {
                           setState(() {
-                            if (numQuestions < 11) {
+                            if (numQuestions < widget.flashcardsQty) {
                               numQuestions++;
                             }
                           });
                         }),
                         Text(
-                          '$numQuestions/11',
+                          '$numQuestions/$maxQuestions',
                           style: genieThemeDataDemo.textTheme.displayLarge,
                         ),
                         DecrementButton(onPressed: () {

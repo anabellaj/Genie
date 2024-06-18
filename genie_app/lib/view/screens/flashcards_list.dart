@@ -83,7 +83,7 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                       children: [
                         Icon(
                           Icons.chevron_left,
-                          color: genieThemeDataDemo.colorScheme.onSecondary,),
+                          color: genieThemeDataDemo.colorScheme.onSecondary),
                         Text(
                           'Regresar',
                           style: TextStyle(

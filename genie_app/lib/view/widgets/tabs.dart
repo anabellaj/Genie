@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
+import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import '../theme.dart';
@@ -7,8 +9,10 @@ import '../theme.dart';
 class Tabs extends StatefulWidget {
   final Widget fichasContent;
   final Widget pruebasContent;
+  final Groups group;
+  final String topicId;
   const Tabs(
-      {super.key, required this.fichasContent, required this.pruebasContent});
+      {super.key, required this.fichasContent, required this.pruebasContent, required this.group, required this.topicId});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -33,7 +37,7 @@ class _TapBarState extends State<Tabs> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const JoinedGroups())); //CAMBIAR ROUTE A group_menu
+                              TopicScreen(topicId: widget.topicId, group: widget.group))); //CAMBIAR ROUTE A group_menu
                 },
                 child: Row(children: [
                   Icon(
