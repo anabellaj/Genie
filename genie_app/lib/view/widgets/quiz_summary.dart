@@ -23,16 +23,33 @@ class QuizSummary extends StatelessWidget {
         children: [
           Card(
               shadowColor: genieThemeDataDemo.colorScheme.onSurface,
-              elevation: 4,
+              elevation: 5,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('$score %'),
+                padding: const EdgeInsets.all(40.0),
+                child: Column(children: [
+                  Text('Obtuviste una calificación de'),
+                  const SizedBox(
+                    height: 6.0,
+                  ),
+                  Text(
+                    '$score %',
+                    style: TextStyle(
+                      fontSize:
+                          60.0, // Adjust font size as desired (larger value = bigger text)
+                      color: genieThemeDataDemo
+                          .primaryColor, // Change color as desired
+                      fontWeight:
+                          FontWeight.bold, // Optional: Add boldness (optional)
+                    ),
+                  )
+                ]),
               )),
+          const SizedBox(height: 26.0),
           for (var index = 0; index < quiz.questions.length; index++)
             Card(
               shadowColor: genieThemeDataDemo.colorScheme.onSurface,
-              color: (guesses[index]) ? Colors.green : Colors.red,
-              elevation: 4,
+              color: (guesses[index]) ? Colors.teal[50] : Colors.red[50],
+              elevation: 2,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
