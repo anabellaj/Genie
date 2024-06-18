@@ -20,8 +20,8 @@ class _TestViewState extends State<TestView> {
   int numQuestions = 2;
   int timeLimit = 360;
 
-  void setTimeLimit(int minutes){
-    timeLimit = minutes*60;
+  void setTimeLimit(int minutes) {
+    timeLimit = minutes * 60;
   }
 
   @override
@@ -70,7 +70,9 @@ class _TestViewState extends State<TestView> {
                       ])
                     ]),
                 const SizedBox(height: 18.0),
-                MyTimeLimitWidget(setTimeLimit: setTimeLimit,),
+                MyTimeLimitWidget(
+                  setTimeLimit: setTimeLimit,
+                ),
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

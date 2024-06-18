@@ -146,6 +146,7 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
       mainContent = Column(
         children: [
           Card(
+            elevation: 8.0,
             shadowColor: genieThemeDataDemo.colorScheme.onSurface,
             child: Center(
               child: Padding(
@@ -243,7 +244,9 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
                 decoration: BoxDecoration(
-                  color: !littleTimeLeft ? genieThemeDataDemo.primaryColor : Colors.red ,
+                  color: !littleTimeLeft
+                      ? genieThemeDataDemo.primaryColor
+                      : Colors.red,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Align(
@@ -254,13 +257,15 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
                 ),
               ),
               Container(
+                width: 40.0, // Adjust width as desired
+                height: 40.0,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: genieThemeDataDemo.primaryColor,
-                      width: 2.0), // Adjust border color and width
+                    color: genieThemeDataDemo.primaryColor,
+                  ), // Adjust border color and width
                 ),
-                padding: const EdgeInsets.all(8.0), // Adjust padding as needed
+
                 child: IconButton(
                   icon: const Icon(Icons.close),
                   color: genieThemeDataDemo.primaryColor,
