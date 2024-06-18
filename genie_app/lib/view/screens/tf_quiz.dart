@@ -231,6 +231,7 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
         guesses: guesses,
         emergenceOrder: emergenceOrder,
       );
+      timeLeft = 0;
     }
 
     return Scaffold(
