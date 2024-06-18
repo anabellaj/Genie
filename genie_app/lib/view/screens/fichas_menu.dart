@@ -19,7 +19,7 @@ class _FichasViewState extends State<FichasView> {
   late bool isLoading = true;
   late List<Flashcard> flashcards;
 
-  void getFlashcards()async {
+  void getFlashcards() async {
     List<Flashcard> flashcardsList = await ControllerStudy.getFlashcards(widget.topicId);
     setState(() {
       flashcards= flashcardsList;
@@ -30,10 +30,8 @@ class _FichasViewState extends State<FichasView> {
   }
   
   void initState() {
-    super.initState();
-    
     getFlashcards();
-
+    super.initState();
   }
 
 
