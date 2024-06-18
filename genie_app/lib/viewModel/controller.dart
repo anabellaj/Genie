@@ -18,6 +18,7 @@ import 'package:genie_app/view/widgets/forum_preview.dart';
 import 'package:genie_app/view/widgets/forum_reply.dart';
 import 'package:genie_app/models/forum_reply.dart';
 import 'package:genie_app/view/widgets/topic_preview.dart';
+import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -117,11 +118,8 @@ User loggedUser = await Controller.getUserInfo();
   static Future<User> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     var user = await prefs.getString("user");
-    print(user);
     User loggedUser;
     if (user != null) {
-      print('decode');
-      print(jsonDecode(user));
       loggedUser = User.fromJson(jsonDecode(user));
       
       return loggedUser;
@@ -160,8 +158,6 @@ User loggedUser = await Controller.getUserInfo();
   static Future<String> updateUserInfo(User userInfo) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      print('update');
-      print(userInfo.toJson());
       await prefs.setString("user", jsonEncode(userInfo.toJson()));
       await Connection.updateUser(userInfo);
       return 'success';
@@ -232,11 +228,13 @@ User loggedUser = await Controller.getUserInfo();
 
   static Future<Topic> loadTopic(String id) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      var user = await prefs.getString("user");
-      print(user);
-      return await Connection.readTopic(id);
+      User user = await Controller.getUserInfo();
+      Topic topic = await Connection.readTopic(id);
+      double percent=  await ControllerStudy.getPercent(topic, user.id);
+      topic.percent= percent;
+      return topic;
     } catch (e) {
+      print(e);
       return Topic(name: "", label: "", files: []);
     }
     

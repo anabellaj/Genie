@@ -1,16 +1,18 @@
 import 'package:genie_app/models/study_material.dart';
 
 class Topic {
-  const Topic(
+   Topic(
       {this.id = '',
       required this.name,
       required this.label,
-      required this.files});
+      required this.files, 
+      this.percent=0});
 
   final String id;
   final String name;
   final String label;
   final List<StudyMaterial> files;
+  late double percent=0;
 
   Map<String, dynamic> toJson() {
     return {

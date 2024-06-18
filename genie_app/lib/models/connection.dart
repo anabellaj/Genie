@@ -49,9 +49,7 @@ class Connection {
         await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
     User groupMember = User.fromJson(docUser as Map<String, dynamic>);
     List studyGroups = groupMember.studyGroups;
-    print(studyGroups);
     studyGroups.remove(group.id.oid);
-    print(studyGroups);
 
     final groupUpdate =
         ModifierBuilder().set("members", members).set("admins", admins);
@@ -77,7 +75,6 @@ class Connection {
       groupMember.id = memberId;
       groupMembs.add(groupMember);
     }
-    print("VAMOSS");
     return groupMembs;
   }
 
@@ -173,7 +170,6 @@ class Connection {
     await db.open();
     var topicCollection = db.collection('topic');
     final response = await topicCollection.findOne(where.eq('_id', castedId));
-    print(response);
     List<StudyMaterial> studyMaterials = [];
     for (var studyMaterial in response!['studyMaterial']) {
       studyMaterials.add(StudyMaterial(

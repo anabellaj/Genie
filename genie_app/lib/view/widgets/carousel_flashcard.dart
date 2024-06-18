@@ -166,7 +166,6 @@ class _CarouselFlashcard extends State<CarouselFlashcard>{
               setState(() {
                 
                 _current=_current+1;
-                print(_current);
                 if(_current>=widget.flashcards.length){
                   _current=0;
                 }

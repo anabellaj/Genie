@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/viewModel/controller.dart';
@@ -94,7 +94,7 @@ class ControllerStudy {
                 studiedFlash.add(false);
           }
       }
-      
+
        return studiedFlash; 
       } catch (e) {
         print(e);
@@ -114,6 +114,8 @@ class ControllerStudy {
     static Future updateStudied(List<bool> studied, String topicId, List<Flashcard> flashcards)async{
       try {
         User user = await Controller.getUserInfo();
+        User fullUser = await Connection.getUser(user.id);
+
       List<dynamic> studiedIds=[];
       int counter=0;
       for (bool b in studied){
@@ -125,13 +127,13 @@ class ControllerStudy {
 
       if(studiedIds.isNotEmpty){
        
-         if(user.flashCardsStudied.indexWhere((e)=>e['topic'] == topicId)!=-1){
-          for (var topic in user.flashCardsStudied) {
+         if(fullUser.flashCardsStudied.indexWhere((e)=>e['topic'] == topicId)!=-1){
+          for (var topic in fullUser.flashCardsStudied) {
             if(topic["topic"] == topicId){
               topic['studied'] = studiedIds;
          
           }
-          await Connection.updateUserFlashcard(user.id, user.flashCardsStudied);
+          await Connection.updateUserFlashcard(user.id, fullUser.flashCardsStudied);
         }}else{
           await Connection.updateStudied(user.id, {
           'topic': topicId,
@@ -154,5 +156,18 @@ class ControllerStudy {
       }
       return counter;
     }
+
+    static Future<double> getPercent(Topic topicId, String userId)async{
+      User fullUser = await Connection.getUser(userId);
+      List<Flashcard> flashcards = await Connection.getFlashCards(topicId.id);
+      if(fullUser.flashCardsStudied.indexWhere((e)=>e['topic']==topicId.id)!=-1){
+        List studied = fullUser.flashCardsStudied[fullUser.flashCardsStudied.indexWhere((e)=>e['topic']==topicId.id)]['studied'];
+        return studied.length/flashcards.length;
+      }else{
+        return 0;
+      }
+      
+    }
+
 
 }

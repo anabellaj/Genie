@@ -91,7 +91,6 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
               },
            );
       final result = await ControllerStudy.updateFlashcard(newFlashCard, widget.flashcard.id);
-      print (result);
         if (result == 'success'){
                   
           Navigator.pushReplacement(

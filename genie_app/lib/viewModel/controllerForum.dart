@@ -69,7 +69,6 @@ class ControllerForum {
   static Future<List<Widget>> getReplys(String forumId) async {
     try {
       List replys = await Connection.returnAnswers(forumId);
-      List liked=[];
       List<ForumReply> objects=[];
     
 
@@ -77,9 +76,7 @@ class ControllerForum {
     for (var reply in replys){
       objects.add(ForumReply.fromJson(reply));
     }
-    print(objects);
     objects.sort((a, b)=>b.num_likes.compareTo(a.num_likes));
-    print(objects);
     
     
     
@@ -224,15 +221,12 @@ class ControllerForum {
       if(fullUser.replysLiked.isNotEmpty){
         
         if(fullUser.replysLiked.indexWhere((e)=> e['forum']==forumId)!=-1){
-          print("hola");
-          for(var like in fullUser.replysLiked[fullUser.replysLiked.indexWhere((e)=> e['forum']==forumId)]['liked']){
+         for(var like in fullUser.replysLiked[fullUser.replysLiked.indexWhere((e)=> e['forum']==forumId)]['liked']){
             newLikes.removeWhere((e)=>e==like);
           }
-          print(fullUser.replysLiked[fullUser.replysLiked.indexWhere((e)=> e['forum']==forumId)]['liked']);
-          print(newReplysLiked);
+          
           fullUser.replysLiked[fullUser.replysLiked.indexWhere((e)=> e['forum']==forumId)]['liked']=newReplysLiked;
-          print(fullUser.replysLiked[fullUser.replysLiked.indexWhere((e)=> e['forum']==forumId)]['liked']);
-
+        
           await Connection.updateLikesInReplys(newLikes);
           await Connection.updateUserLikedReplys(fullUser.id, fullUser.replysLiked);
         }else{
@@ -244,7 +238,6 @@ class ControllerForum {
           });
         }
       }else{
-        print('add');
 
         if(newReplysLiked.isNotEmpty){
           await Connection.updateLikesInReplys(newReplysLiked);
