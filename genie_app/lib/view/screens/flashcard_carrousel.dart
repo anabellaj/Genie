@@ -14,7 +14,8 @@ import '../theme.dart';
 class FlashCardCarrouselPage extends StatefulWidget{
   final String topicId;
   final Groups group;
-  const FlashCardCarrouselPage({super.key, required this.topicId, required this.group});
+  final List<Flashcard> flashcards;
+  const FlashCardCarrouselPage({super.key, required this.topicId, required this.group, required this.flashcards});
 
 
   @override
@@ -23,32 +24,12 @@ class FlashCardCarrouselPage extends StatefulWidget{
 }
 
 class _FlashcardCarrouselPageState extends State<FlashCardCarrouselPage>{
-  late bool isLoading=true;
-  late List<Flashcard> flashcards;
-  void getFlashcards()async {
-    List<Flashcard> flashcardsList = await ControllerStudy.getFlashcards(widget.topicId);
-    setState(() {
-      flashcards= flashcardsList;
-      isLoading=false;
-    });
-
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    
-    getFlashcards();
-
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopBar(),
       body: 
-      isLoading? Center(child: CircularProgressIndicator(),):
-      Center(child: CarouselFlashcard(flashcards: flashcards, topicId: widget.topicId, group: widget.group,),)
+      Center(child: CarouselFlashcard(flashcards: widget.flashcards, topicId: widget.topicId, group: widget.group,),)
         
       );
   }

@@ -1,4 +1,5 @@
 import 'package:genie_app/models/group.dart';
+import 'package:genie_app/view/screens/fichas_menu.dart';
 import 'package:genie_app/view/screens/flashcard_carrousel.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class PercentBar extends StatelessWidget {
             InkWell(
               onTap: () {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: 
-                (context)=>FlashCardCarrouselPage(group: group,topicId: topicId)
+                (context)=>FichasView(group: group,topicId: topicId)
                 ));
                 
               },

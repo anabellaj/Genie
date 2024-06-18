@@ -4,6 +4,7 @@ import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/add_forum.dart';
 import 'package:genie_app/view/screens/create_card.dart';
+import 'package:genie_app/view/screens/fichas_menu.dart';
 import 'package:genie_app/view/screens/flashcard_carrousel.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -76,7 +77,7 @@ class _FlashcardListPageState extends State<FlashcardListPage>{
                     
                     onPressed: () {
                       
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> FlashCardCarrouselPage(topicId: widget.topicId, group: widget.group,)));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> FichasView(topicId: widget.topicId, group: widget.group)));
                     },
                     child:Row(
                       children: [

@@ -65,32 +65,6 @@ class _CarouselFlashcard extends State<CarouselFlashcard>{
     Column(
       mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          
-          TextButton(
-                      onPressed: () {
-                        setState(() {
-                          isLoading=true;
-                        });
-                        studiedFlashcard();
-                        setState(() {
-                          
-                        });
-                        
-                      },
-                      child:Row(
-                        children: [
-                          Icon(
-                            Icons.chevron_left,
-                            color: genieThemeDataDemo.colorScheme.secondary,),
-                          Text(
-                            'Regresar',
-                            style: TextStyle(
-                              color: genieThemeDataDemo.colorScheme.secondary
-                            ),
-                          )],
-                          )
-                      
-                      ),
           SizedBox(height: 45,),
       TextButton(
                       onPressed: () {
