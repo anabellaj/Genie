@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/fichas_menu.dart';
+import 'package:genie_app/models/flashcard.dart';
+import 'package:genie_app/view/screens/create_card.dart';
+import 'package:genie_app/view/screens/flashcard_carrousel.dart';
+import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
-import 'package:genie_app/view/screens/test_menu.dart';
-import 'package:genie_app/view/widgets/tabs.dart';
 import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'dart:async';
@@ -13,12 +14,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const Tabs(
-      fichasContent:
-          FichasView(), // Custom content widget for Fichas tab (if applicable)
-      pruebasContent:
-          TestView(), // Custom content widget for Pruebas tab (if applicable)
-    ),
+    home: const MyApp(),
     theme: genieThemeDataDemo,
   ));
 }
@@ -52,15 +48,18 @@ class _myAppState extends State<MyApp> {
 
     checkState();
 
+
     Timer(
-        const Duration(seconds: 3),
-        () => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => isUser
-                    ? const HomeScreen()
-                    : const SplashPage(title: "SplashPage"))));
+      const Duration(seconds: 3),
+      () => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context)=>
+          isUser? 
+            const HomeScreen(): 
+            const SplashPage(title: "SplashPage"))));
+
   }
+    
 
   // This widget is the root of your application.
   @override
