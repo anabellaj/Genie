@@ -3,7 +3,8 @@ import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/more_less_btns.dart';
 
 class MyTimeLimitWidget extends StatefulWidget {
-  const MyTimeLimitWidget({super.key});
+  const MyTimeLimitWidget({super.key, required this.setTimeLimit});
+  final Function(int timeSet) setTimeLimit;
 
   @override
   _MyTimeLimitWidgetState createState() => _MyTimeLimitWidgetState();
@@ -16,6 +17,7 @@ class _MyTimeLimitWidgetState extends State<MyTimeLimitWidget> {
     setState(() {
       _timeLimit =
           _timeLimit < 120 ? _timeLimit + 10 : _timeLimit; // Limit max value
+          widget.setTimeLimit(_timeLimit);
     });
   }
 
@@ -23,6 +25,7 @@ class _MyTimeLimitWidgetState extends State<MyTimeLimitWidget> {
     setState(() {
       _timeLimit =
           _timeLimit > 10 ? _timeLimit - 10 : _timeLimit; // Limit min value
+          widget.setTimeLimit(_timeLimit);
     });
   }
 

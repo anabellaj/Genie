@@ -18,6 +18,11 @@ class _TestViewState extends State<TestView> {
   late bool isLoading = true;
   late List<Widget> topics = [];
   int numQuestions = 2;
+  int timeLimit = 360;
+
+  void setTimeLimit(int minutes){
+    timeLimit = minutes*60;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +70,7 @@ class _TestViewState extends State<TestView> {
                       ])
                     ]),
                 const SizedBox(height: 18.0),
-                const MyTimeLimitWidget(),
+                MyTimeLimitWidget(setTimeLimit: setTimeLimit,),
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +96,7 @@ class _TestViewState extends State<TestView> {
                                               question: 'Honduras',
                                               correctAnswer: 'Tegucigalpa'),
                                         ]),
-                                        timeLeft: 70,
+                                        timeLeft: timeLimit,
                                       )));
                         },
                         style: mainButtonStyle,

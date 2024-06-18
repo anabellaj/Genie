@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/tf_question.dart';
 import 'package:genie_app/models/tf_quiz.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/quiz_summary.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
-import 'package:genie_app/view/widgets/timer.dart';
 
 var randomGenerator = Random();
 
@@ -24,26 +21,53 @@ class TFQuizScreen extends StatefulWidget {
 }
 
 class _TFQuizScreenState extends State<TFQuizScreen> {
-  int timeLeft = 360;
+  late int timeLeft;
+  late var currentQuestion;
+  final List<int> emergenceOrder = [];
+  List<bool> guesses = [];
+  int correctGuesses = 0;
+  var answeredQuestions = 0;
+  var questionHasBeenAnswered = false;
+  var questionHasBeenAnsweredCorrectly = false;
+  late Timer timer;
+
+  @override
+  void initState() {
+    widget.quiz.initialize();
+    for (var i = 0; i < widget.quiz.questions.length; i++) {
+      emergenceOrder.add(i);
+    }
+    emergenceOrder.shuffle();
+    setState(() {
+      currentQuestion = generateQuestion();
+    });
+    _startTimer();
+    timeLeft = widget.timeLeft;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   void _startTimer() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+
       setState(() {
         if (timeLeft > 0) {
           timeLeft--;
         } else {
           timer.cancel();
+          for (var i = answeredQuestions; i <= emergenceOrder.length;i++){
+            guesses.add(false);
+            answeredQuestions++;
+          }
         }
       });
     });
   }
-
-  late var currentQuestion;
-  int correctGuesses = 0;
-  final List<int> emergenceOrder = [];
-  var answeredQuestions = 0;
-  List<bool> guesses = [];
-  var questionHasBeenAnswered = false;
-  var questionHasBeenAnsweredCorrectly = false;
 
   void userAnswered(bool action) {
     if ((currentQuestion[1] == currentQuestion[2] && action) ||
@@ -85,21 +109,6 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
   }
 
   @override
-  void initState() {
-    widget.quiz.initialize();
-    for (var i = 0; i < widget.quiz.questions.length; i++) {
-      emergenceOrder.add(i);
-    }
-    emergenceOrder.shuffle();
-    setState(() {
-      currentQuestion = generateQuestion();
-    });
-    super.initState();
-    _startTimer();
-    timeLeft = widget.timeLeft;
-  }
-
-  @override
   Widget build(BuildContext context) {
     Widget? nextButton;
     Widget? mainContent;
@@ -129,14 +138,103 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
     );
 
     if (answeredQuestions <= (widget.quiz.questions.length)) {
-      mainContent = Padding(
+      mainContent = Column(
+        children: [
+          Card(
+            shadowColor: genieThemeDataDemo.colorScheme.onSurface,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      currentQuestion[0],
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      currentQuestion[1],
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          OutlinedButton(
+              onPressed: () {
+                if (!questionHasBeenAnswered) userAnswered(true);
+              },
+              style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(20.0),
+                  side: BorderSide(
+                      color: genieThemeDataDemo.colorScheme.secondary),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Verdadero'),
+                  if (questionHasBeenAnswered &&
+                      currentQuestion[1] == currentQuestion[2])
+                    const Icon(Icons.check_circle_outline_outlined,
+                        color: Colors.green)
+                  else if (questionHasBeenAnswered &&
+                      !questionHasBeenAnsweredCorrectly &&
+                      currentQuestion[1] != currentQuestion[2])
+                    const Icon(Icons.close, color: Colors.red)
+                ],
+              )),
+          const SizedBox(
+            height: 30,
+          ),
+          OutlinedButton(
+              onPressed: () {
+                if (!questionHasBeenAnswered) userAnswered(false);
+              },
+              style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(20.0),
+                  side: BorderSide(
+                      color: genieThemeDataDemo.colorScheme.secondary),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Falso'),
+                  if (questionHasBeenAnswered &&
+                      currentQuestion[1] != currentQuestion[2])
+                    const Icon(Icons.check_circle_outline_outlined,
+                        color: Colors.green)
+                  else if (questionHasBeenAnswered &&
+                      !questionHasBeenAnsweredCorrectly &&
+                      currentQuestion[1] == currentQuestion[2])
+                    const Icon(Icons.close, color: Colors.red)
+                ],
+              )),
+          if (questionHasBeenAnswered) nextButton,
+        ],
+      );
+    } else {
+      mainContent = QuizSummary(
+        quiz: widget.quiz,
+        correctGuesses: correctGuesses,
+        guesses: guesses,
+        emergenceOrder: emergenceOrder,
+      );
+    }
+
+    return Scaffold(
+      appBar: TopBar(),
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const SizedBox(height: 16.0),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Container(
-                // width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
                 decoration: BoxDecoration(
@@ -144,7 +242,6 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Align(
-                  // alignment: Alignment.center,
                   child: Text(
                     Duration(seconds: timeLeft).toString().split('.').first,
                     style: genieThemeDataDemo.primaryTextTheme.bodyMedium,
@@ -159,109 +256,20 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
                       width: 2.0), // Adjust border color and width
                 ),
                 padding: const EdgeInsets.all(8.0), // Adjust padding as needed
-                child: Icon(
-                  Icons.close,
-                  color: genieThemeDataDemo.primaryColor, // Adjust icon color
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  color: genieThemeDataDemo.primaryColor,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
               ),
             ]),
             const SizedBox(height: 24.0),
-            Card(
-              shadowColor: genieThemeDataDemo.colorScheme.onSurface,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        currentQuestion[0],
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        currentQuestion[1],
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            OutlinedButton(
-                onPressed: () {
-                  if (!questionHasBeenAnswered) userAnswered(true);
-                },
-                style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.all(20.0),
-                    side: BorderSide(
-                        color: genieThemeDataDemo.colorScheme.secondary),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Verdadero'),
-                    if (questionHasBeenAnswered &&
-                        currentQuestion[1] == currentQuestion[2])
-                      const Icon(Icons.check_circle_outline_outlined,
-                          color: Colors.green)
-                    else if (questionHasBeenAnswered &&
-                        !questionHasBeenAnsweredCorrectly &&
-                        currentQuestion[1] != currentQuestion[2])
-                      const Icon(Icons.close, color: Colors.red)
-                  ],
-                )),
-            const SizedBox(
-              height: 30,
-            ),
-            OutlinedButton(
-                onPressed: () {
-                  if (!questionHasBeenAnswered) userAnswered(false);
-                },
-                style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.all(20.0),
-                    side: BorderSide(
-                        color: genieThemeDataDemo.colorScheme.secondary),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Falso'),
-                    if (questionHasBeenAnswered &&
-                        currentQuestion[1] != currentQuestion[2])
-                      const Icon(Icons.check_circle_outline_outlined,
-                          color: Colors.green)
-                    else if (questionHasBeenAnswered &&
-                        !questionHasBeenAnsweredCorrectly &&
-                        currentQuestion[1] == currentQuestion[2])
-                      const Icon(Icons.close, color: Colors.red)
-                  ],
-                )),
-            if (questionHasBeenAnswered) nextButton,
-            questionHasBeenAnsweredCorrectly
-                ? const Text('Chi')
-                : questionHasBeenAnswered
-                    ? const Text('Nopi')
-                    : const Text(''),
+            mainContent,
           ],
         ),
-      );
-    } else {
-      mainContent = QuizSummary(
-        quiz: widget.quiz,
-        correctGuesses: correctGuesses,
-        guesses: guesses,
-        emergenceOrder: emergenceOrder,
-      );
-    }
-
-    return Scaffold(
-      appBar: TopBar(),
-      body: mainContent,
+      ),
       bottomNavigationBar: BottomNavBar(),
     );
   }
