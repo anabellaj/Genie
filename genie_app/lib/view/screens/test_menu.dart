@@ -20,7 +20,7 @@ class TestView extends StatefulWidget {
 class _TestViewState extends State<TestView> {
   late bool isLoading = true;
   late int maxQuestions;
-  int numQuestions = 1;
+  int numQuestions = 2;
   int timeLimit = 3600;
 
   void setTimeLimit(int minutes) {
@@ -39,7 +39,9 @@ class _TestViewState extends State<TestView> {
     return TFQuiz(questions: quizQuestions);
   }
 
+  @override
   void initState() {
+    super.initState();
     setState(() {
       maxQuestions = widget.flashcards.length;
     });
@@ -47,80 +49,83 @@ class _TestViewState extends State<TestView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(20.0), // Adjust padding as needed
-        child: Column(
+    Widget? content;
+    if (maxQuestions <= 1){
+      content = const Center(child: Text('Tienen que haber por lo menos dos fichas para generar una prueba', textAlign: TextAlign.center,));
+    }else{
+      content = Column(
           children: [
             const SizedBox(height: 26.0),
-            Column(
-              children: [
-                Row(children: [
+            Row(children: [
+              Text(
+                'Configura tu prueba',
+                style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
+              )
+            ]),
+            const SizedBox(height: 26.0),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(
-                    'Configura tu prueba',
-                    style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
-                  )
-                ]),
-                const SizedBox(height: 26.0),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Numero de preguntas',
-                        style: genieThemeDataDemo.textTheme.displayLarge,
-                      ),
-                      Row(children: [
-                        DecrementButton(onPressed: () {
-                          setState(() {
-                            if (numQuestions > 2) {
-                              numQuestions--;
-                            }
-                          });
-                        }),
-                        Text(
-                          '$numQuestions/$maxQuestions',
-                          style: genieThemeDataDemo.textTheme.displayLarge,
-                        ),
-                        IncrementButton(onPressed: () {
-                          setState(() {
-                            if (numQuestions < widget.flashcards.length) {
-                              numQuestions++;
-                            }
-                          });
-                        }),
-                      ])
-                    ]),
-                const SizedBox(height: 18.0),
-                MyTimeLimitWidget(
-                  setTimeLimit: setTimeLimit,
-                ),
-                const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          TFQuiz createdQuiz =
-                              createTest(numQuestions, widget.flashcards);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TFQuizScreen(
-                                        quiz: createdQuiz,
-                                        timeLeft: timeLimit,
-                                      )));
-                        },
-                        style: mainButtonStyle,
-                        child: const Text('Iniciar prueba'),
-                      ),
+                    'Numero de preguntas',
+                    style: genieThemeDataDemo.textTheme.displayLarge,
+                  ),
+                  Row(children: [
+                    DecrementButton(onPressed: () {
+                      setState(() {
+                        if (numQuestions > 2) {
+                          numQuestions--;
+                        }
+                      });
+                    }),
+                    Text(
+                      '$numQuestions/$maxQuestions',
+                      style: genieThemeDataDemo.textTheme.displayLarge,
                     ),
-                  ],
+                    IncrementButton(onPressed: () {
+                      setState(() {
+                        if (numQuestions < widget.flashcards.length) {
+                          numQuestions++;
+                        }
+                      });
+                    }),
+                  ])
+                ]),
+            const SizedBox(height: 18.0),
+            MyTimeLimitWidget(
+              setTimeLimit: setTimeLimit,
+            ),
+            const SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      TFQuiz createdQuiz =
+                          createTest(numQuestions, widget.flashcards);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TFQuizScreen(
+                                    quiz: createdQuiz,
+                                    timeLeft: timeLimit,
+                                  )));
+                    },
+                    style: mainButtonStyle,
+                    child: const Text('Iniciar prueba'),
+                  ),
                 ),
               ],
             ),
           ],
-        ),
+        );
+    }
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(20.0), // Adjust padding as needed
+        child: content
       ),
     );
   }

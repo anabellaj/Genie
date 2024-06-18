@@ -30,62 +30,64 @@ class FlashcardPreview extends StatelessWidget {
               ],
             ),
           )
-        : Column(
-            children: [
-              for (int i = 0; i < flashcards.length; i++)
-                GestureDetector(
-                  onTap: () {},
-                  child: Card(
-                    shadowColor: genieThemeDataDemo.colorScheme.onSurface,
-                    elevation: 4,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  flashcards[i].term,
-                                  maxLines: 100,
-                                  style: genieThemeDataDemo
-                                      .primaryTextTheme.titleLarge,
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ModifyFlashcard(
-                                                    group: group,
-                                                    flashcard: flashcards[i],
-                                                    topicId: topicId,
-                                                    i: i,
-                                                    flashcards: flashcards,
-                                                  )));
-                                    },
-                                    icon: const Icon(Icons.more_horiz_outlined),
+        : SingleChildScrollView(
+          child: Column(
+              children: [
+                for (int i = 0; i < flashcards.length; i++)
+                  GestureDetector(
+                    onTap: () {},
+                    child: Card(
+                      shadowColor: genieThemeDataDemo.colorScheme.onSurface,
+                      elevation: 4,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    flashcards[i].term,
+                                    maxLines: 100,
+                                    style: genieThemeDataDemo
+                                        .primaryTextTheme.titleLarge,
                                   ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              flashcards[i].definition,
-                              style: genieThemeDataDemo.textTheme.displayLarge,
-                              textAlign: TextAlign.start,
-                              maxLines: 100,
-                            ),
-                          ]),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ModifyFlashcard(
+                                                      group: group,
+                                                      flashcard: flashcards[i],
+                                                      topicId: topicId,
+                                                      i: i,
+                                                      flashcards: flashcards,
+                                                    )));
+                                      },
+                                      icon: const Icon(Icons.more_horiz_outlined),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                flashcards[i].definition,
+                                style: genieThemeDataDemo.textTheme.displayLarge,
+                                textAlign: TextAlign.start,
+                                maxLines: 100,
+                              ),
+                            ]),
+                      ),
                     ),
-                  ),
-                )
-            ],
-          );
+                  )
+              ],
+            ),
+        );
   }
 }

@@ -75,7 +75,6 @@ class Connection {
       groupMember.id = memberId;
       groupMembs.add(groupMember);
     }
-    print("VAMOSS");
     return groupMembs;
   }
 

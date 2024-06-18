@@ -231,54 +231,59 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
         guesses: guesses,
         emergenceOrder: emergenceOrder,
       );
-      timeLeft = 0;
+      timer.cancel();
     }
 
     return Scaffold(
       appBar: TopBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
-                decoration: BoxDecoration(
-                  color: !littleTimeLeft
-                      ? genieThemeDataDemo.primaryColor
-                      : Colors.red,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Align(
-                  child: Text(
-                    Duration(seconds: timeLeft).toString().split('.').first,
-                    style: genieThemeDataDemo.primaryTextTheme.bodyMedium,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
+                    decoration: BoxDecoration(
+                      color: !littleTimeLeft
+                          ? genieThemeDataDemo.primaryColor
+                          : Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Align(
+                      child: Text(
+                        Duration(seconds: timeLeft).toString().split('.').first,
+                        style: genieThemeDataDemo.primaryTextTheme.bodyMedium,
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                    width: 40.0, // Adjust width as desired
+                    height: 40.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: genieThemeDataDemo.primaryColor,
+                      ), // Adjust border color and width
+                    ),
+          
+                    child: IconButton(
+                      icon: const Icon(Icons.close),
+                      color: genieThemeDataDemo.primaryColor,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                width: 40.0, // Adjust width as desired
-                height: 40.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: genieThemeDataDemo.primaryColor,
-                  ), // Adjust border color and width
-                ),
-
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  color: genieThemeDataDemo.primaryColor,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ]),
-            const SizedBox(height: 24.0),
-            mainContent,
-          ],
+              const SizedBox(height: 24.0),
+              mainContent,
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavBar(),

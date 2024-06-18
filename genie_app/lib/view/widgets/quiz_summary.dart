@@ -26,7 +26,7 @@ class QuizSummary extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(40.0),
               child: Column(children: [
-                Text('Obtuviste una calificación de'),
+                const Text('Obtuviste una calificación de'),
                 const SizedBox(
                   height: 6.0,
                 ),
@@ -46,19 +46,20 @@ class QuizSummary extends StatelessWidget {
         const SizedBox(height: 26.0),
         for (var index = 0; index < quiz.questions.length; index++)
           Card(
-              shadowColor: genieThemeDataDemo.colorScheme.onSurface,
-              color: (guesses[index]) ? Colors.teal[50] : Colors.red[50],
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(quiz.questions[emergenceOrder[index]].question),
-                    Text(quiz.questions[emergenceOrder[index]].correctAnswer)
-                  ],
-                ),
-              ))
+            shadowColor: genieThemeDataDemo.colorScheme.onSurface,
+            color: (guesses[index]) ? Colors.teal[50] : Colors.red[50],
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(quiz.questions[emergenceOrder[index]].question),
+                  Text(quiz.questions[emergenceOrder[index]].correctAnswer)
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }

@@ -76,6 +76,8 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                       color: genieThemeDataDemo.colorScheme.onSecondary,
                     ))
               ]));
+              _terminoController.text = '';
+              _defController.text = '';
         }
       } else {
         ScaffoldMessenger.of(context)
