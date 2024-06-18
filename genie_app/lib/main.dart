@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/tf_question.dart';
-import 'package:genie_app/models/tf_quiz.dart';
 import 'package:genie_app/view/screens/fichas_menu.dart';
 import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
 import 'package:genie_app/view/screens/test_menu.dart';
-import 'package:genie_app/view/screens/tf_quiz.dart';
 import 'package:genie_app/view/widgets/tabs.dart';
 import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';

@@ -30,6 +30,7 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
   var questionHasBeenAnswered = false;
   var questionHasBeenAnsweredCorrectly = false;
   late Timer timer;
+  bool littleTimeLeft = false;
 
   @override
   void initState() {
@@ -54,13 +55,17 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
 
   void _startTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-
       setState(() {
         if (timeLeft > 0) {
           timeLeft--;
+          if (timeLeft == 60) {
+            setState(() {
+              littleTimeLeft = true;
+            });
+          }
         } else {
           timer.cancel();
-          for (var i = answeredQuestions; i <= emergenceOrder.length;i++){
+          for (var i = answeredQuestions; i <= emergenceOrder.length; i++) {
             guesses.add(false);
             answeredQuestions++;
           }
@@ -238,7 +243,7 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
                 decoration: BoxDecoration(
-                  color: genieThemeDataDemo.primaryColor,
+                  color: !littleTimeLeft ? genieThemeDataDemo.primaryColor : Colors.red ,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Align(
