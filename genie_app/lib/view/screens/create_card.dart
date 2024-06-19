@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+
 import 'package:genie_app/models/connection.dart';
+
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+
 import 'package:genie_app/viewModel/controller.dart';
+
 import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:genie_app/viewModel/validator.dart';
 import 'package:genie_app/models/flashcard.dart';
 
 
 class CreateCardScreen extends StatefulWidget {
-  const CreateCardScreen({super.key, required this.topicId, required this.flashcard, required this.group});
+  const CreateCardScreen(
+      {super.key,
+      required this.topicId,
+      required this.flashcard,
+      required this.group});
+
   final String topicId;
   final List<Flashcard> flashcard;
   final Groups group;
@@ -26,65 +35,71 @@ class CreateCardScreen extends StatefulWidget {
 class _CreateCardScreenState extends State<CreateCardScreen> {
   final _terminoController = TextEditingController();
   final _defController = TextEditingController();
-   bool _validateTerm = true;
-   bool _validateDefinition = true;
-   bool isLoading = false;
+  bool _validateTerm = true;
+  bool _validateDefinition = true;
+  bool isLoading = false;
 
-  void _saveCard()async{
-    if(!Validator.validateController(_terminoController)){
+  void _saveCard() async {
+    if (!Validator.validateController(_terminoController)) {
       setState(() {
-        _validateTerm=false;
+        _validateTerm = false;
       });
-    }else{
+    } else {
       setState(() {
-        _validateTerm=true;
-      });
-    }
-    if(!Validator.validateController(_defController)){
-      setState(() {
-        _validateDefinition=false;
-      });
-    }else{
-      setState(() {
-        _validateDefinition=true;
+        _validateTerm = true;
       });
     }
-    if(_validateDefinition&&_validateTerm){
+    if (!Validator.validateController(_defController)) {
       setState(() {
-        isLoading=true;
+        _validateDefinition = false;
       });
-      String res =await  ControllerStudy.addNewFlashCard(_terminoController.text, _defController.text, widget.topicId);
+    } else {
       setState(() {
-        isLoading=false;
+        _validateDefinition = true;
       });
-      if(res == 'success'){
-        ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
-          backgroundColor: genieThemeDataDemo.colorScheme.secondary,
-          contentTextStyle: TextStyle(
-            color: genieThemeDataDemo.colorScheme.onSecondary,
-            fontSize: 12
-          ),
-          content: const Text("Ficha creada con éxito"), 
-          actions: [IconButton(
-            onPressed: ()=>
-              ScaffoldMessenger.of(context).hideCurrentMaterialBanner(), 
-            icon: Icon(Icons.check, color: genieThemeDataDemo.colorScheme.onSecondary,))]));
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Hubo un error')
-        ));
+    }
+    if (_validateDefinition && _validateTerm) {
+      setState(() {
+        isLoading = true;
+      });
+      String res = await ControllerStudy.addNewFlashCard(
+          _terminoController.text, _defController.text, widget.topicId);
+      setState(() {
+        isLoading = false;
+      });
+      if (res == 'success') {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
+              backgroundColor: genieThemeDataDemo.colorScheme.secondary,
+              contentTextStyle: TextStyle(
+                  color: genieThemeDataDemo.colorScheme.onSecondary,
+                  fontSize: 12),
+              content: const Text("Ficha creada con éxito"),
+              actions: [
+                IconButton(
+                    onPressed: () => ScaffoldMessenger.of(context)
+                        .hideCurrentMaterialBanner(),
+                    icon: Icon(
+                      Icons.check,
+                      color: genieThemeDataDemo.colorScheme.onSecondary,
+                    ))
+              ]));
+              _terminoController.text = '';
+              _defController.text = '';
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Hubo un error')));
       }
     }
   }
-
-
-
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopBar(),
+
       body: isLoading?
       const Center(child: CircularProgressIndicator(),):
       
