@@ -109,14 +109,20 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                       genieThemeDataDemo.colorScheme.onSurface,
                                   elevation: 4,
                                   color: Color.fromARGB(255, 255, 255, 255),
-                                  child: Center(child: Text(f.term)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(child: Text(f.term)),
+                                  ),
                                 ),
                                 back: Card(
                                     shadowColor: genieThemeDataDemo
                                         .colorScheme.onSurface,
                                     elevation: 4,
                                     color: Color.fromARGB(255, 255, 255, 255),
-                                    child: Center(child: Text(f.definition))));
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(child: Text(f.definition)),
+                                    )));
                           }).toList(),
                           carouselController: _controller,
                           options: CarouselOptions(
