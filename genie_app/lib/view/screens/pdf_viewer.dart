@@ -21,25 +21,7 @@ class StudyMaterialViewer extends StatefulWidget{
   State<StudyMaterialViewer> createState()=> _StudyMaterialViewer();
 }
 
-// Future<void> downloadPDF(String id) async {
-//   try {
-//     // Generate the file
-//     File pdfFile = await Controller.generateFile(id);
 
-//     // Provide option to save the file
-//     final params = SaveFileDialogParams(sourceFilePath: pdfFile.path);
-//     final savedPath = await FlutterFileDialog.saveFile(params: params);
-
-//     if (savedPath != null) {
-//       print('File saved at $savedPath');
-//     } else {
-//       print('User cancelled the save dialog');
-//     }
-
-//      } catch (e) {
-//     print('Error saving file: $e');
-//   }
-// }
 
   Future<String> downloadPDF(String id) async {
     try {

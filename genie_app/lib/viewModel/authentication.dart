@@ -46,7 +46,6 @@ class Authenticate{
         if(result[0]["password"]==password){
           await prefs.setBool('isLoggedIn', true);
           
-          print(User.fromJson(result[0]).toJson());
           await prefs.setString("user", jsonEncode(User.fromJson(result[0])) );
           return "success";
         }else{

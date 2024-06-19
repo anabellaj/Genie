@@ -169,7 +169,7 @@ class _TopicScreenState extends State<TopicScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        PercentBar(percent: 70, group: widget.group, topicId: widget.topicId,),
+                        PercentBar(percent: snapshot.data!.percent, group: widget.group, topicId: widget.topicId,),
                         const SizedBox(
                           height: 20,
                         ),

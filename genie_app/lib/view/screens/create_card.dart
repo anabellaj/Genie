@@ -111,6 +111,8 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                     ),
           TextButton(
               onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner(); 
+
                  Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
