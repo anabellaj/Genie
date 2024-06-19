@@ -55,10 +55,8 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
     });
     if (result == 'success') {
       
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>  TopicScreen(topicId: widget.topic.id, group: widget.group,)));
+      Navigator.of(context).pop<StudyMaterial?>(studyMaterial);
+      
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(

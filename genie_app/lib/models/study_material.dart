@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 class StudyMaterial {
-  const StudyMaterial({
+  StudyMaterial({
     this.id = '',
     required this.title,
     required this.description,
   });
-  final String id;
+  String id;
   final String title;
   final String description;
 
