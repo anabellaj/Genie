@@ -208,11 +208,13 @@ class Connection {
           title: studyMaterial['title'] as String,
           description: studyMaterial['description'] as String));
     }
+    print(response['flashCards']);
     Topic topic = Topic(
         id: id,
         name: response['name'],
         label: response['label'],
-        files: studyMaterials);
+        files: studyMaterials,
+        flashCards: response['flashCards']);
     db.close();
     return topic;
   }
@@ -292,6 +294,7 @@ class Connection {
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
       await db.open();
       var topicCollection = db.collection('topic');
+      print(topic.toJson());
       WriteResult insert = await topicCollection.insertOne(topic.toJson());
       var groupCollection = db.collection('studyGroup');
       if (labelExists) {

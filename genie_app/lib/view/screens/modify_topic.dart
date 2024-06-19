@@ -66,7 +66,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
       labelExists = false;
     }
     Topic newTopic = Topic(
-        name: _titleController.text, label: label, files: widget.topic.files);
+        name: _titleController.text, label: label, files: widget.topic.files, flashCards: widget.topic.flashCards);
 
     //Confirm dialog
     showDialog(

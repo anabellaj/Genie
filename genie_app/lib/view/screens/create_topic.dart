@@ -53,7 +53,9 @@ class _CreateTopicScreenState extends State<CreateTopicScreen> {
     final topic = Topic(
         name: _titleController.text,
         label: label,
-        files: []);
+        files: [],
+        flashCards: []
+        );
     setState(() {
       isLoading = true;
     });

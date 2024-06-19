@@ -254,13 +254,15 @@ User loggedUser = await Controller.getUserInfo();
   static Future<Topic> loadTopic(String id) async {
     try {
       User user = await Controller.getUserInfo();
+      print("error");
       Topic topic = await Connection.readTopic(id);
+      print("error 2");
       double percent=  await ControllerStudy.getPercent(topic, user.id);
       topic.percent= percent;
       return topic;
     } catch (e) {
       print(e);
-      return Topic(name: "", label: "", files: []);
+      return Topic(name: "", label: "", files: [], flashCards: []);
     }
     
   }
