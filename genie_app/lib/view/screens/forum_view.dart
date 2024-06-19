@@ -137,7 +137,7 @@ class _ForumView extends State<ForumView> {
                         )],
                         )
                     
-                    ),
+                    ),])),
 
         Padding(
           padding: const EdgeInsets.all(16),
@@ -162,7 +162,8 @@ class _ForumView extends State<ForumView> {
                   Text(widget.creator,
                     
                     style: genieThemeDataDemo.textTheme.titleSmall,
-                  ),
+                  ),]),])))),
+
                   Expanded(
                       child: isLoading
                           ? const Center(child: CircularProgressIndicator())
@@ -220,7 +221,7 @@ class _ForumView extends State<ForumView> {
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
                                           List<Widget> newReply =
-                                              await Controller.newAnswer(
+                                              await ControllerForum.newAnswer(
                                                   _controller.text,
                                                   widget.id,
                                                   replys);
@@ -255,53 +256,14 @@ class _ForumView extends State<ForumView> {
                                       padding: EdgeInsets.all(4),
                                       child: CircularProgressIndicator(),
                                     ),
+                              ]))),
+                              
                             ],
                           ),
-                        ),
-                      ),
-                      ]
-                    ),
-                  ]),])))),
-                  const SizedBox(width: 15,),
-                  !sendingMessage? 
-                  FloatingActionButton(
-                    onPressed: ()async{
-                      if(validate.validateEmptyMessage(_controller.text)){
-                        setState(() {
-                          sendingMessage=true;
-                          isLoading = true;
-                        });
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        List<Widget> newReply = await ControllerForum.newAnswer(_controller.text, widget.id, replys);
-                        _controller.clear();
-                        setState(() {
-                          sendingMessage=false;
-                          isLoading = false;
-                          replys = newReply;
-                        });
-
-                      }else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: const Text("Introduzca un mensaje"), showCloseIcon: true, closeIconColor: genieThemeDataDemo.colorScheme.onError,)
-                        );
-                      }
-                    },
-                    backgroundColor: genieThemeDataDemo.colorScheme.primary,
-                    elevation: 0,
-                    child: Icon(Icons.send,color: genieThemeDataDemo.colorScheme.onPrimary,size: 18,),
-                  ):
-                  const Padding(
-                    padding: EdgeInsets.all(4),
-                    child: CircularProgressIndicator(),
+                        ]),
+                      
                     
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],)
-        ],),
-
+               
     bottomNavigationBar: BottomNavBar())));
 
 

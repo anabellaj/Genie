@@ -46,7 +46,7 @@ class PercentBar extends StatelessWidget {
                     style: TextStyle(
                       color: Color(0xFF174A59),
                       fontSize: 20,
-                    ),
+                    ),),
                     CircularPercentIndicator(
                       radius: 20,
                       backgroundColor: Colors.white,
@@ -64,13 +64,12 @@ class PercentBar extends StatelessWidget {
 
                       ),
                     ),
-                  ),
-                ],
+                  ]),
+                
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ]),
+        
+      );
   }
 }

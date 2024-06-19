@@ -94,46 +94,24 @@ class ControllerStudy {
         for (var el in flashcards) {
           studiedFlash.add(false);
         }
-      }
-      }else{
+        }
+        return studiedFlash; 
+       }catch (e) {
+        print(e);
+        List<bool> studiedFlash=[];
         for(var el in flashcards){
               
                 studiedFlash.add(false);
           }
-      }
-
-       return studiedFlash; 
-      } catch (e) {
-        print(e);
-        List<bool> studiedFlash=[];
-       for(var el in flashcards){
-              
-                studiedFlash.add(false);
-          }
         return studiedFlash;
-      }
+      }}
        
 
 
-      return studiedFlash;
-    } catch (e) {
-      List<bool> studiedFlash = [];
-      // ignore: unused_local_variable
-      for (var el in flashcards) {
-        studiedFlash.add(false);
-      }
-      return studiedFlash;
-    }
-  }
+     
+  
 
-  static Future updateStudied(
-      List<bool> studied, String topicId, List<Flashcard> flashcards) async {
-    try {
-      User user = await Controller.getUserInfo();
-      List<dynamic> studiedIds = [];
-      int counter = 0;
-      for (bool b in studied) {
-        if (b) {
+  
 
     static Future updateStudied(List<bool> studied, String topicId, List<Flashcard> flashcards)async{
       try {
@@ -170,7 +148,7 @@ class ControllerStudy {
 
         }
       }
-    } catch (e) {}
+     catch (e) {}
   }
 
   static int countStudied(List<bool> studied) {
@@ -182,7 +160,7 @@ class ControllerStudy {
     }
     return counter;
   }
-}
+
 
     static Future<double> getPercent(Topic topicId, String userId)async{
       User fullUser = await Connection.getUser(userId);
