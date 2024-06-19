@@ -25,10 +25,12 @@ class _ForumsListPageState extends State<ForumsListPage>{
 
   void getForums()async {
     List<Widget> p = await ControllerForum.getForums(widget.groupId);
+    if(mounted){
     setState(() {
       previews= p;
       isLoading=false;
     });
+    }
 
   }
 

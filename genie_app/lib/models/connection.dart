@@ -812,9 +812,7 @@ class Connection {
       final userCollection = db.collection('user');
       await userCollection.updateOne(
         where.eq('_id', ObjectId.fromHexString(userId))
-        , 
-
-        ModifierBuilder().set('flashCardsStudied', object)); 
+        ,  ModifierBuilder().set('flashCardsStudied', object)); 
       await db.close();
     } catch (e) {
       

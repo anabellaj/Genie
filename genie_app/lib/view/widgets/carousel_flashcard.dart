@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/view/screens/flashcards_list.dart';
-import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';
 import '../theme.dart';
 import 'package:flutter/material.dart';
@@ -32,14 +31,15 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
   void studiedFlashcard() async {
     await ControllerStudy.updateStudied(
         studied, widget.topicId, widget.flashcards);
-    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => TopicScreen(
-                  topicId: widget.topicId,
-                  group: widget.group,
-                )));
+
+    //ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    //Navigator.pushReplacement(
+        //context,
+        //MaterialPageRoute(
+            //builder: (context) => TopicScreen(
+            //      topicId: widget.topicId,
+            //      group: widget.group,
+            //    )));
   }
 
   void getInfo() async {
@@ -65,6 +65,12 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
     getInfo();
   }
 
+  void dispose(){
+    print("ejec");
+    studiedFlashcard();
+    super.dispose();
+    print("dejec");
+  }
   @override
   Widget build(BuildContext context) {
     return isLoading
