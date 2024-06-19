@@ -5,40 +5,44 @@ import 'package:genie_app/view/screens/create_card.dart';
 import 'package:genie_app/view/screens/fichas_menu.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/flashcard_preview.dart';
+
 import 'package:genie_app/viewModel/controllerStudy.dart';
 import '../theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 
-class FlashcardListPage extends StatefulWidget {
-  const FlashcardListPage(
-      {super.key,
-      required this.topicId,
-      required this.flashcards,
-      required this.group});
+
+
+
+class FlashcardListPage extends StatefulWidget{
+  
+  const FlashcardListPage({super.key, required this.topicId, required this.flashcards, required this.group});
   final String topicId;
   final List<Flashcard> flashcards;
   final Groups group;
-
+  
   @override
-  State<FlashcardListPage> createState() => _FlashcardListPageState();
+  State<FlashcardListPage> createState()=> _FlashcardListPageState();
+
 }
 
-class _FlashcardListPageState extends State<FlashcardListPage> {
-  late bool isLoading = true;
-  late List<Flashcard> flashcardsFound = widget.flashcards;
-
-  void getFlashcards() async {
-    List<Flashcard> flashcardsList =
-        await ControllerStudy.getFlashcards(widget.topicId);
+class _FlashcardListPageState extends State<FlashcardListPage>{
+   late bool isLoading=true;
+  late List<Flashcard> flashcardsFound=widget.flashcards;
+  
+  void getFlashcards()async {
+    List<Flashcard> flashcardsList = await ControllerStudy.getFlashcards(widget.topicId);
     setState(() {
-      flashcardsFound = flashcardsList;
-      isLoading = false;
+      flashcardsFound= flashcardsList;
+      isLoading=false;
     });
+
+
   }
 
   @override
   void initState() {
     super.initState();
+
 
     getFlashcards();
   }
@@ -133,3 +137,4 @@ class _FlashcardListPageState extends State<FlashcardListPage> {
     );
   }
 }
+
