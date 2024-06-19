@@ -1,5 +1,9 @@
 import 'package:genie_app/models/group.dart';
+
 import 'package:genie_app/view/screens/fichas_menu.dart';
+
+import 'package:genie_app/view/screens/flashcard_carrousel.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +13,7 @@ class PercentBar extends StatelessWidget {
       required this.percent,
       required this.group,
       required this.topicId});
+
   final double percent;
   final Groups group;
   final String topicId;

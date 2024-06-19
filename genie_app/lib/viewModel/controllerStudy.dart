@@ -6,6 +6,7 @@ import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class ControllerStudy {
   static Future<String> addNewFlashCard(
       String term, String def, String topicID) async {
@@ -15,13 +16,20 @@ class ControllerStudy {
 
       return 'success';
     } catch (e) {
+
+
+
       return 'error';
     }
   }
 
+
   static Future<List<Flashcard>> getFlashcards(String topicID) async {
     try {
       return await Connection.getFlashCards(topicID);
+
+    static Future<List<Flashcard>> getFlashcards(String topicID)async{
+
     } catch (e) {
       return [];
     }
@@ -107,11 +115,11 @@ class ControllerStudy {
       int counter = 0;
       for (bool b in studied) {
         if (b) {
+
           studiedIds.add(flashcards[counter].id);
         }
         counter++;
       }
-
       if (studiedIds.isNotEmpty) {
         if (user.flashCardsStudied.indexWhere((e) => e['topic'] == topicId) !=
             -1) {
@@ -140,3 +148,4 @@ class ControllerStudy {
     return counter;
   }
 }
+

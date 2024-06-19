@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/group.dart';
+import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/view/screens/modify_flashcard.dart';
+import 'package:genie_app/view/screens/modify_study_material.dart';
 import 'package:genie_app/view/theme.dart';
 
 class FlashcardPreview extends StatelessWidget {
@@ -10,6 +12,8 @@ class FlashcardPreview extends StatelessWidget {
       required this.flashcards,
       required this.topicId,
       required this.group});
+
+
 
   final String topicId;
   final Groups group;
@@ -77,6 +81,7 @@ class FlashcardPreview extends StatelessWidget {
                                 ],
                               ),
                               Text(
+
                                 flashcards[i].definition,
                                 style: genieThemeDataDemo.textTheme.displayLarge,
                                 textAlign: TextAlign.start,
@@ -89,5 +94,6 @@ class FlashcardPreview extends StatelessWidget {
               ],
             ),
         );
+
   }
 }
