@@ -44,10 +44,11 @@ class _GroupViewState extends State<GroupView> {
   late List<Widget> topics =[];
   void checkAdmin() async{
   bool check = await Controller.checkAdminCurrUser(widget.group.admins[0]);
+  if(mounted){
   setState(() {
     isAdmin = check;
   });
-  }
+  }}
   void getTopics() async {
     List<Widget> r = await Controller.getTopics(widget.group);
     if (mounted) {
