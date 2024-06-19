@@ -18,6 +18,7 @@ import 'package:genie_app/view/widgets/forum_preview.dart';
 import 'package:genie_app/view/widgets/forum_reply.dart';
 import 'package:genie_app/models/forum_reply.dart';
 import 'package:genie_app/view/widgets/topic_preview.dart';
+import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -102,7 +103,8 @@ class Controller {
   }
 
   static Future<List<Widget>> getUserGroups() async {
-    User loggedUser = await Controller.getUserInfo();
+    try{
+User loggedUser = await Controller.getUserInfo();
     List stGroups = loggedUser.studyGroups;
     List<Widget> obtainedGroups = [];
     for (String groupId in stGroups) {
@@ -117,6 +119,10 @@ class Controller {
     }
 
     return obtainedGroups;
+    }catch(e){
+      return [];
+    }
+    
   }
 
   /*User Controller */
@@ -137,11 +143,8 @@ class Controller {
   static Future<User> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     var user = await prefs.getString("user");
-    print(user);
     User loggedUser;
     if (user != null) {
-      print('decode');
-      print(jsonDecode(user));
       loggedUser = User.fromJson(jsonDecode(user));
       
       return loggedUser;
@@ -180,8 +183,6 @@ class Controller {
   static Future<String> updateUserInfo(User userInfo) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      print('update');
-      print(userInfo.toJson());
       await prefs.setString("user", jsonEncode(userInfo.toJson()));
       await Connection.updateUser(userInfo);
       return 'success';
@@ -216,122 +217,6 @@ class Controller {
     }
   }
 
-  /*Formun Controller */
-  static Future<String> createNewForum(
-      String title, String description, Groups group) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      var user = await prefs.getString("user");
-      if (user != null) {
-        User loggedUser = User.fromJson(jsonDecode(user));
-        String creator = loggedUser.name;
-        DateTime date = DateTime.now();
-
-        Forum newForum =
-            Forum(title, description, creator, loggedUser.id, date);
-        newForum.initialize();
-
-        await Connection.addNewForum(newForum, group);
-
-        return 'success';
-      } else {
-        return 'error';
-      }
-    } catch (e) {
-      print(e);
-      return 'error';
-    }
-  }
-
-  static Future<List<Widget>> getForums(Groups groupId) async {
-    try {
-      List forums = await Connection.returnForums(groupId.id.oid.toString());
-
-    List<Widget> previews = [];
-
-    for (var forum in forums) {
-      Forum f = Forum.fromJson(forum);
-      previews.add(MessagePreview(
-        id: f.id,
-        title: f.title,
-        creator: f.creator,
-        date: DateFormat.yMd().format(f.date),
-        description: f.description,
-        creator_id: f.creator_id,
-        group: groupId,
-      ));
-    }
-
-    return previews;
-    } catch (e) {
-      return [];
-    }
-    
-  }
-
-  static Future<List<Widget>> getReplys(String forumId) async {
-    try {
-      List replys = await Connection.returnAnswers(forumId);
-
-    List<Widget> messages = [];
-    ForumReply f = ForumReply.fromJson(replys[0]);
-    messages.add(ForumBestReply(
-      creator: f.creator, 
-      date: DateFormat.yMd().format(f.date), 
-      message: f.message, 
-      creator_id: f.creator_id, id: f.id, forum: forumId));
-
-    replys.removeAt(0);
-
-    for (var reply in replys) {
-      ForumReply f = ForumReply.fromJson(reply);
-      messages.add(ForumReplyShow(
-        creator: f.creator,
-        date: DateFormat.yMd().format(f.date),
-        message: f.message,
-        creator_id: f.creator_id,
-        id: f.id,
-        forum: forumId,
-      ));
-    }
-
-    return messages;
-    } catch (e) {
-      return [];
-    }
-    
-  }
-
-  static Future<List<Widget>> newAnswer(
-      String message, String forumId, List<Widget> replys) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      var userInfo = prefs.getString('user');
-      if (userInfo != null) {
-        User user = User.fromJson(jsonDecode(userInfo));
-        DateTime date = DateTime.now();
-
-        ForumReply reply = ForumReply(user.name, date, message, user.id);
-
-        String id = await Connection.addNewReply(reply, forumId);
-
-        replys.add(ForumReplyShow(
-          creator: user.name,
-          date: DateFormat.yMd().format(date),
-          message: message,
-          creator_id: user.id,
-          id: id,
-          forum: forumId,
-        ));
-
-        return replys;
-      } else {
-        return replys;
-      }
-    } catch (e) {
-      return replys;
-    }
-  }
 
   static Future<bool> checkIfOwner(String owner) async {
     final prefs = await SharedPreferences.getInstance();
@@ -345,46 +230,6 @@ class Controller {
     }
   }
 
-  static Future<String> deleteForum(String forumId) async {
-    try {
-      await Connection.removeForum(forumId, "66552c763656b63721956447");
-      return 'success';
-    } catch (e) {
-      return 'error';
-    }
-  }
-
-  static Future<String> removeAnswer(String replyId, String forumId) async {
-    try {
-      await Connection.removeAnswer(replyId, forumId);
-
-      return 'success';
-    } catch (e) {
-      return 'error';
-    }
-  }
-
-  static Future<ForumView> getForum(String forumId) async {
-    try {
-      Forum forum = await Connection.refreshForum(forumId);
-
-      return ForumView(
-          date: DateFormat.yMd().format(forum.date),
-          description: forum.description,
-          id: forum.id,
-          title: forum.title,
-          creator: forum.creator,
-          creator_id: forum.creator_id);
-    } catch (e) {
-      return const ForumView(
-          date: "",
-          description: "",
-          id: "",
-          title: "",
-          creator: "",
-          creator_id: "");
-    }
-  }
 
   static Widget manageNavigation(int index) {
     switch (index) {
@@ -408,11 +253,13 @@ class Controller {
 
   static Future<Topic> loadTopic(String id) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      var user = await prefs.getString("user");
-      print(user);
-      return await Connection.readTopic(id);
+      User user = await Controller.getUserInfo();
+      Topic topic = await Connection.readTopic(id);
+      double percent=  await ControllerStudy.getPercent(topic, user.id);
+      topic.percent= percent;
+      return topic;
     } catch (e) {
+      print(e);
       return Topic(name: "", label: "", files: []);
     }
     

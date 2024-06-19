@@ -24,7 +24,7 @@ class _MyTimeLimitWidgetState extends State<MyTimeLimitWidget> {
   void _decrementTimeLimit() {
     setState(() {
       _timeLimit =
-          _timeLimit > 10 ? _timeLimit - 5 : _timeLimit; // Limit min value
+          _timeLimit > 5 ? _timeLimit - 5 : _timeLimit; // Limit min value
       widget.setTimeLimit(_timeLimit);
     });
   }

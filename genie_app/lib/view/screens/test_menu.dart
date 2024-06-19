@@ -67,7 +67,7 @@ class _TestViewState extends State<TestView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Numero de preguntas',
+                    'Numero de preguntas:',
                     style: genieThemeDataDemo.textTheme.displayLarge,
                   ),
                   Row(children: [

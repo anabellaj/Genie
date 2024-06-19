@@ -21,6 +21,7 @@ class User {
   late List<dynamic> chats;
   late List<dynamic> studyGroups;
   late List<dynamic> flashCardsStudied;
+  late List<dynamic> replysLiked;
 
   void initialize(){
       career="";
@@ -31,6 +32,7 @@ class User {
       chats = [];
       studyGroups= []; 
       flashCardsStudied=[];
+      replysLiked=[];
     }
 
   Map<String, dynamic> toJson()=>
@@ -45,7 +47,8 @@ class User {
       "interests":interests,
       "chats": chats,
       "studyGroups":studyGroups,
-      "flashCardsStudied":flashCardsStudied
+      "flashCardsStudied":flashCardsStudied,
+      "replysLiked": replysLiked
 
     };
   User.fromJson(Map<String,dynamic> json):
@@ -59,7 +62,8 @@ class User {
     interests = json['interests'] ?? [],
     chats = json['chats'] ?? [],
     studyGroups = json['studyGroups'] ?? [],
-    flashCardsStudied= json['flashCardsStudied']??[];
+    flashCardsStudied= json['flashCardsStudied']??[],
+    replysLiked =json['replysLiked']??[];
   
   User.fromShared(Map<String,dynamic> json):
     id = json["id"],
@@ -72,7 +76,8 @@ class User {
     interests = json['interests'] ?? [],
     chats = json['chats'] ?? [],
     studyGroups = json['studyGroups'] ?? [],
-    flashCardsStudied= json['flashCardsStudied']??[];
+    flashCardsStudied= json['flashCardsStudied']??[],
+    replysLiked = json['replysLiked']??[];
   
   
 }
