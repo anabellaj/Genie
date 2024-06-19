@@ -32,6 +32,10 @@ class _TopicScreenState extends State<TopicScreen> {
     super.initState();
   }
 
+  void forzarBuild() {
+    setState(() {});
+  }
+
   void createPdfFile(String id, String title) async {
     if (isLoading == true) return;
     isLoading = true;
@@ -122,18 +126,22 @@ class _TopicScreenState extends State<TopicScreen> {
                   }
                   staticActiveTopic = snapshot.data!;
                   return TopicDisplay(
-                      topic: snapshot.data!,
-                      group: widget.group,
-                      modificarArchivo: modificarArchivo,
-                      subirArchivo: subirArchivo,
-                      createPdfFile: createPdfFile);
+                    topic: snapshot.data!,
+                    group: widget.group,
+                    modificarArchivo: modificarArchivo,
+                    subirArchivo: subirArchivo,
+                    createPdfFile: createPdfFile,
+                    forzarBuild: forzarBuild,
+                  );
                 })
             : TopicDisplay(
                 topic: staticActiveTopic!,
                 group: widget.group,
                 modificarArchivo: modificarArchivo,
                 subirArchivo: subirArchivo,
-                createPdfFile: createPdfFile),
+                createPdfFile: createPdfFile,
+                forzarBuild: forzarBuild,
+              ),
         bottomNavigationBar: BottomNavBar());
   }
 }

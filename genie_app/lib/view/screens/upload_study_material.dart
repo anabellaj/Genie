@@ -55,10 +55,12 @@ class _UploadStudyMaterialScreenState extends State<UploadStudyMaterialScreen> {
     });
     if (result == 'success') {
       
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop<StudyMaterial?>(studyMaterial);
       
       return;
     }
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ha ocurrido un error')));  //Popup de que algo no salio bien 
 

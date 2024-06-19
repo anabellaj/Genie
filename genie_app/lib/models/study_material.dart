@@ -8,8 +8,8 @@ class StudyMaterial {
     required this.description,
   });
   String id;
-  final String title;
-  final String description;
+  String title;
+  String description;
 
   Map<String, dynamic> toJson(Uint8List fileContent) {
     return {

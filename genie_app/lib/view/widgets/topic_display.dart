@@ -7,12 +7,20 @@ import 'package:genie_app/view/widgets/percent_bar.dart';
 import 'package:genie_app/view/widgets/topic_cards.dart';
 
 class TopicDisplay extends StatelessWidget {
-  const TopicDisplay({super.key, required this.topic, required this.group, required this.modificarArchivo, required this.subirArchivo, required this.createPdfFile});
+  const TopicDisplay(
+      {super.key,
+      required this.topic,
+      required this.group,
+      required this.modificarArchivo,
+      required this.subirArchivo,
+      required this.createPdfFile,
+      required this.forzarBuild});
   final Topic topic;
   final Groups group;
   final Function(Topic topic) modificarArchivo;
   final Function(Topic topic) subirArchivo;
   final Function(String id, String title) createPdfFile;
+  final Function forzarBuild;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +32,11 @@ class TopicDisplay extends StatelessWidget {
           children: [
             TextButton(
                 onPressed: () {
+                  //TODO: MEJORAR ESTO
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              GroupView(group: group)));
+                          builder: (context) => GroupView(group: group)));
                 },
                 child: Row(
                   children: [
@@ -107,6 +115,7 @@ class TopicDisplay extends StatelessWidget {
               },
               topicId: topic.id,
               group: group,
+              forzarBuild: forzarBuild,
             )
           ],
         ),

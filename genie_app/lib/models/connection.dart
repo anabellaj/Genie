@@ -382,8 +382,7 @@ class Connection {
           ModifierBuilder().set('studyMaterial', materials),
         );
       }
-
-      await db.close();
+      db.close();
       return 'success';
     } on Exception catch (e) {
       return e;
