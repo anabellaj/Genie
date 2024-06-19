@@ -6,8 +6,8 @@ import 'package:genie_app/view/screens/forum_list.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+import 'package:genie_app/viewModel/controllerForum.dart';
 import 'package:genie_app/viewModel/validator.dart';
-import 'package:genie_app/viewModel/controller.dart';
 
 
 
@@ -176,7 +176,7 @@ class _AddForum extends State<AddForum>{
                                     setState(() {
                                       isLoading=true;
                                     });
-                                    String answer = await Controller.createNewForum(title, description, widget.groupId);
+                                    String answer = await ControllerForum.createNewForum(title, description, widget.groupId);
                                     if(answer=="success"){  
                                       setState(() {
                                         isLoading=false;

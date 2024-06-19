@@ -47,20 +47,21 @@ class PercentBar extends StatelessWidget {
                       color: Color(0xFF174A59),
                       fontSize: 20,
                     ),
-                  ),
-                  CircularPercentIndicator(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    progressColor: const Color(0xff084C6E),
-                    percent: 0.75, // Adjusted to 75%
-                    lineWidth: 7,
-                    circularStrokeCap: CircularStrokeCap.round,
-                    center: const Text(
-                      '75%',
-                      style: TextStyle(
-                        color: Color(0xff084C6E),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10,
+                    CircularPercentIndicator(
+                      radius: 20,
+                      backgroundColor: Colors.white,
+                      progressColor: const Color(0xff084C6E),
+                      percent: percent, // Adjusted to 75%
+                      lineWidth: 7,
+                      circularStrokeCap: CircularStrokeCap.round,
+                      center: Text(
+                        '${(percent*100).truncate()}%',
+                        style: const TextStyle(
+                          color: Color(0xff084C6E),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                        ),
+
                       ),
                     ),
                   ),

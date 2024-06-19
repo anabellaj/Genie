@@ -1,9 +1,13 @@
-  import 'package:flutter/cupertino.dart';
+  import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/viewModel/ForumNotification.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/view/screens/forum_view.dart';
+import 'package:genie_app/viewModel/controllerForum.dart';
 
 
 class ForumBestReply extends StatefulWidget{
@@ -13,7 +17,8 @@ class ForumBestReply extends StatefulWidget{
   final String date;
   final String message;
   final String creator_id;
-  const ForumBestReply({super.key,required this.creator, required this.date, required this.message, required this.creator_id, required this.id, required this.forum});
+  final int num_likes;
+  const ForumBestReply({super.key,required this.creator, required this.date, required this.message, required this.creator_id, required this.id, required this.forum, required this.num_likes});
 
   @override
   State<ForumBestReply> createState()=> _ForumReply();
@@ -21,11 +26,23 @@ class ForumBestReply extends StatefulWidget{
 
 class _ForumReply extends State<ForumBestReply>{
   late bool isCreator=false;
+  late bool liked=false;
+    late bool isLoading=true;
+
+  late int number_likes=0;
 
   void checkCreator()async{
     bool creator = await Controller.checkIfOwner(widget.creator_id);
+    bool like = await ControllerForum.checkLike(widget.id, widget.forum);
+    if(like){
+      LikeState(true, widget.id).dispatch(context);
+    }
     setState(() {
       isCreator=creator;
+      liked=like;
+      number_likes= widget.num_likes;
+      isLoading=false;
+
     });
   }
 
@@ -93,8 +110,8 @@ class _ForumReply extends State<ForumBestReply>{
                             ),
                           );
                         });
-                      String res = await Controller.removeAnswer(widget.id, widget.forum);
-                      ForumView f = await Controller.getForum(widget.forum);
+                      String res = await ControllerForum.removeAnswer(widget.id, widget.forum);
+                      ForumView f = await ControllerForum.getForum(widget.forum);
                       Navigator.pop(context);
                       
                       if(res=='success'){
@@ -116,14 +133,33 @@ class _ForumReply extends State<ForumBestReply>{
                   ), 
                  ],
             ):SizedBox.shrink()]), 
-            Row(
+            isLoading?
+            SizedBox(
+              height: 20,
+            ):Row(
               children: [
                 IconButton(
-                  onPressed: (){}, 
+                  onPressed: (){
+                    LikedReply(true).dispatch(context);
+                    setState(() {
+                      liked = !liked;
+                    if(liked){
+                      number_likes++;
+                    }else{
+                      if(number_likes>0){
+                        number_likes--;
+                      }
+                    }
+                    });
+                    
+                    
+                    LikeState(liked, widget.id).dispatch(context);
+                    LikedReply(false).dispatch(context);
+                  }, 
                   iconSize: 14,
-                  icon: Icon(Icons.thumb_up_outlined, color: genieThemeDataDemo.colorScheme.primary,)),
+                  icon: Icon(liked? Icons.thumb_up: Icons.thumb_up_outlined, color: genieThemeDataDemo.colorScheme.primary,)),
                 Text(
-                  '${widget.date} me gusta',
+                  '$number_likes me gusta',
                   style: TextStyle(fontSize: 12, color: genieThemeDataDemo.colorScheme.primary),
                 )
               ],
