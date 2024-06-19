@@ -1,9 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:genie_app/models/flashcard.dart';
-
-import 'package:genie_app/models/topic.dart';
-
 import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';

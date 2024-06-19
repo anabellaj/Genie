@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
-import 'package:genie_app/view/widgets/forum_reply.dart';
 import 'package:genie_app/viewModel/ForumNotification.dart';
-
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/controllerForum.dart';
 import 'package:genie_app/viewModel/validator.dart';

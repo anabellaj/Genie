@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/group.dart';
-import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/view/screens/modify_flashcard.dart';
-import 'package:genie_app/view/screens/modify_study_material.dart';
 import 'package:genie_app/view/theme.dart';
 
 class FlashcardPreview extends StatelessWidget {

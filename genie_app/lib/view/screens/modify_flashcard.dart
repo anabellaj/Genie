@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/flashcard.dart';
-
-import 'package:genie_app/models/study_material.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/flashcards_list.dart';
-import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
-import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';
 
 

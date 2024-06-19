@@ -3,7 +3,6 @@ import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/add_forum.dart';
 import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
-import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/controllerForum.dart';
 import '../theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';

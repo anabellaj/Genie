@@ -9,20 +9,12 @@ import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
-import 'package:genie_app/view/widgets/forum_best.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
-import 'package:genie_app/models/forum.dart';
-import 'package:genie_app/view/screens/forum_view.dart';
-import 'package:genie_app/view/widgets/forum_preview.dart';
-import 'package:genie_app/view/widgets/forum_reply.dart';
-import 'package:genie_app/models/forum_reply.dart';
 import 'package:genie_app/view/widgets/topic_preview.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
-
 class Controller {
 
   /*Groups Controller */

@@ -99,8 +99,8 @@ class ControllerStudy {
        }catch (e) {
         print(e);
         List<bool> studiedFlash=[];
+        // ignore: unused_local_variable
         for(var el in flashcards){
-              
                 studiedFlash.add(false);
           }
         return studiedFlash;

@@ -1,8 +1,4 @@
-  import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/viewModel/ForumNotification.dart';
 import 'package:genie_app/viewModel/controller.dart';
