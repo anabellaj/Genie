@@ -29,6 +29,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
   late List<bool> studied = [];
 
   void studiedFlashcard() async {
+    print("Hola");
     await ControllerStudy.updateStudied(
         studied, widget.topicId, widget.flashcards);
 
@@ -40,6 +41,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
             //      topicId: widget.topicId,
             //      group: widget.group,
             //    )));
+    print("Chao");
   }
 
   void getInfo() async {
