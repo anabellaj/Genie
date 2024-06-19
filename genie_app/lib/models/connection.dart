@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:genie_app/models/flashcard.dart';
@@ -105,7 +106,6 @@ class Connection {
       groupMember.id = memberId;
       groupMembs.add(groupMember);
     }
-    print("VAMOSS");
     return groupMembs;
   }
 
