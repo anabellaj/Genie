@@ -83,7 +83,7 @@ class _ForumView extends State<ForumView> {
                         )],
                         )
                     
-                    ),])),
+                    ),
 
         Padding(
           padding: const EdgeInsets.all(16),
@@ -205,9 +205,9 @@ class _ForumView extends State<ForumView> {
                           ),
                         ),
                       ),
-
+                      ]
                     ),
-                  ),
+                  ]),])))),
                   const SizedBox(width: 15,),
                   !sendingMessage? 
                   FloatingActionButton(

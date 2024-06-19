@@ -28,7 +28,7 @@ class ControllerStudy {
     try {
       return await Connection.getFlashCards(topicID);
 
-    static Future<List<Flashcard>> getFlashcards(String topicID)async{
+   
 
     } catch (e) {
       return [];

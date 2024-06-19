@@ -43,7 +43,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
         _defLabelController.text.isEmpty) {
       
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          const SnackBar(content: Text('Por favor llene todos los campos')));
 
       return;
     }
@@ -179,7 +179,6 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-<<<<<< andres
                   builder: (context) => FlashcardListPage(
                         topicId: widget.topicId,
                         flashcards: widget.flashcards,
@@ -198,7 +197,7 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
 
   }
     
-  }
+  
   
 
   @override
@@ -367,5 +366,5 @@ class _ModifyFlashcard extends State<ModifyFlashcard> {
                   ))))
         ])));
 
-  }
-}
+  }}
+
