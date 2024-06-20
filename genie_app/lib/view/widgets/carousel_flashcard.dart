@@ -49,19 +49,19 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
     getInfo();
   }
 
-  void dispose(){
+  void dispose() {
     print("ejec");
     studiedFlashcard();
     super.dispose();
     print("dejec");
   }
+
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -99,7 +99,8 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                   shadowColor:
                                       genieThemeDataDemo.colorScheme.onSurface,
                                   elevation: 4,
-                                  color: const Color.fromARGB(255, 255, 255, 255),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Center(child: Text(f.term)),
@@ -109,7 +110,8 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                     shadowColor: genieThemeDataDemo
                                         .colorScheme.onSurface,
                                     elevation: 4,
-                                    color: const Color.fromARGB(255, 255, 255, 255),
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Center(child: Text(f.definition)),
@@ -209,9 +211,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                           ],
                         ),
                       ),
-                    TextButton(onPressed: (){
-                      studiedFlashcard();
-                    }, style: secondaryButtonStyle, child: const Text("Guardar cambios"))],
+                    ],
                   )
           ]);
   }
