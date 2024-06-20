@@ -10,8 +10,8 @@ class Topic {
       this.percent=0});
 
   final String id;
-  final String name;
-  final String label;
+  String name;
+  String label;
   final List<StudyMaterial> files;
   final List<dynamic> flashCards;
   late double percent=0;
