@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/view/screens/group_view.dart';
-import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -10,9 +9,13 @@ import 'package:genie_app/viewModel/controller.dart';
 
 class ModifyTopicScreen extends StatefulWidget {
   const ModifyTopicScreen(
-      {super.key, required this.topic, required this.group});
+      {super.key,
+      required this.topic,
+      required this.group,
+      required this.forzarBuild});
   final Topic topic;
   final Groups group;
+  final Function forzarBuild;
 
   @override
   State<ModifyTopicScreen> createState() => _ModifyTopicScreen();
@@ -34,10 +37,6 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
     selectedOption = widget.topic.label;
 
     super.initState();
-  }
-
-  Future<Topic> _loadTopic() async {
-    return Controller.loadTopic(widget.topic.id);
   }
 
   void modifyTopic() async {
@@ -66,7 +65,10 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
       labelExists = false;
     }
     Topic newTopic = Topic(
-        name: _titleController.text, label: label, files: widget.topic.files, flashCards: widget.topic.flashCards);
+        name: _titleController.text,
+        label: label,
+        files: widget.topic.files,
+        flashCards: widget.topic.flashCards);
 
     //Confirm dialog
     showDialog(
@@ -115,13 +117,11 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
 
         if (result == 'success') {
           if (!labelExists) widget.group.labels.add(label);
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TopicScreen(
-                        topicId: widget.topic.id,
-                        group: widget.group,
-                      )));
+          widget.topic.name = newTopic.name;
+          widget.topic.label = newTopic.label;
+          widget.forzarBuild();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
         } else {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -139,7 +139,6 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
     otherLabelController.dispose();
     super.dispose();
   }
-
 
   void deleteTopic() async {
     //confirm dialog
@@ -218,13 +217,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
           // Boton de Regresar
           TextButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TopicScreen(
-                              topicId: widget.topic.id,
-                              group: widget.group,
-                            )));
+                Navigator.of(context).pop();
               },
               child: Row(
                 children: [
@@ -272,19 +265,19 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                         TextField(
                           controller: _titleController,
                           maxLength: 50,
-                          decoration:  InputDecoration(
-                            hintText: 'Nombre del Tema',
-                            enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context).colorScheme.secondary
-                                          ),
-                                        
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context).colorScheme.primary
-                                          ),)
-                          ),
+                          decoration: InputDecoration(
+                              hintText: 'Nombre del Tema',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              )),
                         ),
                         const SizedBox(
                           height: 20,
@@ -294,18 +287,19 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                           children: [
                             DropdownButtonFormField(
                               decoration: InputDecoration(
-                                helperText: 'Agrega una etiqueta al tema',
-                                enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context).colorScheme.secondary
-                                          ),
-                                        
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context).colorScheme.primary
-                                          ),)
-                              ),
+                                  helperText: 'Agrega una etiqueta al tema',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                  )),
                               value: selectedOption,
                               items: evaluationLabels
                                   .map(
