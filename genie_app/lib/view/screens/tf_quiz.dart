@@ -123,6 +123,12 @@ class _TFQuizScreenState extends State<TFQuizScreen> {
           height: 30,
         ),
         OutlinedButton(
+          style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(20.0),
+                  side: BorderSide(
+                      color: genieThemeDataDemo.colorScheme.secondary),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0))),
             onPressed: () {
               if (answeredQuestions <= (widget.quiz.questions.length - 1)) {
                 setState(() {
