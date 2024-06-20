@@ -56,6 +56,12 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
     getInfo();
   }
 
+  void dispose(){
+    print("ejec");
+    studiedFlashcard();
+    super.dispose();
+    print("dejec");
+  }
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -202,8 +208,10 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                 ))
                           ],
                         ),
-                      )
-                    ],
+                      ),
+                    TextButton(onPressed: (){
+                      studiedFlashcard();
+                    }, style: secondaryButtonStyle, child: const Text("Guardar cambios"))],
                   )
           ]);
   }
