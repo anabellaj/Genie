@@ -30,9 +30,21 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
 
   void studiedFlashcard() async {
     print("Hola");
-    await ControllerStudy.updateStudied(
-        studied, widget.topicId, widget.flashcards);
-
+    showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const AlertDialog(
+              content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 20),
+                  Text('Guardando...'),
+                ],
+              ),
+            );
+          },
+        );
     //ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     //Navigator.pushReplacement(
         //context,
@@ -41,7 +53,11 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
             //      topicId: widget.topicId,
             //      group: widget.group,
             //    )));
-    print("Chao");
+    await ControllerStudy.updateStudied(
+        studied, widget.topicId, widget.flashcards);
+      Navigator.of(context)
+                    .pop(true);
+      print("Chao");
   }
 
   void getInfo() async {
@@ -65,13 +81,6 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
   void initState() {
     super.initState();
     getInfo();
-  }
-
-  void dispose(){
-    print("ejec");
-    studiedFlashcard();
-    super.dispose();
-    print("dejec");
   }
   @override
   Widget build(BuildContext context) {
@@ -219,8 +228,10 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                 ))
                           ],
                         ),
-                      )
-                    ],
+                      ),
+                    TextButton(onPressed: (){
+                      studiedFlashcard();
+                    }, style: secondaryButtonStyle, child: const Text("Guardar cambios"))],
                   )
           ]);
   }
