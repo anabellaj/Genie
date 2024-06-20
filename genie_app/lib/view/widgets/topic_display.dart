@@ -56,6 +56,7 @@ class TopicDisplay extends StatelessWidget {
               children: [
                 Text(
                   topic.name,
+                  overflow: TextOverflow.ellipsis,
                   style: genieThemeDataDemo.textTheme.displayMedium!
                       .copyWith(fontSize: 32, fontWeight: FontWeight.w700),
                 ),
@@ -63,7 +64,7 @@ class TopicDisplay extends StatelessWidget {
                     onPressed: () {
                       modificarArchivo(topic);
                     },
-                    icon: const Icon(Icons.more_horiz))
+                    icon: const Icon(Icons.more_horiz)),
               ],
             ),
             const SizedBox(

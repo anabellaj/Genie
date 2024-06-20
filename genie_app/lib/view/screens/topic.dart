@@ -97,10 +97,11 @@ class _TopicScreenState extends State<TopicScreen> {
   }
 
   void modificarArchivo(Topic topic) async {
-    Navigator.of(context).push<Map<String, String>>(MaterialPageRoute(
+    Navigator.of(context).push(MaterialPageRoute(
       builder: (ctx) => ModifyTopicScreen(
         topic: topic,
         group: widget.group,
+        forzarBuild: forzarBuild,
       ),
     ));
   }
