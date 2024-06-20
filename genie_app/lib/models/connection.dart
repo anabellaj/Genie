@@ -1,3 +1,4 @@
+import 'package:genie_app/models/flashcard.dart';
 import 'group.dart';
 import 'dart:typed_data';
 import 'package:genie_app/models/forum_reply.dart';
@@ -25,7 +26,33 @@ class Connection {
     return result;
   }
 
-  static void removeGroupMember(String memberId, Groups group) async {
+  static void removeGroup(Groups group) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+
+    var groupCollection = db.collection('studyGroup');
+    var userCollection = db.collection("user");
+    groupCollection
+        .deleteOne(where.eq("_id", ObjectId.fromHexString(group.id.oid)));
+    List groupMembers = await userCollection.find({
+      "studyGroups": {
+        '\$in': [group.id.oid]
+      }
+    }).toList();
+    if (groupMembers.isNotEmpty) {
+      for (var member in groupMembers) {
+        List currStudyGroups = member["studyGroups"];
+        currStudyGroups.remove(group.id.oid);
+        final userUpdate =
+            ModifierBuilder().set("studyGroups", currStudyGroups);
+        userCollection.updateOne(where.eq("_id", member["_id"]), userUpdate);
+      }
+    }
+    await db.close();
+  }
+
+  static Future<User> removeGroupMember(String memberId, Groups group) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
@@ -41,14 +68,17 @@ class Connection {
     if (admins.contains(memberId)) {
       admins.remove(memberId);
     }
+    if (admins.isEmpty && members.isNotEmpty) {
+      admins.add(members[0]);
+    }
 
     final docUser =
         await userCollection.findOne({"_id": ObjectId.fromHexString(memberId)});
+
     User groupMember = User.fromJson(docUser as Map<String, dynamic>);
     List studyGroups = groupMember.studyGroups;
-    print(studyGroups);
     studyGroups.remove(group.id.oid);
-    print(studyGroups);
+    groupMember.studyGroups.remove(group.id.oid);
 
     final groupUpdate =
         ModifierBuilder().set("members", members).set("admins", admins);
@@ -59,6 +89,7 @@ class Connection {
         where.eq("_id", ObjectId.fromHexString(memberId)), userUpdate);
 
     db.close();
+    return groupMember;
   }
 
   static Future<List<User>> getGroupMembers(List groupMembers) async {
@@ -74,7 +105,6 @@ class Connection {
       groupMember.id = memberId;
       groupMembs.add(groupMember);
     }
-    print("VAMOSS");
     return groupMembs;
   }
 
@@ -125,6 +155,8 @@ class Connection {
       "interests": [],
       "chats": [],
       "studyGroups": [],
+      'flashCardsStudied': [],
+      'replysLiked': []
     });
     await db.close();
     return result.id.oid.toString();
@@ -149,14 +181,13 @@ class Connection {
 
     var userCollection = db.collection('user');
     await userCollection.remove(where.eq('email', user.email));
-    var studyGroupCollection= db.collection('studyGroup');
+    var studyGroupCollection = db.collection('studyGroup');
     for (var id in user.studyGroups) {
-      await studyGroupCollection.updateOne(where.eq('_id', ObjectId.fromHexString(id)),
-        ModifierBuilder().pull("members", user.id)
-      );
-
+      await studyGroupCollection.updateOne(
+          where.eq('_id', ObjectId.fromHexString(id)),
+          ModifierBuilder().pull("members", user.id));
     }
-     
+
     await db.close();
   }
 
@@ -168,7 +199,6 @@ class Connection {
     await db.open();
     var topicCollection = db.collection('topic');
     final response = await topicCollection.findOne(where.eq('_id', castedId));
-    print(response);
     List<StudyMaterial> studyMaterials = [];
     for (var studyMaterial in response!['studyMaterial']) {
       studyMaterials.add(StudyMaterial(
@@ -176,11 +206,13 @@ class Connection {
           title: studyMaterial['title'] as String,
           description: studyMaterial['description'] as String));
     }
+    print(response['flashCards']);
     Topic topic = Topic(
         id: id,
         name: response['name'],
         label: response['label'],
-        files: studyMaterials);
+        files: studyMaterials,
+        flashCards: response['flashCards']);
     db.close();
     return topic;
   }
@@ -211,6 +243,7 @@ class Connection {
             'description': studyMaterial.description,
           }));
       db.close();
+      studyMaterial.id = ObjectIdConverter.convertToId(response.id);
       return 'success';
     } on Exception catch (e) {
       return ('Error $e');
@@ -260,6 +293,7 @@ class Connection {
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
       await db.open();
       var topicCollection = db.collection('topic');
+      print(topic.toJson());
       WriteResult insert = await topicCollection.insertOne(topic.toJson());
       var groupCollection = db.collection('studyGroup');
       if (labelExists) {
@@ -348,8 +382,7 @@ class Connection {
           ModifierBuilder().set('studyMaterial', materials),
         );
       }
-
-      await db.close();
+      db.close();
       return 'success';
     } on Exception catch (e) {
       return e;
@@ -536,6 +569,7 @@ class Connection {
       'date': newReply.date,
       'message': newReply.message,
       'creator_id': newReply.creator_id,
+      'num_likes': newReply.num_likes
     });
 
     await forumCollection.updateOne(
@@ -636,6 +670,202 @@ class Connection {
       return 'success';
     } on Exception catch (e) {
       return e;
+    }
+  }
+
+  static Future addNewFlashCard(Flashcard flash, String topicID) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    final flashcardCollection = db.collection('flashcard');
+
+    WriteResult res = await flashcardCollection
+        .insertOne({"term": flash.term, "definition": flash.definition});
+
+    final topicCollection = db.collection('topic');
+    await topicCollection.updateOne(
+        where.eq("_id", ObjectId.fromHexString(topicID)),
+        ModifierBuilder().push('flashCards', res.id));
+    await db.close();
+  }
+
+  static Future<List<Flashcard>> getFlashCards(String topicID) async {
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open();
+      final topicCollection = db.collection('topic');
+      final flashcardCollection = db.collection('flashcard');
+
+      final topic = await topicCollection
+          .findOne(where.eq("_id", ObjectId.fromHexString(topicID)));
+      final flashcardIds = topic?['flashCards'];
+
+      final flashcards = await flashcardCollection
+          .find(where.oneFrom("_id", flashcardIds))
+          .toList();
+
+      final List<Flashcard> flashcardObjects = flashcards.map((flashcard) {
+        return Flashcard.fromJson(flashcard);
+      }).toList();
+
+      return flashcardObjects;
+    } on Exception catch (e) {
+      print('Error in all flashcards: $e');
+      return [];
+    }
+  }
+
+  static Future<dynamic> updateFlashcard(
+      Flashcard newFlashcard, String id) async {
+    try {
+      ObjectId convertedId = ObjectId.fromHexString(id);
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open();
+      final flashcardCollection = db.collection('flashcard');
+      await flashcardCollection.update(
+        where.eq('_id', convertedId),
+        ModifierBuilder()
+            .set('term', newFlashcard.term)
+            .set('definition', newFlashcard.definition),
+      );
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      print(e);
+      return e;
+    }
+  }
+
+  static Future<dynamic> deleteFlashcard(
+      String flashcardId, String topicId, int i) async {
+    try {
+      ObjectId convertedIdFlashcard = ObjectId.fromHexString(flashcardId);
+      ObjectId convertedIdTopic = ObjectId.fromHexString(topicId);
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+      await db.open();
+      final flashcardCollection = db.collection('flashcard');
+      final topicCollection = db.collection('topic');
+      await flashcardCollection.remove(where.eq('_id', convertedIdFlashcard));
+
+      final topic =
+          await topicCollection.findOne(where.eq('_id', convertedIdTopic));
+      if (topic != null) {
+        List flashcards = topic['flashCards'];
+        flashcards.removeAt(i);
+        await topicCollection.update(
+          where.eq('_id', convertedIdTopic),
+          ModifierBuilder().set('flashCards', flashcards),
+        );
+      }
+
+      await db.close();
+      return 'success';
+    } on Exception catch (e) {
+      print(e);
+      return e;
+    }
+  }
+
+  static Future updateStudied(
+      String userId, Map<String, dynamic> object) async {
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+          where.eq('_id', ObjectId.fromHexString(userId)),
+          ModifierBuilder().addToSet('flashCardsStudied', object));
+      await db.close();
+    } catch (e) {}
+  }
+
+  static Future<User> getUser(String id) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final userCollection = db.collection('user');
+    Map<String, dynamic>? res = await userCollection
+        .findOne(where.eq("_id", ObjectId.fromHexString(id)));
+    await db.close();
+    if (res != null) {
+      return User.fromJson(res);
+    } else {
+      return User("", "");
+    }
+  }
+
+  static Future updateUserFlashcard(String userId, List<dynamic> object) async {
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+          where.eq('_id', ObjectId.fromHexString(userId)),
+          ModifierBuilder().set('flashCardsStudied', object));
+      await db.close();
+    } catch (e) {}
+  }
+
+  static Future updateLikesInReplys(List replysId) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final forumReplyCollection = db.collection('forumAnswer');
+    for (var reply in replysId) {
+      await forumReplyCollection.updateOne(
+          where.eq("_id", ObjectId.fromHexString(reply)),
+          ModifierBuilder().inc("num_likes", 1));
+    }
+    await db.close();
+  }
+
+  static Future updateUserLikedReplys(String userId, dynamic object) async {
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+          where.eq('_id', ObjectId.fromHexString(userId)),
+          ModifierBuilder().set('replysLiked', object));
+      await db.close();
+    } catch (e) {}
+  }
+
+  static Future addUserLikedReplys(String userId, dynamic object) async {
+    try {
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+      await db.open();
+      final userCollection = db.collection('user');
+      await userCollection.updateOne(
+          where.eq('_id', ObjectId.fromHexString(userId)),
+          ModifierBuilder().addToSet('replysLiked', object));
+      await db.close();
+    } catch (e) {}
+  }
+
+  static Future removeLikes(List remove) async {
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final answerCollection = db.collection('forumAnswer');
+    for (var rem in remove) {
+      await answerCollection.updateOne(
+          where.eq("_id", rem), ModifierBuilder().inc('num_likes', -1));
     }
   }
 }

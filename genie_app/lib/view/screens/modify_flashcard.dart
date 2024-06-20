@@ -1,74 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/group.dart';
-import 'package:genie_app/models/topic.dart';
-import 'package:genie_app/view/screens/group_view.dart';
+import 'package:genie_app/view/screens/flashcards_list.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
-import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
-import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/viewModel/controllerStudy.dart';
 
-class ModifyTopicScreen extends StatefulWidget {
-  const ModifyTopicScreen(
-      {super.key,
-      required this.topic,
-      required this.group,
-      required this.forzarBuild});
-  final Topic topic;
+
+class ModifyFlashcard extends StatefulWidget {
+  const ModifyFlashcard({super.key, required this.flashcard, required this.topicId, required this.i, required this.flashcards, required this.group});
+
+  final Flashcard flashcard;
+  final String topicId;
+  final int i;
   final Groups group;
-  final Function forzarBuild;
+  final List<Flashcard> flashcards;
+
 
   @override
-  State<ModifyTopicScreen> createState() => _ModifyTopicScreen();
+  State<ModifyFlashcard> createState() => _ModifyFlashcard();
 }
 
-class _ModifyTopicScreen extends State<ModifyTopicScreen> {
-  final _titleController = TextEditingController();
-  final otherLabelController = TextEditingController();
-  late List<String> evaluationLabels;
+class _ModifyFlashcard extends State<ModifyFlashcard> {
+  final _termController = TextEditingController();
+  final _defLabelController = TextEditingController();
   var isLoading = true;
-  var labelExists = true;
-  late String selectedOption;
 
   @override
   void initState() {
-    evaluationLabels = List<String>.from(widget.group.labels);
-    evaluationLabels.add('Agregar nueva etiqueta');
-    _titleController.text = widget.topic.name;
-    selectedOption = widget.topic.label;
 
+    _termController.text = widget.flashcard.term;
+    _defLabelController.text = widget.flashcard.definition;
     super.initState();
   }
 
-  void modifyTopic() async {
-    labelExists = true;
-    var label = selectedOption;
-    if (_titleController.text.isEmpty) {
+  void modifyFlashcard () async {
+    if (_termController.text.isEmpty ||
+        _defLabelController.text.isEmpty) {
+      
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Por favor llene todos los campos')));
+
       return;
     }
-    if (selectedOption == 'Agregar nueva etiqueta') {
-      if (otherLabelController.text.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Debe ponerle un nombre a la etiqueta.')));
-        return;
-      }
-      for (var label in evaluationLabels) {
-        if (label.toUpperCase() ==
-            otherLabelController.text.toUpperCase().trim()) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('La etiqueta ingresada ya existe. ')));
-          return;
-        }
-      }
-      label = otherLabelController.text;
-      labelExists = false;
-    }
-    Topic newTopic = Topic(
-        name: _titleController.text,
-        label: label,
-        files: widget.topic.files,
-        flashCards: widget.topic.flashCards);
+
+    String newTerm = _termController.text;
+    String newDef = _defLabelController.text;
+    Flashcard newFlashCard = Flashcard(newTerm, newDef);
 
     //Confirm dialog
     showDialog(
@@ -76,91 +54,93 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar'),
-          content: const Text('¿Desea modificar el tema?'),
+          content: const Text('¿Desea modificar la ficha?'),
           actions: [
             ElevatedButton(
               child: const Text('Aceptar'),
               onPressed: () {
-                Navigator.of(context)
-                    .pop(true); // Devuelve false cuando se cancela
+
+                Navigator.of(context).pop(true); // Devuelve false cuando se cancela
+
               },
             ),
             ElevatedButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context)
-                    .pop(false); // Devuelve true cuando se acepta
+
+                Navigator.of(context).pop(false); // Devuelve true cuando se acepta
               },
             ),
           ],
         );
       },
     ).then((value) async {
-      if (value != null && value) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return const AlertDialog(
-              content: Row(
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(width: 20),
-                  Text('Modificando tema...'),
-                ],
-              ),
-            );
-          },
-        );
-        final result = await Controller.updateTopic(
-            newTopic, widget.topic, labelExists, widget.group);
 
-        if (result == 'success') {
-          if (!labelExists) widget.group.labels.add(label);
-          widget.topic.name = newTopic.name;
-          widget.topic.label = newTopic.label;
-          widget.forzarBuild();
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        } else {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Ha ocurrido un error.')));
+      if (value != null && value){
+        showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return const AlertDialog(
+                  content: Row(
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 20),
+                      Text('Modificando ficha...'),
+                    ],
+                  ),
+                );
+              },
+           );
+      final result = await ControllerStudy.updateFlashcard(newFlashCard, widget.flashcard.id);
+        if (result == 'success'){
+                  
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>  FlashcardListPage(topicId: widget.topicId, flashcards: widget.flashcards, group: widget.group,)));
         }
-      } else {
+        else{
+          ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Ha ocurrido un error.')));
+        }
+      } 
+      else {
         return;
       }
     });
+
   }
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    otherLabelController.dispose();
-    super.dispose();
-  }
+  void deleteFile() async{
 
-  void deleteTopic() async {
     //confirm dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar'),
-          content: const Text('¿Desea eliminar el tema?'),
+
+          content:const  Text('¿Desea eliminar la ficha?'),
+
           actions: [
             ElevatedButton(
               child: const Text('Aceptar'),
               onPressed: () {
+
                 Navigator.of(context)
                     .pop(true); // Devuelve false cuando se cancela
+
               },
             ),
             ElevatedButton(
               child: const Text('Cancelar'),
               onPressed: () {
+
                 Navigator.of(context)
                     .pop(false); // Devuelve true cuando se acepta
+
               },
             ),
           ],
@@ -177,39 +157,66 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(width: 20),
-                  Text('Eliminando tema...'),
+                  Text('Eliminando ficha...'),
                 ],
               ),
             );
           },
         );
-        final result = await Controller.deleteTopic(widget.topic.id);
+        final result = await ControllerStudy.deleteFlashcard(
+            widget.flashcard.id, widget.topicId, widget.i);
 
         if (result == 'success') {
           //revisar como hay que pasar el id
+
           // ObjectId id = ObjectId.fromHexString(topic.id);
           //final topicId = widget.topic.id;
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => GroupView(group: widget.group)));
+                  builder: (context) => FlashcardListPage(
+                        topicId: widget.topicId,
+                        flashcards: widget.flashcards,
+                        group: widget.group,
+                      )));
         } else {
           ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Ha ocurrido un error.')));
+
         }
       } else {
         return;
       }
     });
+
   }
+    
+  
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: TopBar(),
-        body: SingleChildScrollView(
-            child: Column(children: [
+        body:
+            // FutureBuilder(
+            //   future: _loadMaterial(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return const Center(child: CircularProgressIndicator());
+            //     }
+            //     if (snapshot.hasError) {
+            //       //snackbar
+            //       ScaffoldMessenger.of(context).clearSnackBars();
+            //        ScaffoldMessenger.of(context)
+            //             .showSnackBar(SnackBar(content: Text('Ha ocurrido un error.')));
+            //       return const Center(
+            //         child: Text('Ha ocurrido un error'),
+            //       );
+            //     }
+            SingleChildScrollView(
+                child: Column(children: [
           const SizedBox(
             height: 20,
           ),
@@ -217,7 +224,14 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
           // Boton de Regresar
           TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FlashcardListPage(
+                              topicId: widget.topicId,
+                              flashcards: widget.flashcards,
+                              group: widget.group,
+                            )));
               },
               child: Row(
                 children: [
@@ -257,16 +271,38 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Modificar Tema',
+                        Text('Modificar Ficha',
                             style: genieThemeDataDemo
                                 .primaryTextTheme.headlineMedium),
 
                         //Nombre
                         TextField(
-                          controller: _titleController,
+                          controller: _termController,
                           maxLength: 50,
                           decoration: InputDecoration(
-                              hintText: 'Nombre del Tema',
+                              hintText: 'Término',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              )),
+
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+                        TextField(
+                          controller: _defLabelController,
+                          maxLength: 50,
+                          decoration: InputDecoration(
+                              hintText: 'Definición',
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context)
@@ -279,50 +315,8 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                                         Theme.of(context).colorScheme.primary),
                               )),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        //Evaluacion
-                        Column(
-                          children: [
-                            DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                  helperText: 'Agrega una etiqueta al tema',
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
-                                  )),
-                              value: selectedOption,
-                              items: evaluationLabels
-                                  .map(
-                                    (label) => DropdownMenuItem<String>(
-                                      value: label,
-                                      child: Text(label),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedOption = value!;
-                                });
-                              },
-                            ),
-                            if (selectedOption == 'Agregar nueva etiqueta')
-                              TextField(
-                                controller: otherLabelController,
-                                decoration: const InputDecoration(
-                                    label: Text('Agregar ')),
-                              )
-                          ],
-                        ),
+
+
                         const SizedBox(
                           height: 20,
                         ),
@@ -330,13 +324,15 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              modifyTopic();
+
+                              modifyFlashcard();
                             },
+
                             style: const ButtonStyle(
                                 backgroundColor:
                                     WidgetStatePropertyAll(Color(0xff3d7f95))),
                             child: const Text(
-                              'Modificar Tema',
+                              'Modificar Ficha',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -348,13 +344,14 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              deleteTopic();
+                              deleteFile();
                             },
                             style: const ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll(
                                     Color.fromARGB(255, 255, 211, 217))),
+
                             child: const Text(
-                              'Eliminar Tema',
+                              'Eliminar Ficha',
                               style: TextStyle(color: Color(0xffC5061D)),
                             ),
                           ),
@@ -362,7 +359,7 @@ class _ModifyTopicScreen extends State<ModifyTopicScreen> {
                       ], //children de columna
                     ),
                   ))))
-        ])),
-        bottomNavigationBar: BottomNavBar());
-  }
-}
+        ])));
+
+  }}
+

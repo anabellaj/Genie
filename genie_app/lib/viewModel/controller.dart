@@ -11,16 +11,10 @@ import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
-import 'package:genie_app/models/forum.dart';
-import 'package:genie_app/view/screens/forum_view.dart';
-import 'package:genie_app/view/widgets/forum_preview.dart';
-import 'package:genie_app/view/widgets/forum_reply.dart';
-import 'package:genie_app/models/forum_reply.dart';
 import 'package:genie_app/view/widgets/topic_preview.dart';
+import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
-
 class Controller {
 
   /*Groups Controller */
@@ -66,17 +60,43 @@ class Controller {
     );
   }
 
+  static Future<String> deleteGroup(Groups group) async{
+    try{
+    Connection.removeGroup(group);
+    return "success";
+    }
+    catch (e){
+      return "no_success";
+    }
+  }
+
   static Future<String> deleteMember(String memberId, Groups group) async {
     try {
-      Connection.removeGroupMember(memberId, group);
+      User currUser = await Connection.removeGroupMember(memberId, group);
+      Controller.updateUserInfo(currUser);
       return "success";
     } catch (e) {
+      print(e);
+      return "no_success";
+    }
+  }
+
+  static Future<String> leaveGroup(Groups group) async{
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+    String logUserId = logUser[0]["_id"].oid;
+    try{
+    String response = await Controller.deleteMember(logUserId, group);
+    return response;
+    } catch (e){
+      print(e);
       return "no_success";
     }
   }
 
   static Future<List<Widget>> getUserGroups() async {
-    User loggedUser = await Controller.getUserInfo();
+    try{
+User loggedUser = await Controller.getUserInfo();
     List stGroups = loggedUser.studyGroups;
     List<Widget> obtainedGroups = [];
     for (String groupId in stGroups) {
@@ -91,12 +111,16 @@ class Controller {
     }
 
     return obtainedGroups;
+    }catch(e){
+      return [];
+    }
+    
   }
 
   /*User Controller */
   static Future<bool> getLoggedInUser() async {
     final prefs = await SharedPreferences.getInstance();
-    var answer = prefs.getBool("isLoggedIn");
+    var answer = await prefs.getBool("isLoggedIn");
     if (answer != null) {
       if (answer) {
         return true;
@@ -110,11 +134,11 @@ class Controller {
 
   static Future<User> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-    var user = prefs.getString("user");
+    var user = await prefs.getString("user");
     User loggedUser;
     if (user != null) {
       loggedUser = User.fromJson(jsonDecode(user));
-
+      
       return loggedUser;
     } else {
       return User("", "");
@@ -185,114 +209,6 @@ class Controller {
     }
   }
 
-  /*Formun Controller */
-  static Future<String> createNewForum(
-      String title, String description, Groups group) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      var user = prefs.getString("user");
-      if (user != null) {
-        User loggedUser = User.fromJson(jsonDecode(user));
-        String creator = loggedUser.name;
-        DateTime date = DateTime.now();
-
-        Forum newForum =
-            Forum(title, description, creator, loggedUser.id, date);
-        newForum.initialize();
-
-        await Connection.addNewForum(newForum, group);
-
-        return 'success';
-      } else {
-        return 'error';
-      }
-    } catch (e) {
-      print(e);
-      return 'error';
-    }
-  }
-
-  static Future<List<Widget>> getForums(Groups groupId) async {
-    try {
-      List forums = await Connection.returnForums(groupId.id.oid.toString());
-
-    List<Widget> previews = [];
-
-    for (var forum in forums) {
-      Forum f = Forum.fromJson(forum);
-      previews.add(MessagePreview(
-        id: f.id,
-        title: f.title,
-        creator: f.creator,
-        date: DateFormat.yMd().format(f.date),
-        description: f.description,
-        creator_id: f.creator_id,
-        group: groupId,
-      ));
-    }
-
-    return previews;
-    } catch (e) {
-      return [];
-    }
-    
-  }
-
-  static Future<List<ForumReplyShow>> getReplys(String forumId) async {
-    try {
-      List replys = await Connection.returnAnswers(forumId);
-
-    List<ForumReplyShow> messages = [];
-
-    for (var reply in replys) {
-      ForumReply f = ForumReply.fromJson(reply);
-      messages.add(ForumReplyShow(
-        creator: f.creator,
-        date: DateFormat.yMd().format(f.date),
-        message: f.message,
-        creator_id: f.creator_id,
-        id: f.id,
-        forum: forumId,
-      ));
-    }
-
-    return messages;
-    } catch (e) {
-      return [];
-    }
-    
-  }
-
-  static Future<List<ForumReplyShow>> newAnswer(
-      String message, String forumId, List<ForumReplyShow> replys) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      var userInfo = prefs.getString('user');
-      if (userInfo != null) {
-        User user = User.fromJson(jsonDecode(userInfo));
-        DateTime date = DateTime.now();
-
-        ForumReply reply = ForumReply(user.name, date, message, user.id);
-
-        String id = await Connection.addNewReply(reply, forumId);
-
-        replys.add(ForumReplyShow(
-          creator: user.name,
-          date: DateFormat.yMd().format(date),
-          message: message,
-          creator_id: user.id,
-          id: id,
-          forum: forumId,
-        ));
-
-        return replys;
-      } else {
-        return replys;
-      }
-    } catch (e) {
-      return replys;
-    }
-  }
 
   static Future<bool> checkIfOwner(String owner) async {
     final prefs = await SharedPreferences.getInstance();
@@ -306,46 +222,6 @@ class Controller {
     }
   }
 
-  static Future<String> deleteForum(String forumId) async {
-    try {
-      await Connection.removeForum(forumId, "66552c763656b63721956447");
-      return 'success';
-    } catch (e) {
-      return 'error';
-    }
-  }
-
-  static Future<String> removeAnswer(String replyId, String forumId) async {
-    try {
-      await Connection.removeAnswer(replyId, forumId);
-
-      return 'success';
-    } catch (e) {
-      return 'error';
-    }
-  }
-
-  static Future<ForumView> getForum(String forumId) async {
-    try {
-      Forum forum = await Connection.refreshForum(forumId);
-
-      return ForumView(
-          date: DateFormat.yMd().format(forum.date),
-          description: forum.description,
-          id: forum.id,
-          title: forum.title,
-          creator: forum.creator,
-          creator_id: forum.creator_id);
-    } catch (e) {
-      return const ForumView(
-          date: "",
-          description: "",
-          id: "",
-          title: "",
-          creator: "",
-          creator_id: "");
-    }
-  }
 
   static Widget manageNavigation(int index) {
     switch (index) {
@@ -369,9 +245,16 @@ class Controller {
 
   static Future<Topic> loadTopic(String id) async {
     try {
-      return await Connection.readTopic(id);
+      User user = await Controller.getUserInfo();
+      print("error");
+      Topic topic = await Connection.readTopic(id);
+      print("error 2");
+      double percent=  await ControllerStudy.getPercent(topic, user.id);
+      topic.percent= percent;
+      return topic;
     } catch (e) {
-      return Topic(name: "", label: "", files: []);
+      print(e);
+      return Topic(name: "", label: "", files: [], flashCards: []);
     }
     
   }

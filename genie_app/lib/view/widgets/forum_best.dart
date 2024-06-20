@@ -6,7 +6,7 @@ import 'package:genie_app/view/screens/forum_view.dart';
 import 'package:genie_app/viewModel/controllerForum.dart';
 
 
-class ForumReplyShow extends StatefulWidget{
+class ForumBestReply extends StatefulWidget{
   final String forum;
   final String id;
   final String creator;
@@ -14,30 +14,31 @@ class ForumReplyShow extends StatefulWidget{
   final String message;
   final String creator_id;
   final int num_likes;
-  const ForumReplyShow({super.key,required this.creator, required this.date, required this.message, required this.creator_id, required this.id, required this.forum, required this.num_likes, });
+  const ForumBestReply({super.key,required this.creator, required this.date, required this.message, required this.creator_id, required this.id, required this.forum, required this.num_likes});
 
   @override
-  State<ForumReplyShow> createState()=> _ForumReply();
+  State<ForumBestReply> createState()=> _ForumReply();
 }
 
-class _ForumReply extends State<ForumReplyShow>{
+class _ForumReply extends State<ForumBestReply>{
   late bool isCreator=false;
-  late bool liked= false;
-  late bool isLoading=true;
+  late bool liked=false;
+    late bool isLoading=true;
+
   late int number_likes=0;
 
   void checkCreator()async{
     bool creator = await Controller.checkIfOwner(widget.creator_id);
     bool like = await ControllerForum.checkLike(widget.id, widget.forum);
-    print(like);
     if(like){
       LikeState(true, widget.id).dispatch(context);
     }
     setState(() {
       isCreator=creator;
-      liked= like;
-      number_likes=widget.num_likes;
+      liked=like;
+      number_likes= widget.num_likes;
       isLoading=false;
+
     });
   }
 
@@ -47,8 +48,6 @@ class _ForumReply extends State<ForumReplyShow>{
   void initState() {
     
     super.initState();
-    
-    
     checkCreator();
     
 
@@ -61,7 +60,9 @@ class _ForumReply extends State<ForumReplyShow>{
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
         decoration: BoxDecoration(
-          border: Border(bottom: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 2))
+          border: Border(bottom: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4),
+          top:BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4), left: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4),
+          right: BorderSide( color: genieThemeDataDemo.colorScheme.primary, width: 4))
         ), 
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -127,10 +128,11 @@ class _ForumReply extends State<ForumReplyShow>{
                       fontWeight: FontWeight.bold,),)
                   ), 
                  ],
-            ):SizedBox.shrink()]),
-             isLoading?
-             SizedBox(height: 20,):
-             Row(
+            ):SizedBox.shrink()]), 
+            isLoading?
+            SizedBox(
+              height: 20,
+            ):Row(
               children: [
                 IconButton(
                   onPressed: (){
@@ -139,18 +141,16 @@ class _ForumReply extends State<ForumReplyShow>{
                       liked = !liked;
                     if(liked){
                       number_likes++;
-                      LikeState(liked, widget.id).dispatch(context);
                     }else{
                       if(number_likes>0){
                         number_likes--;
-                        LikeState(liked, widget.id).dispatch(context);
                       }
                     }
                     });
                     
                     
+                    LikeState(liked, widget.id).dispatch(context);
                     LikedReply(false).dispatch(context);
-                     
                   }, 
                   iconSize: 14,
                   icon: Icon(liked? Icons.thumb_up: Icons.thumb_up_outlined, color: genieThemeDataDemo.colorScheme.primary,)),
@@ -160,7 +160,6 @@ class _ForumReply extends State<ForumReplyShow>{
                 )
               ],
             )
-            
             
             ]
           ),
