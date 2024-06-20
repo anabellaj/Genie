@@ -3,6 +3,8 @@ import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/view/screens/flashcard_carrousel.dart';
 import 'package:genie_app/view/screens/test_menu.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/tabs.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';
 
@@ -38,9 +40,11 @@ class _FichasViewState extends State<FichasView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: TopBar(),
       body: isLoading? const Center(child: CircularProgressIndicator()):
        Tabs(group: widget.group, topicId:widget.topicId, fichasContent: FlashCardCarrouselPage(flashcards: flashcards, group:widget.group, topicId: widget.topicId), 
-       pruebasContent: TestView(flashcards: flashcards))
+       pruebasContent: TestView(flashcards: flashcards)),
+       bottomNavigationBar: BottomNavBar(),
     );
   }
 }

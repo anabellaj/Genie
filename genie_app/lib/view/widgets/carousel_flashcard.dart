@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/view/screens/flashcards_list.dart';
-import 'package:genie_app/view/screens/topic.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';
 import '../theme.dart';
 import 'package:flutter/material.dart';
@@ -32,14 +31,6 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
   void studiedFlashcard() async {
     await ControllerStudy.updateStudied(
         studied, widget.topicId, widget.flashcards);
-    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => TopicScreen(
-                  topicId: widget.topicId,
-                  group: widget.group,
-                )));
   }
 
   void getInfo() async {
@@ -58,21 +49,27 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
     getInfo();
   }
 
+  void dispose() {
+    print("ejec");
+    studiedFlashcard();
+    super.dispose();
+    print("dejec");
+  }
+
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(),
           )
         : Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            SizedBox(
+            const SizedBox(
               height: 45,
             ),
             TextButton(
@@ -90,7 +87,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                 style: linkButtonStyle,
                 child: const Text('Ver todas las fichas')),
             widget.flashcards.isEmpty
-                ? Center(
+                ? const Center(
                     child: Text('Todavía no hay fichas disponibles'),
                   )
                 : Column(
@@ -102,15 +99,23 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                   shadowColor:
                                       genieThemeDataDemo.colorScheme.onSurface,
                                   elevation: 4,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  child: Center(child: Text(f.term)),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(child: Text(f.term)),
+                                  ),
                                 ),
                                 back: Card(
                                     shadowColor: genieThemeDataDemo
                                         .colorScheme.onSurface,
                                     elevation: 4,
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    child: Center(child: Text(f.definition))));
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(child: Text(f.definition)),
+                                    )));
                           }).toList(),
                           carouselController: _controller,
                           options: CarouselOptions(
@@ -145,7 +150,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                   child: Container(
                                     width: 6.0,
                                     height: 6.0,
-                                    margin: EdgeInsets.symmetric(
+                                    margin: const EdgeInsets.symmetric(
                                         vertical: 10.0, horizontal: 4.0),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
@@ -163,7 +168,6 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                 onPressed: () {
                                   setState(() {
                                     _current = _current + 1;
-                                    print(_current);
                                     if (_current >= widget.flashcards.length) {
                                       _current = 0;
                                     }
@@ -184,7 +188,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                '${num_studied}/${widget.flashcards.length} estudiadas'),
+                                '$num_studied/${widget.flashcards.length} estudiadas'),
                             IconButton(
                                 iconSize: 48,
                                 onPressed: () {
@@ -195,6 +199,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                     } else {
                                       num_studied--;
                                     }
+                                    studiedFlashcard();
                                   });
                                 },
                                 icon: Icon(
@@ -205,7 +210,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                 ))
                           ],
                         ),
-                      )
+                      ),
                     ],
                   )
           ]);

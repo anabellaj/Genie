@@ -20,13 +20,12 @@ class FlashCardCarrouselPage extends StatefulWidget {
 class _FlashcardCarrouselPageState extends State<FlashCardCarrouselPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
+    return Center(
       child: CarouselFlashcard(
         flashcards: widget.flashcards,
         topicId: widget.topicId,
         group: widget.group,
       ),
-    ));
+    );
   }
 }

@@ -11,7 +11,7 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: const MyApp(),
-    theme: genieThemeDataDemo,
+    theme: genieThemeDataDemo,  
   ));
 }
 
