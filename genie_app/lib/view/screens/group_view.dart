@@ -319,7 +319,7 @@ class _GroupViewState extends State<GroupView> {
                       onPressed: () {
                         ScaffoldMessenger.of(context)
                             .hideCurrentMaterialBanner();
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => MembersView(

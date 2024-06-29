@@ -21,10 +21,7 @@ class CodePage extends StatelessWidget {
               TextButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GroupView(group: group)));
+                    Navigator.of(context).pop();
                   },
                   child: Row(
                     children: [

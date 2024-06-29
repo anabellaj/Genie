@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
+import 'package:genie_app/view/screens/add_friends.dart';
 import 'package:genie_app/view/screens/code.dart';
 import 'package:genie_app/view/screens/group_view.dart';
+import 'package:genie_app/view/screens/join_requests.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
@@ -68,11 +70,7 @@ class _MembersViewState extends State<MembersView> {
                 TextButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  GroupView(group: widget.group))); //CAMBIAR ROUTE A group_menu
+                      Navigator.of(context).pop(); //CAMBIAR ROUTE A group_menu
                     },
                     child: Row(children: [
                       Icon(
@@ -85,21 +83,22 @@ class _MembersViewState extends State<MembersView> {
                             color: genieThemeDataDemo.colorScheme.onPrimary),
                       )
                     ])),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Miembros",
                         style:
                             genieThemeDataDemo.primaryTextTheme.headlineSmall,
                       ),
-                      TextButton(
+                      Row(children: [
+                        TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                       CodePage(group: widget.group))); //CAMBIAR ROUTE A foro
+                                       AddFriendPage(group: widget.group))); //CAMBIAR ROUTE A foro
                         },
                         style: TextButton.styleFrom(
                           backgroundColor:
@@ -110,7 +109,27 @@ class _MembersViewState extends State<MembersView> {
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                         ),
                         child: const Text('Invitar'),
+                      ),
+                      SizedBox(width: 12,),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                       const JoinRequestPage())); //CAMBIAR ROUTE A foro
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              genieThemeDataDemo.colorScheme.surface,
+                          foregroundColor:
+                              genieThemeDataDemo.colorScheme.secondary,
+                          textStyle: genieThemeDataDemo.textTheme.bodyMedium,
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                        ),
+                        child: const Text('Solicitudes'),
                       )
+                      ],)
                     ])
               ])),
         Expanded(child:members)])
