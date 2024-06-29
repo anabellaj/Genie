@@ -134,7 +134,7 @@ User loggedUser = await Controller.getUserInfo();
 
   static Future<User> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-    var user = await prefs.getString("user");
+    var user = prefs.getString("user");
     User loggedUser;
     if (user != null) {
       loggedUser = User.fromJson(jsonDecode(user));

@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
@@ -7,16 +7,22 @@ import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/study_group_profile_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen(
+class ProfileScreen extends StatefulWidget {
+  ProfileScreen(
       {super.key, required this.displayedUser, required this.currentuUser});
-  final User displayedUser;
+  User displayedUser;
   final bool currentuUser;
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
   Widget build(context) {
-    File _imageFile = displayedUser.fileFromBase64String();
+    File imageFile = widget.displayedUser.fileFromBase64String();
     return Scaffold(
       appBar: TopBar(),
       body: SingleChildScrollView(
@@ -54,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${displayedUser.name[0].toUpperCase()}${displayedUser.name.substring(1).toLowerCase()}',
+                        '${widget.displayedUser.name[0].toUpperCase()}${widget.displayedUser.name.substring(1).toLowerCase()}',
                         style:
                             genieThemeDataDemo.textTheme.displayLarge!.copyWith(
                           fontSize: 24,
@@ -65,48 +71,54 @@ class ProfileScreen extends StatelessWidget {
                         height: 4,
                       ),
                       Text(
-                        displayedUser.username,
+                        widget.displayedUser.username,
                         textAlign: TextAlign.start,
                       ),
                       const SizedBox(
                         height: 4,
                       ),
                       Text(
-                          '${displayedUser.career} | ${displayedUser.university}'),
+                          '${widget.displayedUser.career} | ${widget.displayedUser.university}'),
                       const SizedBox(
                         height: 10,
                       ),
-                      if (currentuUser)
+                      if (widget.currentuUser)
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
                               side: BorderSide(
                                   color: genieThemeDataDemo.primaryColor)),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
+                          onPressed: () async {
+                            User? changedUser = await Navigator.of(context)
+                                .push<User?>(MaterialPageRoute(
                               builder: (context) => const ModifyProfile(),
                             ));
+                            if (changedUser != null) {
+                              setState(() {
+                                widget.displayedUser = changedUser;
+                              });
+                            }
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 5),
                             child: Text('Modificar perfil'),
                           ),
+                        )
+                      else
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              side: BorderSide(
+                                  color: genieThemeDataDemo.primaryColor)),
+                          onPressed: () {},
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 5),
+                            child: Text('Amigos'),
+                          ),
                         ),
-                        const SizedBox(height: 10,),
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color: genieThemeDataDemo.primaryColor)),
-                        onPressed: () {},
-                        child: const Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                          child: Text('Amigos'),
-                        ),
-                      ),
                     ],
                   ),
-                  displayedUser.profilePicture == ""
+                  widget.displayedUser.profilePicture == ""
                       ? const CircleAvatar(
                           radius: 50,
                           backgroundImage:
@@ -114,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                         )
                       : CircleAvatar(
                           radius: 50,
-                          backgroundImage: FileImage(_imageFile!),
+                          backgroundImage: FileImage(imageFile),
                         ),
                 ],
               ),
@@ -125,10 +137,10 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              for (int i = 0; i < displayedUser.studyGroups.length; i++)
+              for (int i = 0; i < widget.displayedUser.studyGroups.length; i++)
                 StudyGroupProfileCard(
                     id: /*displayedUser.studyGroups[i]['id']*/
-                        displayedUser.studyGroups[i],
+                        widget.displayedUser.studyGroups[i],
                     name: /*displayedUser.studyGroups[i]['name']*/ 'Nombre $i',
                     description: /*displayedUser.studyGroups[i]['description']*/
                         'Descripcion $i'),

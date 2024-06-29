@@ -39,7 +39,7 @@ class _ModifyProfile extends State<ModifyProfile> {
       isLoading = false;
     }
 
-    if (loggedUser.profilePicture != ''){
+    if (loggedUser.profilePicture != '') {
       _imageFile = loggedUser.fileFromBase64String();
     }
   }
@@ -85,7 +85,7 @@ class _ModifyProfile extends State<ModifyProfile> {
                         onPressed: () {
                           ScaffoldMessenger.of(context)
                               .hideCurrentMaterialBanner();
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(loggedUser);
                         },
                         child: Row(
                           children: [
