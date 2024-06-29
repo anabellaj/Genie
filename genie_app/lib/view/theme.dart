@@ -74,19 +74,19 @@ final ThemeData genieThemeDataDemo = ThemeData(
           GoogleFonts.breeSerif(color: const Color(0xffFFFCFF), fontSize: 36),
     ));
 ButtonStyle mainButtonStyle = ButtonStyle(
-  backgroundColor: MaterialStatePropertyAll(genieThemeDataDemo.primaryColor),
+  backgroundColor: WidgetStatePropertyAll(genieThemeDataDemo.primaryColor),
   foregroundColor:
-      MaterialStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
-  textStyle: MaterialStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
-  padding: const MaterialStatePropertyAll(EdgeInsets.all(10)),
+      WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
+  textStyle: WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
+  padding: const WidgetStatePropertyAll(EdgeInsets.all(10)),
 );
 ButtonStyle secondaryButtonStyle = ButtonStyle(
   backgroundColor:
-      MaterialStatePropertyAll(genieThemeDataDemo.colorScheme.secondary),
+      WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.secondary),
   foregroundColor:
-      MaterialStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
-  textStyle: MaterialStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
-  padding: const MaterialStatePropertyAll(EdgeInsets.all(10)),
+      WidgetStatePropertyAll(genieThemeDataDemo.colorScheme.onPrimary),
+  textStyle: WidgetStatePropertyAll(genieThemeDataDemo.textTheme.bodyMedium),
+  padding: const WidgetStatePropertyAll(EdgeInsets.all(10)),
 );
 ButtonStyle outlinedButtonStyle = ButtonStyle(
   backgroundColor:
