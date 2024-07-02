@@ -44,7 +44,7 @@ class ControllerSocial{
       for(var request in remove){
         userFollowing.requests.removeWhere((r)=>r['id']==request);
       }
-      userFollowing.follows.addAll(accept);
+      userFollowing.followed.addAll(accept);
       await Connection.setRequests(userFollowing, user.following);
       await Connection.addFollow(accept, user.id);
     } catch (e) {
