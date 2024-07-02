@@ -11,6 +11,20 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class Connection {
   /*User queries*/
+
+  static Future<List> findUsersByName(String searchValue, String attribute) async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+    await db.open();
+    var userCollection = db.collection('user');
+    final regex = RegExp('^$searchValue.*');
+    final filter = {attribute: {'\$regex': '$regex'}};
+    final projection = {'name': 1, 'university': 1, '_id': 1};
+    final result = await userCollection.find(where.eq(attribute, searchValue)).toList();
+    await db.close();
+    return result;
+    
+  }
   static Future<List> checkUser(User user) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");

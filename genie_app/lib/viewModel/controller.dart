@@ -9,6 +9,7 @@ import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
+import 'package:genie_app/view/widgets/found_member.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
 import 'package:genie_app/view/widgets/topic_preview.dart';
@@ -115,6 +116,21 @@ User loggedUser = await Controller.getUserInfo();
       return [];
     }
     
+  }
+
+  static Future<List<Widget>> getFoundUsers(String searchValue, String attribute) async{
+    try{
+      List<Widget> obtainedUsers = [];
+      List users = await Connection.findUsersByName(searchValue, attribute);
+      for (var user in users){
+        obtainedUsers.add(FoundMember(name: user["name"], university: user["university"], career: user["career"]));
+      }
+      return obtainedUsers;
+    }
+    catch(e){
+      print (e);
+      return [];
+    }
   }
 
   /*User Controller */

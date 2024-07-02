@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/viewModel/controller.dart';
 
 class SearchPage extends StatefulWidget {
 
@@ -13,6 +14,22 @@ class _SearchPageState extends State<SearchPage> {
   bool nameButtonPressed = true;
   bool careerButtonPressed = false;
   bool univButtonPressed = false;
+  bool isLoading = false;
+  late List<Widget> foundUsers = [];
+  final TextEditingController _controller = TextEditingController();
+
+  void findUsers(String attribute) async{
+    print("Hola");
+    setState(() {
+      isLoading = true;
+    });
+    List<Widget> found = await Controller.getFoundUsers(_controller.text, attribute);
+    print(foundUsers);
+    setState(() {
+      foundUsers = found;
+      isLoading = false;
+    });
+  }
 
   Widget build(BuildContext context){
     return Scaffold(
@@ -44,6 +61,7 @@ class _SearchPageState extends State<SearchPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
+                                      controller: _controller,
                                       decoration: InputDecoration(
                                           filled: true,
                                           fillColor: genieThemeDataDemo
@@ -62,7 +80,14 @@ class _SearchPageState extends State<SearchPage> {
                       ),
 
                       IconButton(onPressed: (){
-
+                        if(nameButtonPressed){
+                          findUsers("name");
+                        } else if(univButtonPressed){
+                          findUsers("university");
+                        } else if(careerButtonPressed){
+                          findUsers("career");
+                        }
+                        
                       }, icon: Icon(Icons.search_outlined, color: genieThemeDataDemo.colorScheme.onPrimary)),
 
                     ]), 
@@ -118,7 +143,34 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     
               ])),
-        ],
+        isLoading? 
+        const Column(
+          
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Center(child: const CircularProgressIndicator()),
+            ),
+          ],
+        ): 
+        foundUsers.isEmpty?
+        Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height*.70,
+                    child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No se ha encontrado ningún usuario", 
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color(0xffB4B6BF)),),
+                     
+                    ],
+                  )):
+        Expanded(child: ListView(children: [...foundUsers]))],
       ),
     );
   }
