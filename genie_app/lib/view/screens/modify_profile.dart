@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/home.dart';
 import 'package:genie_app/view/screens/initial.dart';
+import 'package:genie_app/view/screens/settings.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/models/user.dart';
-
 import 'package:genie_app/viewModel/validator.dart';
 
 
@@ -65,7 +64,7 @@ class _ModifyProfile extends State<ModifyProfile>{
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
                 Navigator.pushReplacement(context, 
-                  MaterialPageRoute(builder: (context)=>const HomeScreen())
+                  MaterialPageRoute(builder: (context)=> SettingsPage())
                 );
               },
               child:Row(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/modify_profile.dart';
+import 'package:genie_app/view/screens/settings.dart';
 import 'package:genie_app/view/theme.dart';
 
 class TopBar extends AppBar{
@@ -25,8 +25,8 @@ class _TopBarState extends State<TopBar>{
             color: genieThemeDataDemo.colorScheme.onPrimary,
           ),
           onPressed: () {
-            Navigator.pushReplacement(context, 
-            MaterialPageRoute(builder: (context)=> const ModifyProfile())
+            Navigator.push(context, 
+            MaterialPageRoute(builder: (context)=>  SettingsPage())
             );
           },
     )],

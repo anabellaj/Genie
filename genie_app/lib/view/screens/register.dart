@@ -26,6 +26,7 @@ class _MyHomePageState extends State<RegisterPage> {
   final validate = Validator();
 
   String name="";
+  String username="";
   String email="";
   String password="";
   String answer="";
@@ -84,6 +85,39 @@ class _MyHomePageState extends State<RegisterPage> {
                     TextFormField(
                       onSaved: (value){
                         if(value!=null){
+                          username= value;  
+                        }
+                        
+                      },
+                      validator: (value){
+                          return validate.validateUsername(value);
+                        },
+                      decoration: InputDecoration(
+                        errorStyle: TextStyle(
+                          color: genieThemeDataDemo.colorScheme.onError,
+                        ),
+                        hintText: 'Nombre de Usuario',
+                        prefixIcon: Icon(
+                          Icons.account_circle,
+                          color: Theme.of(context).colorScheme.secondary,),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary
+                          ),
+                        
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary
+                          ),
+                      )),
+                      textAlignVertical: TextAlignVertical.center,
+                      style: Theme.of(context).textTheme.displayLarge,
+
+                    ),
+                    TextFormField(
+                      onSaved: (value){
+                        if(value!=null){
                           name= value;  
                         }
                         
@@ -95,9 +129,9 @@ class _MyHomePageState extends State<RegisterPage> {
                         errorStyle: TextStyle(
                           color: genieThemeDataDemo.colorScheme.onError,
                         ),
-                        hintText: 'Nombre',
+                        hintText: 'Nombre Completo',
                         prefixIcon: Icon(
-                          Icons.account_circle,
+                          Icons.badge,
                           color: Theme.of(context).colorScheme.secondary,),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
@@ -188,7 +222,7 @@ class _MyHomePageState extends State<RegisterPage> {
                           setState(() {
                             isLoading=true;
                           }),
-                          answer = await Authenticate.registerUser(email, password, name),
+                          answer = await Authenticate.registerUser(email, password, name, username),
                           setState(() {
                             isLoading=false;
                           }),
