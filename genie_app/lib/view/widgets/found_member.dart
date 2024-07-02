@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/user.dart';
+import 'package:genie_app/view/screens/profile.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/viewModel/ForumNotification.dart';
 import 'package:genie_app/viewModel/controller.dart';
@@ -11,17 +13,40 @@ class FoundMember extends StatefulWidget{
   final String username;
   final String career;
   final String university;
-
-  const FoundMember({super.key, required this.name, required this.username, required this.career, required this.university});
+  final User user;
+  const FoundMember({super.key, required this.name, required this.username, required this.career, required this.university, required this.user});
   @override
   State<FoundMember> createState() => _FoundMemberState();
 }
 
 class _FoundMemberState extends State<FoundMember> {
+
+  late String currUsername = "";
+
+  void getCurrUsername() async{
+    User currUser = await Controller.getUserInfo();
+    print("primero que el false");
+    setState(() {
+      currUsername = currUser.username;
+    });
+    print(currUsername);
+    print(currUser.name);
+  }
+
+  void initState(){
+    getCurrUsername();
+  }
+
   Widget build(BuildContext context){
     return GestureDetector(
       onTap: (){
-        
+        bool isCurrUser = false;
+        if(currUsername == widget.username){
+          isCurrUser = true;
+        }
+        print(isCurrUser);
+        Navigator.pushReplacement(context, 
+                                  MaterialPageRoute(builder: (context)=> ProfileScreen(displayedUser: widget.user, currentuUser:isCurrUser)));
       },
       child: Padding(
         padding: const EdgeInsets.all(8),
