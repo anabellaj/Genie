@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/user.dart';
@@ -7,8 +6,8 @@ import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/study_group_profile_card.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(
       {super.key, required this.displayedUser, required this.currentuUser});

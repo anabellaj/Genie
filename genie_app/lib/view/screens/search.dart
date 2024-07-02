@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/screens/joined_groups.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
