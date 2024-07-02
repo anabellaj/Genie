@@ -18,8 +18,8 @@ class Connection {
     await db.open();
     var userCollection = db.collection('user');
     final regex = RegExp('^$searchValue.*');
-    final filter = {attribute: {'\$regex': '$regex'}};
-    final projection = {'name': 1, 'university': 1, '_id': 1};
+    //final filter = {attribute: {'\$regex': '$regex'}};
+    //final projection = {'name': 1, 'university': 1, '_id': 1};
     final result = await userCollection.find(where.eq(attribute, searchValue)).toList();
     await db.close();
     return result;

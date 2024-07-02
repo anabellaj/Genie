@@ -18,16 +18,17 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
 
   void findUsers(String attribute) async{
-    print("Hola");
+    String txt = _controller.text.trim();
+    if(txt.isNotEmpty){
     setState(() {
       isLoading = true;
     });
-    List<Widget> found = await Controller.getFoundUsers(_controller.text, attribute);
-    print(foundUsers);
+    List<Widget> found = await Controller.getFoundUsers(txt, attribute);
     setState(() {
       foundUsers = found;
       isLoading = false;
     });
+    }
   }
 
   Widget build(BuildContext context){
