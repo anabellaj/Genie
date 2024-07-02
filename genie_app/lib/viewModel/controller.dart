@@ -118,12 +118,20 @@ User loggedUser = await Controller.getUserInfo();
     
   }
 
+  static Future<User> getCurrUserFromDB() async{
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+    User currUser = User.fromJson(logUser[0]);
+    return currUser;
+  }
+  
   static Future<List<Widget>> getFoundUsers(String searchValue, String attribute) async{
     try{
       List<Widget> obtainedUsers = [];
       List users = await Connection.findUsersByName(searchValue, attribute);
       for (var user in users){
-        obtainedUsers.add(FoundMember(name: user["name"], university: user["university"], career: user["career"]));
+        User selectedUser = User.fromJson(user);
+        obtainedUsers.add(FoundMember(user: selectedUser, name: user["name"], username: user["username"], career: user["career"], university: user["university"],));
       }
       return obtainedUsers;
     }

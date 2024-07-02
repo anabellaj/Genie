@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/view/widgets/found_member.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
 class SearchPage extends StatefulWidget {
@@ -24,11 +25,38 @@ class _SearchPageState extends State<SearchPage> {
       isLoading = true;
     });
     List<Widget> found = await Controller.getFoundUsers(txt, attribute);
+    print(found);
+    List<Widget> correctUsers = processUsers(found, txt, attribute);
+    print(correctUsers);
     setState(() {
-      foundUsers = found;
+      foundUsers = correctUsers;
       isLoading = false;
     });
     }
+  }
+
+  List<Widget> processUsers(List<Widget> foundUsers, String searchValue, String attribute){
+    List<FoundMember> endList = [];
+    if(attribute == "username"){
+    for (Widget user in foundUsers){
+      if((user as FoundMember).username.toLowerCase().startsWith(searchValue.toLowerCase())){
+        endList.add(user);
+      }
+    }
+    } else if (attribute == "career"){
+      for (Widget user in foundUsers){
+      if((user as FoundMember).career.toLowerCase().startsWith(searchValue.toLowerCase())){
+        endList.add(user);
+      }
+    }
+    } else if (attribute == "university"){
+      for (Widget user in foundUsers){
+      if((user as FoundMember).university.toLowerCase().startsWith(searchValue.toLowerCase())){
+        endList.add(user);
+      }
+    }
+    }
+    return endList as List<Widget>;
   }
 
   Widget build(BuildContext context){
@@ -81,7 +109,7 @@ class _SearchPageState extends State<SearchPage> {
 
                       IconButton(onPressed: (){
                         if(nameButtonPressed){
-                          findUsers("name");
+                          findUsers("username");
                         } else if(univButtonPressed){
                           findUsers("university");
                         } else if(careerButtonPressed){

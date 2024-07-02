@@ -7,6 +7,7 @@ class User {
     String passwordPam,
   ) {
     name = "";
+    username = "";
     email = emailPam;
     password = passwordPam;
     username = "";

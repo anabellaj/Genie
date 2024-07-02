@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
+import 'package:genie_app/view/screens/search.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -32,7 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                              context, 
+                            MaterialPageRoute(builder: (context)=> SearchPage()));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
