@@ -17,10 +17,7 @@ class Connection {
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
     var userCollection = db.collection('user');
-    final regex = RegExp('^$searchValue.*');
-    //final filter = {attribute: {'\$regex': '$regex'}};
-    //final projection = {'name': 1, 'university': 1, '_id': 1};
-    final result = await userCollection.find(where.eq(attribute, searchValue)).toList();
+    final result = await userCollection.find(where.match(attribute, searchValue)).toList();
     await db.close();
     return result;
     

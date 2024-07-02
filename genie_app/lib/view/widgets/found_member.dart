@@ -8,10 +8,11 @@ import 'package:genie_app/viewModel/controllerForum.dart';
 class FoundMember extends StatefulWidget{
 
   final String name;
-  final String university;
+  final String username;
   final String career;
+  final String university;
 
-  const FoundMember({super.key, required this.name, required this.university, required this.career});
+  const FoundMember({super.key, required this.name, required this.username, required this.career, required this.university});
   @override
   State<FoundMember> createState() => _FoundMemberState();
 }
@@ -52,7 +53,7 @@ class _FoundMemberState extends State<FoundMember> {
                         style: genieThemeDataDemo.primaryTextTheme.titleLarge),
                        ],
                   ),
-                  Text('Universidad: ${widget.university}',
+                  Text('Username: ${widget.username}',
                     
                     style: genieThemeDataDemo.textTheme.displayMedium,)
                         

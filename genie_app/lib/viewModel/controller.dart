@@ -123,7 +123,7 @@ User loggedUser = await Controller.getUserInfo();
       List<Widget> obtainedUsers = [];
       List users = await Connection.findUsersByName(searchValue, attribute);
       for (var user in users){
-        obtainedUsers.add(FoundMember(name: user["name"], university: user["university"], career: user["career"]));
+        obtainedUsers.add(FoundMember(name: user["name"], username: user["username"], career: user["career"], university: user["university"],));
       }
       return obtainedUsers;
     }
