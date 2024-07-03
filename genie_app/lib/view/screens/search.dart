@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/view/widgets/appbar.dart';
+import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/found_member.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
@@ -11,6 +13,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  bool firstTime = true;
   bool nameButtonPressed = true;
   bool careerButtonPressed = false;
   bool univButtonPressed = false;
@@ -22,6 +25,7 @@ class _SearchPageState extends State<SearchPage> {
     String txt = _controller.text.trim();
     if (txt.isNotEmpty) {
       setState(() {
+        firstTime = false;
         isLoading = true;
       });
       List<Widget> found = await Controller.getFoundUsers(txt, attribute);
@@ -72,27 +76,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: TopBar(),
       body: Column(
         children: [
           Container(
               padding: const EdgeInsets.all(12.0),
               color: genieThemeDataDemo.colorScheme.secondary,
               child: Column(children: [
-                TextButton(
-                    onPressed: () {
-                      //CAMBIAR ROUTE A group_menu
-                    },
-                    child: Row(children: [
-                      Icon(
-                        Icons.chevron_left,
-                        color: genieThemeDataDemo.colorScheme.onPrimary,
-                      ),
-                      Text(
-                        'Regresar',
-                        style: TextStyle(
-                            color: genieThemeDataDemo.colorScheme.onPrimary),
-                      )
-                    ])),
+               
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -199,7 +190,9 @@ class _SearchPageState extends State<SearchPage> {
                   ],
                 )
               : foundUsers.isEmpty
-                  ? Container(
+                  ? 
+                  !firstTime ?
+                  Container(
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * .70,
                       child: const Column(
@@ -212,10 +205,25 @@ class _SearchPageState extends State<SearchPage> {
                             style: TextStyle(color: Color(0xffB4B6BF)),
                           ),
                         ],
+                      )):
+                  const SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              "¡Realiza una búsqueda!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Color(0xffB4B6BF)),
+                            ),
+                          ),
+                        ],
                       ))
                   : Expanded(child: ListView(children: [...foundUsers]))
         ],
       ),
-    );
+    bottomNavigationBar: BottomNavBar());
   }
 }

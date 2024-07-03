@@ -269,12 +269,29 @@ class Controller {
     }
   }
 
+  static void sendJoinRequest(String groupId) async{
+    
+    List resultGroup = await Connection.checkStudyGroup(groupId);
+    User loggedUser = await Controller.getUserInfo();
+    resultGroup[0]["requests"].add(
+      {
+        "id":loggedUser.id,
+        "username":loggedUser.username
+      }
+    );
+    print(resultGroup[0]["requests"]);
+    print(groupId);
+    Connection.addJoinRequest(resultGroup[0]["requests"], groupId);
+  }
+
   static Widget manageNavigation(int index) {
     switch (index) {
       case 0:
         return const JoinedGroups();
       case 1:
         return const JoinOrCreate();
+      case 2:
+        return SearchPage();
       default:
         return const SearchPage();
     }
@@ -397,5 +414,17 @@ class Controller {
     } catch (e) {
       return 'error';
     }
+  }
+
+  static Future<bool> checkIfUserInRequests(String groupId) async{
+    List resultGroup = await Connection.checkStudyGroup(groupId);
+    User loggedUser = await Controller.getUserInfo();
+    bool userInRequests = false;
+    for (var request in resultGroup[0]["requests"]){
+      if(request["id"] == loggedUser.id){
+        userInRequests = true;
+      }
+    }
+    return userInRequests;
   }
 }
