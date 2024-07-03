@@ -925,6 +925,7 @@ class Connection {
     final followingCollection = db.collection('following');
     await followingCollection.replaceOne(where.eq("_id", ObjectId.fromHexString(following)), f.toJson());
   }
+
   
   static Future addFollow(List<dynamic> added, String userid)async{
      final db = await Db.create(
