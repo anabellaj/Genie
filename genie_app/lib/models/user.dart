@@ -29,6 +29,7 @@ class User {
   late List<dynamic> flashCardsStudied;
   late List<dynamic> replysLiked;
   late String profilePicture;
+  late String following;
 
   void initialize() {
     career = "";
@@ -40,6 +41,7 @@ class User {
     studyGroups = [];
     flashCardsStudied = [];
     replysLiked = [];
+    following = "";
   }
 
   Map<String, dynamic> toJson() => {
@@ -55,7 +57,8 @@ class User {
         "studyGroups": studyGroups,
         "flashCardsStudied": flashCardsStudied,
         "replysLiked": replysLiked,
-        "profilePicture": profilePicture
+        "profilePicture": profilePicture,
+        "following":following
       };
   User.fromJson(Map<String, dynamic> json)
       : id = json["_id"] != null ? json['_id'].oid.toString() : json['id'],
@@ -70,7 +73,8 @@ class User {
         studyGroups = json['studyGroups'] ?? [],
         flashCardsStudied = json['flashCardsStudied'] ?? [],
         profilePicture = json["profilePicture"] ?? "",
-        replysLiked = json['replysLiked'] ?? [];
+        replysLiked = json['replysLiked'] ?? [],
+        following = json['following']?? "";
 
   User.fromShared(Map<String, dynamic> json)
       : id = json["id"],
@@ -85,7 +89,8 @@ class User {
         studyGroups = json['studyGroups'] ?? [],
         flashCardsStudied = json['flashCardsStudied'] ?? [],
         profilePicture = json["profilePicture"] ?? "",
-        replysLiked = json['replysLiked'] ?? [];
+        replysLiked = json['replysLiked'] ?? [],
+        following = json['following']?? "";
 
   File fileFromBase64String() {
     final decodedBytes = base64Decode(profilePicture);

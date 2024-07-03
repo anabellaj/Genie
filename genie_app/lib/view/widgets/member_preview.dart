@@ -30,8 +30,6 @@ class _MemberPreviewState extends State<MemberPreview> {
       currUserisAdmin = check;
     });}
 
-    print("isAdmin "+ "${isAdmin}");
-    print(currUserisAdmin);
   }
   
   @override

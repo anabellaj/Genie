@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/models/user.dart';
-import 'package:genie_app/view/screens/profile.dart';
+import 'package:genie_app/view/screens/settings.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
@@ -25,15 +24,10 @@ class _TopBarState extends State<TopBar> {
             Icons.settings,
             color: genieThemeDataDemo.colorScheme.onPrimary,
           ),
-          onPressed: () async {
-            User ans = await Controller.getUserInfo();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProfileScreen(
-                          displayedUser: ans,
-                          currentuUser: true,
-                        )));
+          onPressed: () {
+            Navigator.push(context, 
+            MaterialPageRoute(builder: (context)=>  SettingsPage())
+            );
           },
         )
       ],
