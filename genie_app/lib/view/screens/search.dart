@@ -29,7 +29,6 @@ class _SearchPageState extends State<SearchPage> {
         isLoading = true;
       });
       List<Widget> found = await Controller.getFoundUsers(txt, attribute);
-      print(found);
       List<Widget> correctUsers = processUsers(found, txt, attribute);
 
       setState(() {
@@ -89,9 +88,10 @@ class _SearchPageState extends State<SearchPage> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                         child: TextField(
                           controller: _controller,
+                          style: TextStyle(fontSize: 14),
                           decoration: InputDecoration(
                               filled: true,
                               fillColor:
@@ -132,7 +132,8 @@ class _SearchPageState extends State<SearchPage> {
                         child: Text(
                           "Filtrar por:",
                           style: TextStyle(
-                              color: genieThemeDataDemo.colorScheme.onPrimary),
+                              color: genieThemeDataDemo.colorScheme.onPrimary,
+                              fontSize: 14),
                         ),
                       ),
                       FilledButton(
@@ -146,7 +147,7 @@ class _SearchPageState extends State<SearchPage> {
                           style: nameButtonPressed
                               ? mainButtonStyle
                               : outlinedButtonStyle,
-                          child: const Text("Nombre")),
+                          child: const Text("Nombre", style: TextStyle(fontSize: 14),)),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FilledButton(
@@ -160,7 +161,7 @@ class _SearchPageState extends State<SearchPage> {
                             style: careerButtonPressed
                                 ? mainButtonStyle
                                 : outlinedButtonStyle,
-                            child: const Text("Carrera")),
+                            child: const Text("Carrera", style: TextStyle(fontSize: 14))),
                       ),
                       FilledButton(
                           onPressed: () {
@@ -173,7 +174,7 @@ class _SearchPageState extends State<SearchPage> {
                           style: univButtonPressed
                               ? mainButtonStyle
                               : outlinedButtonStyle,
-                          child: const Text("Universidad")),
+                          child: const Text("Universidad", style: TextStyle(fontSize: 14))),
                     ],
                   ),
                 ),

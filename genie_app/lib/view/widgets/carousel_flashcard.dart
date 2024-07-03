@@ -56,10 +56,8 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
   }
 
   void dispose() {
-    print("ejec");
     studiedFlashcard();
     super.dispose();
-    print("dejec");
   }
 
   @override

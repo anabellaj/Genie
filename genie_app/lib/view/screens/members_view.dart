@@ -41,7 +41,6 @@ class _MembersViewState extends State<MembersView> {
   void getMembers() async{
     Widget g = await Controller.obtainGroupMembers(widget.group.members, widget.group);
     bool admin = await Controller.checkAdminCurrUser(widget.group.admins[0]);
-    print(admin);
     if(mounted){
     setState(() {
       members = g;

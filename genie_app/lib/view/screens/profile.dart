@@ -52,6 +52,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Widget checkExtraData(){
+    if(widget.displayedUser.career.isEmpty&&widget.displayedUser.university.isNotEmpty){
+      return Text("${widget.displayedUser.university}");
+    }
+    else if(widget.displayedUser.career.isNotEmpty&&widget.displayedUser.university.isEmpty){
+       return Text("${widget.displayedUser.career}");
+    }
+    else if(widget.displayedUser.career.isNotEmpty&&widget.displayedUser.university.isNotEmpty){
+      return Text('${widget.displayedUser.career} | ${widget.displayedUser.university}');
+    }else{
+      return SizedBox.shrink();
+    }
+  }
+
   @override
   void initState() {
     _image = widget.displayedUser.fileFromBase64String();
@@ -120,8 +134,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(
                         height: 4,
                       ),
-                      Text(
-                          '${widget.displayedUser.career} | ${widget.displayedUser.university}'),
+
+                      checkExtraData(),
                       const SizedBox(
                         height: 10,
                       ),

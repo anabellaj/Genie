@@ -66,7 +66,6 @@ class _StudyGroupProfileCardState extends State<StudyGroupProfileCard> {
                 message: "Solicitar unirse",
                 child: IconButton(
                   onPressed: () async{
-                    print(widget.id);
                     setState(() {
                       isSolicited = true;
                     });

@@ -231,7 +231,6 @@ class Connection {
           title: studyMaterial['title'] as String,
           description: studyMaterial['description'] as String));
     }
-    print(response['flashCards']);
     Topic topic = Topic(
         id: id,
         name: response['name'],
@@ -318,7 +317,6 @@ class Connection {
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
       await db.open();
       var topicCollection = db.collection('topic');
-      print(topic.toJson());
       WriteResult insert = await topicCollection.insertOne(topic.toJson());
       var groupCollection = db.collection('studyGroup');
       if (labelExists) {
@@ -1008,7 +1006,6 @@ class Connection {
       final followingResult = await followingCollection
           .findOne(where.eq('_id', ObjectId.fromHexString(user.following)));
 
-      print(followingResult.toString());
       
       if (followingResult?['followed'].contains(followedUser)) {
         return 1;
@@ -1033,12 +1030,10 @@ class Connection {
       final userCollection = db.collection('user');
       final followingCollection = db.collection('following');
 
-      ObjectId mainUserId = ObjectId.fromHexString(currentUser.id);
       ObjectId secondaryUserId = ObjectId.fromHexString(followedUserId);
 
       final secondaryUserResult =
           await userCollection.findOne(where.id(secondaryUserId));
-      print(secondaryUserResult.toString());
       
       ObjectId followingSecondary = ObjectId.fromHexString(secondaryUserResult?['following']);
 

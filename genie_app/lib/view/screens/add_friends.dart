@@ -47,7 +47,6 @@ class _AddFriendPageState extends State<AddFriendPage>{
   Widget build(BuildContext context) {
     return NotificationListener<GroupAddNotification>(
       onNotification: (n){
-        print(n.userId);
         toAdd.add(n.userId);
         return true;
       },

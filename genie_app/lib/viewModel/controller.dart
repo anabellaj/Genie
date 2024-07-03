@@ -280,8 +280,6 @@ class Controller {
         "username":loggedUser.username
       }
     );
-    print(resultGroup[0]["requests"]);
-    print(groupId);
     Connection.addJoinRequest(resultGroup[0]["requests"], groupId);
   }
 
