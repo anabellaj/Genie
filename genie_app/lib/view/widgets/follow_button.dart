@@ -27,10 +27,13 @@ class _FollowButtonState extends State<FollowButton> {
     super.initState();
     if (widget.response == 1){
       isFollowing = true;
+      setState(() {});
     } else if (widget.response == 2) {
       isRequested = true;
+      setState(() {});
     } else if (widget.response == 3){
-      isStranger == true;
+      isStranger = true;
+      setState(() {});
     }
   }
 

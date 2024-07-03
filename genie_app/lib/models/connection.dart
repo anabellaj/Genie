@@ -13,16 +13,18 @@ import 'package:mongo_dart/mongo_dart.dart';
 class Connection {
   /*User queries*/
 
-  static Future<List> findUsersByName(String searchValue, String attribute) async{
+  static Future<List> findUsersByName(
+      String searchValue, String attribute) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
     var userCollection = db.collection('user');
-    final result = await userCollection.find(where.match(attribute, searchValue)).toList();
+    final result =
+        await userCollection.find(where.match(attribute, searchValue)).toList();
     await db.close();
     return result;
-    
   }
+
   static Future<List> checkUser(User user) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
@@ -30,26 +32,21 @@ class Connection {
     var userCollection = db.collection('user');
     List result = await userCollection
         .find(where.eq("username", user.username).or(where.eq(
-          "email",
-          user.email,
-        )))
+              "email",
+              user.email,
+            )))
         .toList();
     await db.close();
     return result;
   }
-  static Future<String> newFollowing()async{
-     final db = await Db.create(
+
+  static Future<String> newFollowing() async {
+    final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
     await db.open();
     var followCollection = db.collection('following');
     WriteResult following = await followCollection.insertOne(
-      {
-        "follows": [],
-        "followed":[],
-        "requests":[],
-        "requested":[]
-      }
-    );
+        {"follows": [], "followed": [], "requests": [], "requested": []});
     return following.id.oid;
   }
 
@@ -183,8 +180,8 @@ class Connection {
       "chats": [],
       "studyGroups": [],
       'flashCardsStudied': [],
-      'replysLiked': [], 
-      "following":user.following,
+      'replysLiked': [],
+      "following": user.following,
     });
     await db.close();
     return result.id.oid.toString();
@@ -897,127 +894,128 @@ class Connection {
     }
   }
 
-  static Future<Following> getFollowRequests(User user)async{
+  static Future<Following> getFollowRequests(User user) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
 
     await db.open();
     final followingCollection = db.collection('following');
-    Map<String, dynamic>? result = await followingCollection.findOne(where.eq("_id", ObjectId.fromHexString(user.following)));
-    if(result!=null){
+    Map<String, dynamic>? result = await followingCollection
+        .findOne(where.eq("_id", ObjectId.fromHexString(user.following)));
+    if (result != null) {
       return Following.fromJson(result);
-    }else{
-      return Following.fromJson({
-        "follows":[],
-        "followed":[],
-        "requests": [],
-        "requested": []
-      });
+    } else {
+      return Following.fromJson(
+          {"follows": [], "followed": [], "requests": [], "requested": []});
     }
   }
 
-
-  static Future setRequests(Following f, String following)async{
+  static Future setRequests(Following f, String following) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
 
     await db.open();
     final followingCollection = db.collection('following');
-    await followingCollection.replaceOne(where.eq("_id", ObjectId.fromHexString(following)), f.toJson());
+    await followingCollection.replaceOne(
+        where.eq("_id", ObjectId.fromHexString(following)), f.toJson());
   }
 
-  
-  static Future addFollow(List<dynamic> added, String userid)async{
-     final db = await Db.create(
+  static Future addFollow(List<dynamic> added, String userid) async {
+    final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
 
     await db.open();
     final followingCollection = db.collection("following");
     final userCollection = db.collection('user');
-    for(var add in added){
-      Map<String,dynamic>? id = await userCollection.findOne(where.eq("_id", ObjectId.fromHexString(add)));
-      if(id!=null){
+    for (var add in added) {
+      Map<String, dynamic>? id = await userCollection
+          .findOne(where.eq("_id", ObjectId.fromHexString(add)));
+      if (id != null) {
         print(id['following']);
-        await followingCollection.updateOne(where.eq("_id", ObjectId.fromHexString(id["following"])), ModifierBuilder().push("follows", userid));
+        await followingCollection.updateOne(
+            where.eq("_id", ObjectId.fromHexString(id["following"])),
+            ModifierBuilder().push("follows", userid));
       }
     }
     await db.close();
   }
 
-  static Future <int> checkRequestsFollowing (User user, String followedUser) async {
-    try{
+  static Future<int> checkRequestsFollowing(
+      User user, String followedUser) async {
+
+    try {
       final db = await Db.create(
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-      await db.open(); 
+      await db.open();
       final userCollection = db.collection('user');
       final followingCollection = db.collection('following');
 
-      ObjectId mainUserId = ObjectId.fromHexString(user.id);
       ObjectId secondaryUserId = ObjectId.fromHexString(followedUser);
+
+      final followingResult = await followingCollection
+          .findOne(where.eq('_id', ObjectId.fromHexString(user.following)));
+
+      print(followingResult.toString());
       
-    final userResult = await userCollection.findOne(where.id(mainUserId));
-    
-    final followingResult = await followingCollection.findOne(where.eq('_id', userResult?['following']));
-      
-        if (followingResult?['followed'].contains(secondaryUserId)) {
-          return 1;
-        }
-        
-        if (followingResult?['requested'].contains(secondaryUserId)) {
-          return 2;
-        }
-        
-        return 3;
-      
-    } 
-    catch (e) {
+      if (followingResult?['followed'].contains(followedUser)) {
+        return 1;
+      }
+
+      if (followingResult?['requested'].contains(followedUser)) {
+        return 2;
+      }
+
+      return 3;
+    } catch (e) {
       print('Error: $e');
       return 0;
     }
   }
 
-  static Future addRequest (User currentUser, String followedUserId) async {
-    try{
+  static Future addRequest(User currentUser, String followedUserId) async {
+    try {
       final db = await Db.create(
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
-      await db.open(); 
+      await db.open();
       final userCollection = db.collection('user');
       final followingCollection = db.collection('following');
-      
+
       ObjectId mainUserId = ObjectId.fromHexString(currentUser.id);
       ObjectId secondaryUserId = ObjectId.fromHexString(followedUserId);
 
-      final mainUserResult = await userCollection.findOne(where.id(mainUserId));
-      final secondaryUserResult = await userCollection.findOne(where.id(secondaryUserId));
-
-      final mainRequested = await followingCollection.findOne(where.eq('_id', mainUserResult?['following']));
-      final secondaryRequest = await followingCollection.findOne(where.eq('_id', secondaryUserResult?['following']));
+      final secondaryUserResult =
+          await userCollection.findOne(where.id(secondaryUserId));
+      print(secondaryUserResult.toString());
       
+      ObjectId followingSecondary = ObjectId.fromHexString(secondaryUserResult?['following']);
+
+      final mainRequested = await followingCollection
+          .findOne(where.eq('_id', ObjectId.fromHexString(currentUser.following)));
+          
+      final secondaryRequest = await followingCollection
+          .findOne(where.eq('_id', followingSecondary));
+
       List mainRequestedUsers = mainRequested?['requested'];
       mainRequestedUsers.add(followedUserId);
       await followingCollection.update(
-        where.eq('_id', mainUserResult?['following']),
+        where.eq('_id', ObjectId.fromHexString(currentUser.following)),
         ModifierBuilder().set('requested', mainRequestedUsers),
       );
 
       List secondaryRequestsList = secondaryRequest?['requests'];
-      Object userInfo = {'Id': currentUser.id, 'username': currentUser.username};
+      Object userInfo = {
+        'id': currentUser.id,
+        'username': currentUser.username
+      };
       secondaryRequestsList.add(userInfo);
       await followingCollection.update(
-        where.eq('_id', secondaryUserResult?['following']),
+        where.eq('_id', followingSecondary),
         ModifierBuilder().set('requests', secondaryRequestsList),
       );
 
       await db.close();
-
-
-    } catch (e){
+    } catch (e) {
       print('Error: $e');
     }
-
-
-
-
   }
-
 }

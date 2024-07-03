@@ -57,6 +57,7 @@ class ControllerSocial {
 
   static Future addRequest(String followedUserId) async {
     try {
+      print('aca estoy');
       User currentUser = await Controller.getUserInfo();
       await Connection.addRequest(currentUser, followedUserId);
     } catch (e) {
