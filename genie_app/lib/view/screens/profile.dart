@@ -223,6 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 20,
               ),
+              
               FutureBuilder(
                 future: userStudyGroups,
                 builder: (context, snapshot) {
@@ -238,7 +239,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   }
                   groups = snapshot.data!;
-                  return Column(
+                  if(_friendState==1){
+                     return Column(
                     children: [
                       for (int i = 0; i < groups!.length; i++)
                         StudyGroupProfileCard(
@@ -250,6 +252,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )
                     ],
                   );
+                  }else{
+                    return SizedBox.shrink();
+                  }
+                 
                 },
               )
             ],
