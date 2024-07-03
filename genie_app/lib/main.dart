@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/home.dart';  
 import 'package:genie_app/view/screens/initial.dart';
 import 'package:genie_app/view/screens/test.dart';
@@ -11,7 +12,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: const MyApp(),
+    home: MyApp(),
     theme: genieThemeDataDemo,  
   ));
 }
@@ -25,9 +26,10 @@ class MyApp extends StatefulWidget {
 
 class _myAppState extends State<MyApp> {
   late bool isUser = false;
-
+  late User user;
   void checkState() async {
     bool ans = await Controller.getLoggedInUser();
+    user = await Controller.getUserInfo();
     if (ans) {
       setState(() {
         isUser = true;

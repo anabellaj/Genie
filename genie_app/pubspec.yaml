@@ -55,6 +55,7 @@ dependencies:
   carousel_slider: ^4.2.1
   flip_card: ^0.7.0
   percent_indicator: ^4.2.3
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,7 @@ flutter:
   uses-material-design: true
   assets:
     - lib/view/assets/genie logo.png
+    - lib/view/assets/no_pp.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
