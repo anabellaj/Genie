@@ -132,7 +132,7 @@ class ControllerSocial {
     
   }
   
-}
+
 
   static Future addRequest(String followedUserId) async {
     try {
@@ -154,4 +154,5 @@ class ControllerSocial {
       return 0;
     }
   }
+
 }

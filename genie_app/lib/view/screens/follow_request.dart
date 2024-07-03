@@ -65,31 +65,8 @@ class _FollowRequestPageState extends State<FollowRequestPage> {
       },
       child: Scaffold(
       appBar: TopBar(),
-      body: isLoading? const Center(child: CircularProgressIndicator(),):
-      Column(
-        children: [
-           Container(
-        color: genieThemeDataDemo.colorScheme.secondary,
-        
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextButton(
-            onPressed: () {
-              finalizeRequests();
-            },
-            child: Row(
-              children: [
-                Icon(Icons.chevron_left,
-                  color: genieThemeDataDemo.colorScheme.onSecondary),
-                Text(
-                  'Regresar',
-                  style: TextStyle(
-                    color: genieThemeDataDemo.colorScheme.onSecondary),
-
-                )
-              : Column(
+      body: isLoading? const Center(child: CircularProgressIndicator(),)
+      : Column(
                   children: [
                     Container(
                       color: genieThemeDataDemo.colorScheme.secondary,
