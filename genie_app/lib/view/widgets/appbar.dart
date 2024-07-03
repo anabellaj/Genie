@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/settings.dart';
 import 'package:genie_app/view/theme.dart';
-import 'package:genie_app/viewModel/controller.dart';
 
 class TopBar extends AppBar {
   TopBar({super.key});

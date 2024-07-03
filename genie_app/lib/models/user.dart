@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
+const idGenerator = Uuid();
 
 class User {
   User(
@@ -92,8 +95,12 @@ class User {
         replysLiked = json['replysLiked'] ?? [],
         following = json['following']?? "";
 
-  File fileFromBase64String() {
+
+
+  Future<File> fileFromBase64String() async  {
     final decodedBytes = base64Decode(profilePicture);
-    return File('${name}pp')..writeAsBytesSync(decodedBytes);
+    final directory = await getApplicationDocumentsDirectory();
+    var idString = idGenerator.v4();
+    return File('${directory.path}/${idString}pp')..writeAsBytesSync(decodedBytes);
   }
 }

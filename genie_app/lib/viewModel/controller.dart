@@ -293,7 +293,7 @@ class Controller {
       case 2:
         return SearchPage();
       default:
-        return const JoinedGroups();
+        return const SearchPage();
     }
   }
 

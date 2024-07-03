@@ -11,7 +11,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyApp(),
+    home: const MyApp(),
     theme: genieThemeDataDemo,  
   ));
 }
@@ -23,6 +23,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _myAppState();
 }
 
+// ignore: camel_case_types
 class _myAppState extends State<MyApp> {
   late bool isUser = false;
   late User user;

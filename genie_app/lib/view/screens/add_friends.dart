@@ -1,11 +1,12 @@
 import 'package:genie_app/models/group.dart';
-import 'package:genie_app/view/screens/settings.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/screens/code.dart';
 import 'package:genie_app/view/widgets/friend_add.dart';
+import 'package:genie_app/viewModel/GroupAddNotification.dart';
+import 'package:genie_app/viewModel/controllerSocial.dart';
 
 class AddFriendPage extends StatefulWidget{
   final Groups group;
@@ -15,13 +16,45 @@ class AddFriendPage extends StatefulWidget{
 }
 
 class _AddFriendPageState extends State<AddFriendPage>{
+  List<FriendAdd> friends = [];
+  late bool isLoading=true;
+  late bool isLeaving= false;
+  late List<dynamic> toAdd =[];
+
+  void getFriends() async{
+    List<FriendAdd> f = await ControllerSocial.getFriendsToAdd(widget.group);
+    setState(() {
+      friends=f;
+      isLoading=false;
+    });
+  }
+  void updateAdd()async{
+    setState(() {
+      isLeaving=true;
+    });
+    await ControllerSocial.addNewMembers(widget.group, toAdd);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void initState() {
+    getFriends();
+    super.initState();
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return NotificationListener<GroupAddNotification>(
+      onNotification: (n){
+        print(n.userId);
+        toAdd.add(n.userId);
+        return true;
+      },
+      child: Scaffold(
       appBar: TopBar(),
-      body:Column(
+      body: isLeaving? Center(child: CircularProgressIndicator(),):
+      Column(
         children: [
            Container(
         color: genieThemeDataDemo.colorScheme.secondary,
@@ -30,9 +63,10 @@ class _AddFriendPageState extends State<AddFriendPage>{
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              updateAdd();
             },
             child: Row(
               children: [
@@ -81,10 +115,15 @@ class _AddFriendPageState extends State<AddFriendPage>{
         ],
       ),
       ),
-      FriendAdd(),
-      FriendAdd(),
+      
+      Expanded(
+        child: isLoading? Center(child: CircularProgressIndicator(),): 
+        ListView(
+          children: [...friends],
+        ))
         ],),
       bottomNavigationBar: BottomNavBar(),
-    );
+    ),)
+    ;
   }
 }

@@ -6,6 +6,8 @@ import 'package:genie_app/view/widgets/found_member.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
@@ -29,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
       List<Widget> found = await Controller.getFoundUsers(txt, attribute);
       print(found);
       List<Widget> correctUsers = processUsers(found, txt, attribute);
-      print(correctUsers);
+
       setState(() {
         foundUsers = correctUsers;
         isLoading = false;

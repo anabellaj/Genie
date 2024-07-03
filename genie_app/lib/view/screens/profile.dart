@@ -1,14 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
-import 'package:genie_app/view/screens/search.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
+import 'package:genie_app/view/widgets/follow_button.dart';
 import 'package:genie_app/view/widgets/study_group_profile_card.dart';
 import 'package:genie_app/viewModel/controller.dart';
+import 'package:genie_app/viewModel/controllerSocial.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
@@ -22,26 +24,44 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late Future<int> _friendState;
   late Future<List<Groups>> userStudyGroups;
   List<Groups>? groups;
+  late Future<File> _image;
 
   Future<List<Groups>> getUserGroups() async {
     return Controller.getUserGroupsById(widget.displayedUser);
   }
 
+  Future<int> getFriendState() async {
+    return ControllerSocial.checkRequestsFollowing(widget.displayedUser.id);
+  }
+
+  Future modifyProfile() async {
+    User? changedUser =
+        await Navigator.of(context).push<User?>(MaterialPageRoute(
+      builder: (context) => const ModifyProfile(),
+    ));
+
+    if (changedUser != null) {
+      setState(() {
+        widget.displayedUser = changedUser;
+        _image = changedUser.fileFromBase64String();
+      });
+    }
+  }
+
   @override
   void initState() {
+    _image = widget.displayedUser.fileFromBase64String();
     userStudyGroups = getUserGroups();
+    _friendState =
+        ControllerSocial.checkRequestsFollowing(widget.displayedUser.id);
     super.initState();
   }
 
   @override
   Widget build(context) {
-    File? imageFile;
-
-    if (widget.displayedUser.profilePicture != "") {
-      imageFile = widget.displayedUser.fileFromBase64String();
-    }
     return Scaffold(
       appBar: TopBar(),
       body: SingleChildScrollView(
@@ -109,17 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: OutlinedButton.styleFrom(
                               side: BorderSide(
                                   color: genieThemeDataDemo.primaryColor)),
-                          onPressed: () async {
-                            User? changedUser = await Navigator.of(context)
-                                .push<User?>(MaterialPageRoute(
-                              builder: (context) => const ModifyProfile(),
-                            ));
-                            if (changedUser != null) {
-                              setState(() {
-                                widget.displayedUser = changedUser;
-                              });
-                            }
-                          },
+                          onPressed: modifyProfile,
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 5),
@@ -127,29 +137,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         )
                       else
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              side: BorderSide(
-                                  color: genieThemeDataDemo.primaryColor)),
-                          onPressed: () {},
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 5),
-                            child: Text('Amigos'),
-                          ),
-                        ),
+                        FutureBuilder(
+                            future: _friendState,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return ElevatedButton(
+                                  onPressed: () {},
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.access_time_outlined),
+                                      SizedBox(width: 8),
+                                      Text('Cargando'),
+                                    ],
+                                  ),
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                //snackbar
+                                ScaffoldMessenger.of(context).clearSnackBars();
+                                return Center(
+                                  child: Text(
+                                      'Ocurrió un error. ${snapshot.error.toString()}'),
+                                );
+                              }
+                              return FollowButton(
+                                  response: snapshot.data!,
+                                  followedUserId: widget.displayedUser.id);
+                            })
                     ],
                   ),
-                  widget.displayedUser.profilePicture == ""
-                      ? const CircleAvatar(
+                  FutureBuilder(
+                    future: _image,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircleAvatar(
                           radius: 50,
                           backgroundImage:
                               AssetImage('lib/view/assets/no_pp.jpg'),
-                        )
-                      : CircleAvatar(
-                          radius: 50,
-                          backgroundImage: FileImage(imageFile!),
-                        ),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        //snackbar
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        return Center(
+                          child: Text(
+                              'Ocurrió un error. ${snapshot.error.toString()}'),
+                        );
+                      }
+
+                      return widget.displayedUser.profilePicture == ""
+                          ? const CircleAvatar(
+                              radius: 50,
+                              backgroundImage:
+                                  AssetImage('lib/view/assets/no_pp.jpg'),
+                            )
+                          : CircleAvatar(
+                              radius: 50,
+                              backgroundImage: FileImage(snapshot.data!),
+                            );
+                    },
+                  ),
                 ],
               ),
               const SizedBox(

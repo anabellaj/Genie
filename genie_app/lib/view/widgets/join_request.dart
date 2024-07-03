@@ -1,15 +1,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
+import 'package:genie_app/viewModel/JoinRequestNotification.dart';
 
 class JoinRequest extends StatefulWidget{
-  const JoinRequest({super.key});
+  const JoinRequest({super.key, required this.id, required this.username});
+  final String id;
+  final String username;
 
   @override
   State<JoinRequest> createState() => _JoinRequestState();
 }
 
 class _JoinRequestState extends State<JoinRequest>{
+
+  late bool added=false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +24,24 @@ class _JoinRequestState extends State<JoinRequest>{
         child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("name"),
+          Text(widget.username),
+          added?
+          Icon(Icons.check, color: genieThemeDataDemo.colorScheme.primary,):
           Row(
             
             children: [
               IconButton(
-            onPressed: (){print("accept");}, icon: Icon(Icons.person_add_alt, color: genieThemeDataDemo.colorScheme.primary,)),
+            onPressed: (){
+              
+              JoinRequestNotification(true, widget.id).dispatch(context);
+              setState(() {
+                added=true;
+              });
+            }, icon: Icon(Icons.person_add_alt, color: genieThemeDataDemo.colorScheme.primary,)),
             IconButton(
-            onPressed: (){print("deny");}, icon: Icon(Icons.cancel, color: genieThemeDataDemo.colorScheme.error,))
+            onPressed: (){
+              JoinRequestNotification(false, widget.id).dispatch(context);
+            }, icon: Icon(Icons.cancel, color: genieThemeDataDemo.colorScheme.error,))
             
             ],
           )
