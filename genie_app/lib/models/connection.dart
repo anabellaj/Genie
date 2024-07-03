@@ -644,6 +644,7 @@ class Connection {
       "admins": [objIdString],
       "profile_picture": "",
       "entrance_code": "",
+      "requests":[]
     });
 
     ObjectId insertedStGroupId = await writeResult.id;
@@ -937,10 +938,46 @@ class Connection {
         await followingCollection.updateOne(
             where.eq("_id", ObjectId.fromHexString(id["following"])),
             ModifierBuilder().pull("requested", userid));
+
       }
     }
     await db.close();
   }
+
+  static Future<List<dynamic>> getFriends(String followingId, List<dynamic> friendsList)async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final userCollection = db.collection("user");
+    List<dynamic> result = await userCollection.find(where.oneFrom("_id", friendsList)).toList();
+    await db.close();
+    return result;
+  }
+
+  static Future addNewMembers(Groups g, List<dynamic> toAdd)async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final userCollection = db.collection("user");
+    final groupCollection = db.collection('studyGroup');
+    await userCollection.updateMany(where.oneFrom('_id', toAdd), ModifierBuilder().push("studyGroups", g.id.oid));
+    WriteResult r = await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
+  }
+  
+  static Future manageJoinRequests(Groups g, List<dynamic> add)async{
+     final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final groupCollection = db.collection('studyGroup');
+    final userCollection = db.collection('user');
+    await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
+    await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('requests', g.requests));
+    await userCollection.updateMany(where.oneFrom("_id", add), ModifierBuilder().push('studyGroups', g.id.oid));
+  }
+
 
   static Future<int> checkRequestsFollowing(
       User user, String followedUser) async {

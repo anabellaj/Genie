@@ -51,25 +51,43 @@ class _FollowRequestPageState extends State<FollowRequestPage> {
   @override
   Widget build(BuildContext context) {
     return NotificationListener<FollowRequestNotification>(
-        onNotification: (n) {
-          if (n.result) {
-            accept.add(n.id);
-            print(accept);
-          } else {
-            List<FollowRequest> r =
-                ControllerSocial.removeRequest(requests, n.id);
-            remove.add(n.id);
-            setState(() {
-              requests = r;
-            });
-          }
-          return true;
-        },
-        child: Scaffold(
-          appBar: TopBar(),
-          body: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
+      onNotification: (n){
+        if(n.result){
+          accept.add(n.id);
+        }else{
+          List<FollowRequest> r = ControllerSocial.removeRequest(requests, n.id);
+          remove.add(n.id);
+          setState(() {
+            requests=r;
+          });
+        }
+        return true;
+      },
+      child: Scaffold(
+      appBar: TopBar(),
+      body: isLoading? const Center(child: CircularProgressIndicator(),):
+      Column(
+        children: [
+           Container(
+        color: genieThemeDataDemo.colorScheme.secondary,
+        
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextButton(
+            onPressed: () {
+              finalizeRequests();
+            },
+            child: Row(
+              children: [
+                Icon(Icons.chevron_left,
+                  color: genieThemeDataDemo.colorScheme.onSecondary),
+                Text(
+                  'Regresar',
+                  style: TextStyle(
+                    color: genieThemeDataDemo.colorScheme.onSecondary),
+
                 )
               : Column(
                   children: [
