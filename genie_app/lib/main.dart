@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/home.dart';  
 import 'package:genie_app/view/screens/initial.dart';
+import 'package:genie_app/view/screens/test.dart';
 import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'dart:async';

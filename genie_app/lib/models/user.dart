@@ -1,5 +1,8 @@
 
 
+import 'dart:convert';
+import 'dart:io';
+
 class User {
  User(String emailPam, String passwordPam,){
       name= "";
@@ -9,6 +12,7 @@ class User {
       university="";
       career="";
       username="";
+      profilePicture = '';
     }
   late String id;
   late String name;
@@ -23,6 +27,7 @@ class User {
   late List<dynamic> flashCardsStudied;
   late List<dynamic> replysLiked;
   late String following;
+  late String profilePicture;
 
   void initialize(){
       career="";
@@ -51,8 +56,8 @@ class User {
       "studyGroups":studyGroups,
       "flashCardsStudied":flashCardsStudied,
       "replysLiked": replysLiked,
-      "following":following
-
+      "following":following,
+      "profilePicture": profilePicture
     };
   User.fromJson(Map<String,dynamic> json):
     id = json["_id"]!=null ?  json['_id'].oid.toString():json['id'],
@@ -81,8 +86,12 @@ class User {
     chats = json['chats'] ?? [],
     studyGroups = json['studyGroups'] ?? [],
     flashCardsStudied= json['flashCardsStudied']??[],
+    profilePicture = json["profilePicture"] ?? "",
     replysLiked = json['replysLiked']??[],
     following = json['following']?? "";
   
-  
+  File fileFromBase64String() {
+    final decodedBytes = base64Decode(profilePicture);
+    return File('${name}pp')..writeAsBytesSync(decodedBytes);
+  }
 }

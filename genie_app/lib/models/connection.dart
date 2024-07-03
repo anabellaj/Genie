@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/following.dart';
 import 'group.dart';
@@ -914,6 +915,7 @@ class Connection {
     final followingCollection = db.collection('following');
     await followingCollection.replaceOne(where.eq("_id", ObjectId.fromHexString(following)), f.toJson());
   }
+  
   static Future addFollow(List<dynamic> added, String userid)async{
      final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
@@ -929,6 +931,82 @@ class Connection {
       }
     }
     await db.close();
+  }
+
+  static Future <int> checkRequestsFollowing (User user, String followedUser) async {
+    try{
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open(); 
+      final userCollection = db.collection('user');
+      final followingCollection = db.collection('following');
+
+      ObjectId mainUserId = ObjectId.fromHexString(user.id);
+      ObjectId secondaryUserId = ObjectId.fromHexString(followedUser);
+      
+    final userResult = await userCollection.findOne(where.id(mainUserId));
+    
+    final followingResult = await followingCollection.findOne(where.eq('_id', userResult?['following']));
+      
+        if (followingResult?['followed'].contains(secondaryUserId)) {
+          return 1;
+        }
+        
+        if (followingResult?['requested'].contains(secondaryUserId)) {
+          return 2;
+        }
+        
+        return 3;
+      
+    } 
+    catch (e) {
+      print('Error: $e');
+      return 0;
+    }
+  }
+
+  static Future addRequest (User currentUser, String followedUserId) async {
+    try{
+      final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+      await db.open(); 
+      final userCollection = db.collection('user');
+      final followingCollection = db.collection('following');
+      
+      ObjectId mainUserId = ObjectId.fromHexString(currentUser.id);
+      ObjectId secondaryUserId = ObjectId.fromHexString(followedUserId);
+
+      final mainUserResult = await userCollection.findOne(where.id(mainUserId));
+      final secondaryUserResult = await userCollection.findOne(where.id(secondaryUserId));
+
+      final mainRequested = await followingCollection.findOne(where.eq('_id', mainUserResult?['following']));
+      final secondaryRequest = await followingCollection.findOne(where.eq('_id', secondaryUserResult?['following']));
+      
+      List mainRequestedUsers = mainRequested?['requested'];
+      mainRequestedUsers.add(followedUserId);
+      await followingCollection.update(
+        where.eq('_id', mainUserResult?['following']),
+        ModifierBuilder().set('requested', mainRequestedUsers),
+      );
+
+      List secondaryRequestsList = secondaryRequest?['requests'];
+      Object userInfo = {'Id': currentUser.id, 'username': currentUser.username};
+      secondaryRequestsList.add(userInfo);
+      await followingCollection.update(
+        where.eq('_id', secondaryUserResult?['following']),
+        ModifierBuilder().set('requests', secondaryRequestsList),
+      );
+
+      await db.close();
+
+
+    } catch (e){
+      print('Error: $e');
+    }
+
+
+
+
   }
 
 }

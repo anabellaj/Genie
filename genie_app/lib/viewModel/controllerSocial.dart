@@ -52,4 +52,26 @@ class ControllerSocial{
       print(e);
     }
   }
+
+  static Future addRequest (String followedUserId) async {
+    try {
+      User currentUser = await Controller.getUserInfo();
+      await Connection.addRequest(currentUser, followedUserId);
+
+    } catch (e){
+      print('Error $e');
+    }
+
+  }
+
+  static Future <int> checkRequestsFollowing (String followedUserId) async {
+    try{
+      User currentUser = await Controller.getUserInfo();
+      var response = await Connection.checkRequestsFollowing(currentUser, followedUserId);
+      return response;    
+    } catch (e) {
+      return 0;
+    }
+  }
+
 }
