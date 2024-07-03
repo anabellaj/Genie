@@ -636,6 +636,7 @@ class Connection {
       "admins": [objIdString],
       "profile_picture": "",
       "entrance_code": "",
+      "requests":[]
     });
 
     ObjectId insertedStGroupId = await writeResult.id;
@@ -949,10 +950,19 @@ class Connection {
     final userCollection = db.collection("user");
     final groupCollection = db.collection('studyGroup');
     await userCollection.updateMany(where.oneFrom('_id', toAdd), ModifierBuilder().push("studyGroups", g.id.oid));
-    print(g.members.length);
     WriteResult r = await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
-    print(r.isSuccess);
   }
   
+  static Future manageJoinRequests(Groups g, List<dynamic> add)async{
+     final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final groupCollection = db.collection('studyGroup');
+    final userCollection = db.collection('user');
+    await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
+    await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('requests', g.requests));
+    await userCollection.updateMany(where.oneFrom("_id", add), ModifierBuilder().push('studyGroups', g.id.oid));
+  }
 
 }

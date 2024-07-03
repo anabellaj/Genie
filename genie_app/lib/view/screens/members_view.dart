@@ -38,13 +38,17 @@ class MembersView extends StatefulWidget {
 class _MembersViewState extends State<MembersView> {
   bool isLoading = true;
   late Widget members;
+  late bool isAdmin=false;
 
   void getMembers() async{
     Widget g = await Controller.obtainGroupMembers(widget.group.members, widget.group);
+    bool admin = await Controller.checkAdminCurrUser(widget.group.admins[0]);
+    print(admin);
     if(mounted){
     setState(() {
       members = g;
       isLoading = false;
+      isAdmin=admin;
     });
     }
   }
@@ -111,13 +115,14 @@ class _MembersViewState extends State<MembersView> {
                         child: const Text('Invitar'),
                       ),
                       SizedBox(width: 12,),
+                      !isAdmin? SizedBox.shrink():
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                       const JoinRequestPage())); 
+                                      JoinRequestPage(group: widget.group,))); 
                         },
                         style: TextButton.styleFrom(
                           backgroundColor:

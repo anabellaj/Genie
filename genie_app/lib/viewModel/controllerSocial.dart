@@ -6,6 +6,7 @@ import 'package:genie_app/models/object_id_converter.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/widgets/follow_request.dart';
 import 'package:genie_app/view/widgets/friend_add.dart';
+import 'package:genie_app/view/widgets/join_request.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
 class ControllerSocial{
@@ -92,4 +93,41 @@ class ControllerSocial{
       print(e);
     }
   }
+
+  static List<JoinRequest> getRequests(Groups g){
+    try {
+      List<JoinRequest> requests =[];
+      if(g.requests.isNotEmpty){
+        for(var r in g.requests){
+          requests.add(JoinRequest(id: r['id'], username: r['username']));
+        }
+        return requests;
+      }else{
+        return requests;
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+  static List<JoinRequest> removeJoinRequest(List<JoinRequest> requests, String id){
+    requests.removeWhere((r)=> r.id==id);
+    return requests;
+  }
+
+  static Future manageJoinRequests(Groups g, List<dynamic> add, List<dynamic> remove)async{
+    List<dynamic> toAdd = [];
+    add.forEach((r){
+      g.requests.removeWhere((e)=>e['id']==r);
+      g.members.add(r);
+      toAdd.add(ObjectIdConverter.convertToObject(r));
+    });
+    remove.forEach((r){
+      g.requests.removeWhere((e)=>e['id']==r);
+    });
+    
+    await Connection.manageJoinRequests(g, toAdd);
+
+    
+  }
+  
 }

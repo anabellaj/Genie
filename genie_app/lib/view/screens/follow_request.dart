@@ -58,7 +58,6 @@ class _FollowRequestPageState extends State<FollowRequestPage>{
       onNotification: (n){
         if(n.result){
           accept.add(n.id);
-          print(accept);
         }else{
           List<FollowRequest> r = ControllerSocial.removeRequest(requests, n.id);
           remove.add(n.id);
