@@ -931,10 +931,12 @@ class Connection {
       Map<String, dynamic>? id = await userCollection
           .findOne(where.eq("_id", ObjectId.fromHexString(add)));
       if (id != null) {
-        print(id['following']);
         await followingCollection.updateOne(
             where.eq("_id", ObjectId.fromHexString(id["following"])),
-            ModifierBuilder().push("follows", userid));
+            ModifierBuilder().push("followed", userid));
+        await followingCollection.updateOne(
+            where.eq("_id", ObjectId.fromHexString(id["following"])),
+            ModifierBuilder().pull("requested", userid));
       }
     }
     await db.close();
