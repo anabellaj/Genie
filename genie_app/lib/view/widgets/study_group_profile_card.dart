@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
 
-class StudyGroupProfileCard extends StatelessWidget {
+class StudyGroupProfileCard extends StatefulWidget {
   const StudyGroupProfileCard(
       {super.key,
       required this.id,
       required this.name,
       required this.description});
+  
   final String id;
   final String name;
   final String description;
 
+  @override
+  State<StudyGroupProfileCard> createState() => _StudyGroupProfileCardState();
+}
+
+class _StudyGroupProfileCardState extends State<StudyGroupProfileCard> {
+  bool isSolicited = false;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -28,19 +35,31 @@ class StudyGroupProfileCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  widget.name,
                   textAlign: TextAlign.start,
                 ),
                 Text(
-                  description,
+                  widget.description,
                   textAlign: TextAlign.start,
                 ),
               ],
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.person_add_alt_1),
-            )
+            !isSolicited ?
+            Tooltip(
+                message: "Solicitar unirse",
+                child: IconButton(
+                  onPressed: () {
+                    print(widget.id);
+                    setState(() {
+                      isSolicited = true;
+                    });
+                    
+                  },
+                  icon: const Icon(Icons.person_add_alt_1),
+                ),
+              ):
+            const Tooltip(message: "¡Solicitud enviada!", child: const Icon(Icons.person_add_alt_1, color: Colors.blue,))
+            
           ],
         ),
       ),
