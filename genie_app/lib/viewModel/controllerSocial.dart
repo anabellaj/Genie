@@ -82,14 +82,12 @@ class ControllerSocial {
   }
   static Future addNewMembers(Groups g, List<dynamic> toAdd)async{
     try {
-      print(g.members.length);
       List<dynamic> toAddInId = [];
       toAdd.forEach((e){
          toAddInId.add(ObjectIdConverter.convertToObject(e));
         g.members.add(e);
       }
       );
-      print(g.members.length);
       await Connection.addNewMembers(g, toAddInId);
     } catch (e) {
       print(e);
@@ -136,7 +134,6 @@ class ControllerSocial {
 
   static Future addRequest(String followedUserId) async {
     try {
-      print('aca estoy');
       User currentUser = await Controller.getUserInfo();
       await Connection.addRequest(currentUser, followedUserId);
     } catch (e) {
