@@ -942,4 +942,16 @@ class Connection {
     await db.close();
   }
 
+  static void addJoinRequest(List requests, String groupId) async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    var groupCollection = db.collection('studyGroup');
+    final requestsUpdate =
+            ModifierBuilder().set("requests", requests);
+    await groupCollection.updateOne(where.eq("_id", ObjectId.fromHexString(groupId)), requestsUpdate);
+    await db.close();
+    }
+
 }

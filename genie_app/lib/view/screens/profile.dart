@@ -52,7 +52,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchPage()));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
