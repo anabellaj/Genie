@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
+
 class User {
   User(
     String emailPam,
@@ -87,8 +89,9 @@ class User {
         profilePicture = json["profilePicture"] ?? "",
         replysLiked = json['replysLiked'] ?? [];
 
-  File fileFromBase64String() {
+  Future<File> fileFromBase64String() async  {
     final decodedBytes = base64Decode(profilePicture);
-    return File('${name}pp')..writeAsBytesSync(decodedBytes);
+    final directory = await getApplicationDocumentsDirectory();
+    return File('${directory.path}/${name}pp')..writeAsBytesSync(decodedBytes);
   }
 }

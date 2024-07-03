@@ -40,7 +40,7 @@ class _ModifyProfile extends State<ModifyProfile> {
     }
 
     if (loggedUser.profilePicture != '') {
-      _imageFile = loggedUser.fileFromBase64String();
+      _imageFile = await loggedUser.fileFromBase64String();
     }
   }
 
@@ -85,7 +85,7 @@ class _ModifyProfile extends State<ModifyProfile> {
                         onPressed: () {
                           ScaffoldMessenger.of(context)
                               .hideCurrentMaterialBanner();
-                          Navigator.of(context).pop(loggedUser);
+                          Navigator.of(context).pop();
                         },
                         child: Row(
                           children: [
@@ -488,33 +488,8 @@ class _ModifyProfile extends State<ModifyProfile> {
                                                     setState(() {
                                                       isLoading = false;
                                                     });
-                                                    ScaffoldMessenger
-                                                            .of(context)
-                                                        .showMaterialBanner(MaterialBanner(
-                                                            backgroundColor:
-                                                                genieThemeDataDemo
-                                                                    .colorScheme
-                                                                    .secondary,
-                                                            contentTextStyle: TextStyle(
-                                                                color: genieThemeDataDemo
-                                                                    .colorScheme
-                                                                    .onSecondary,
-                                                                fontSize: 12),
-                                                            content: const Text(
-                                                                "Cambios guardados con éxito"),
-                                                            actions: [
-                                                          IconButton(
-                                                              onPressed: () =>
-                                                                  ScaffoldMessenger.of(
-                                                                          context)
-                                                                      .hideCurrentMaterialBanner(),
-                                                              icon: Icon(
-                                                                Icons.check,
-                                                                color: genieThemeDataDemo
-                                                                    .colorScheme
-                                                                    .onSecondary,
-                                                              ))
-                                                        ]));
+                                                    Navigator.of(context)
+                                                        .pop<User>(loggedUser);
                                                   } else {
                                                     ScaffoldMessenger.of(
                                                             context)

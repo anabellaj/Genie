@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
-import 'package:genie_app/view/screens/search.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -24,24 +23,35 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late Future<List<Groups>> userStudyGroups;
   List<Groups>? groups;
+  late Future<File> _image;
 
   Future<List<Groups>> getUserGroups() async {
     return Controller.getUserGroupsById(widget.displayedUser);
   }
 
+  Future modifyProfile() async {
+    User? changedUser =
+        await Navigator.of(context).push<User?>(MaterialPageRoute(
+      builder: (context) => const ModifyProfile(),
+    ));
+
+    if (changedUser != null) {
+      setState(() {
+        widget.displayedUser = changedUser;
+        _image = widget.displayedUser.fileFromBase64String();
+      });
+    }
+  }
+
   @override
   void initState() {
+    _image = widget.displayedUser.fileFromBase64String();
     userStudyGroups = getUserGroups();
     super.initState();
   }
 
   @override
   Widget build(context) {
-    File? imageFile;
-
-    if (widget.displayedUser.profilePicture != "") {
-      imageFile = widget.displayedUser.fileFromBase64String();
-    }
     return Scaffold(
       appBar: TopBar(),
       body: SingleChildScrollView(
@@ -106,17 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: OutlinedButton.styleFrom(
                               side: BorderSide(
                                   color: genieThemeDataDemo.primaryColor)),
-                          onPressed: () async {
-                            User? changedUser = await Navigator.of(context)
-                                .push<User?>(MaterialPageRoute(
-                              builder: (context) => const ModifyProfile(),
-                            ));
-                            if (changedUser != null) {
-                              setState(() {
-                                widget.displayedUser = changedUser;
-                              });
-                            }
-                          },
+                          onPressed: modifyProfile,
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 5),
@@ -137,16 +137,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                     ],
                   ),
-                  widget.displayedUser.profilePicture == ""
-                      ? const CircleAvatar(
+                  FutureBuilder(
+                    future: _image,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircleAvatar(
                           radius: 50,
                           backgroundImage:
                               AssetImage('lib/view/assets/no_pp.jpg'),
-                        )
-                      : CircleAvatar(
-                          radius: 50,
-                          backgroundImage: FileImage(imageFile!),
-                        ),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        //snackbar
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        return Center(
+                          child: Text(
+                              'Ocurrió un error. ${snapshot.error.toString()}'),
+                        );
+                      }
+
+                      return widget.displayedUser.profilePicture == ""
+                          ? const CircleAvatar(
+                              radius: 50,
+                              backgroundImage:
+                                  AssetImage('lib/view/assets/no_pp.jpg'),
+                            )
+                          : CircleAvatar(
+                              radius: 50,
+                              backgroundImage: FileImage(snapshot.data!),
+                            );
+                    },
+                  ),
                 ],
               ),
               const SizedBox(
