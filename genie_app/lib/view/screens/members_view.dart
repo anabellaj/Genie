@@ -98,7 +98,7 @@ class _MembersViewState extends State<MembersView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                       AddFriendPage(group: widget.group))); //CAMBIAR ROUTE A foro
+                                       AddFriendPage(group: widget.group))); 
                         },
                         style: TextButton.styleFrom(
                           backgroundColor:
@@ -117,7 +117,7 @@ class _MembersViewState extends State<MembersView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                       const JoinRequestPage())); //CAMBIAR ROUTE A foro
+                                       const JoinRequestPage())); 
                         },
                         style: TextButton.styleFrom(
                           backgroundColor:

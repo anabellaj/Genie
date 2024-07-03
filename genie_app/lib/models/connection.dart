@@ -924,11 +924,35 @@ class Connection {
     for(var add in added){
       Map<String,dynamic>? id = await userCollection.findOne(where.eq("_id", ObjectId.fromHexString(add)));
       if(id!=null){
-        print(id['following']);
-        await followingCollection.updateOne(where.eq("_id", ObjectId.fromHexString(id["following"])), ModifierBuilder().push("follows", userid));
+        await followingCollection.updateOne(where.eq("_id", ObjectId.fromHexString(id["following"])), ModifierBuilder().push("followed", userid));
       }
     }
     await db.close();
   }
+
+  static Future<List<dynamic>> getFriends(String followingId, List<dynamic> friendsList)async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final userCollection = db.collection("user");
+    List<dynamic> result = await userCollection.find(where.oneFrom("_id", friendsList)).toList();
+    await db.close();
+    return result;
+  }
+
+  static Future addNewMembers(Groups g, List<dynamic> toAdd)async{
+    final db = await Db.create(
+        "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+
+    await db.open();
+    final userCollection = db.collection("user");
+    final groupCollection = db.collection('studyGroup');
+    await userCollection.updateMany(where.oneFrom('_id', toAdd), ModifierBuilder().push("studyGroups", g.id.oid));
+    print(g.members.length);
+    WriteResult r = await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
+    print(r.isSuccess);
+  }
+  
 
 }

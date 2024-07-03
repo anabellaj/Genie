@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/connection.dart';
 import 'package:genie_app/models/following.dart';
+import 'package:genie_app/models/group.dart';
+import 'package:genie_app/models/object_id_converter.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/widgets/follow_request.dart';
+import 'package:genie_app/view/widgets/friend_add.dart';
 import 'package:genie_app/viewModel/controller.dart';
 
 class ControllerSocial{
@@ -44,11 +47,48 @@ class ControllerSocial{
       for(var request in remove){
         userFollowing.requests.removeWhere((r)=>r['id']==request);
       }
-      userFollowing.followed.addAll(accept);
+      userFollowing.follows.addAll(accept);
       await Connection.setRequests(userFollowing, user.following);
       await Connection.addFollow(accept, user.id);
     } catch (e) {
-      print('error');
+      print(e);
+    }
+  }
+  static Future<List<FriendAdd>> getFriendsToAdd(Groups group)async{
+    try {
+      List<FriendAdd> friends = [];
+      User user = await Controller.getUserInfo();
+      Following following = await ControllerSocial.getFollowing();
+      List<dynamic> friendsObjectId=[];
+      for (var f in following.follows){
+        friendsObjectId.add(ObjectIdConverter.convertToObject(f));
+      }
+      List<dynamic> result = await Connection.getFriends(user.following, friendsObjectId);
+      for(var r in result){
+        if(group.members.contains(r['_id'].oid)){
+          friends.add(FriendAdd(username: r['username'], id: r['_id'].oid, added: true,));
+        }else{
+          friends.add(FriendAdd(username: r['username'], id: r['_id'].oid, added: false,));
+        }
+        
+      }
+      return friends;
+    } catch (e) {
+      return [];
+    }
+  }
+  static Future addNewMembers(Groups g, List<dynamic> toAdd)async{
+    try {
+      print(g.members.length);
+      List<dynamic> toAddInId = [];
+      toAdd.forEach((e){
+         toAddInId.add(ObjectIdConverter.convertToObject(e));
+        g.members.add(e);
+      }
+      );
+      print(g.members.length);
+      await Connection.addNewMembers(g, toAddInId);
+    } catch (e) {
       print(e);
     }
   }

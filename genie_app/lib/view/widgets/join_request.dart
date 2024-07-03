@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/view/theme.dart';
 
 class JoinRequest extends StatefulWidget{
-  const JoinRequest({super.key});
+  const JoinRequest({super.key, required this.id, required this.username});
+  final String id;
+  final String username;
 
   @override
   State<JoinRequest> createState() => _JoinRequestState();
@@ -19,7 +21,7 @@ class _JoinRequestState extends State<JoinRequest>{
         child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("name"),
+          Text(widget.username),
           Row(
             
             children: [

@@ -22,7 +22,6 @@ class Authenticate{
       if(!result.isNotEmpty){
         String followingId = await Connection.newFollowing();
         user.following= followingId;
-        print(user.toJson());
         String id = await Connection.insertNewUser(user);
         user.id= id;
         await prefs.setBool('isLoggedIn', true);
@@ -49,7 +48,6 @@ class Authenticate{
         
         if(result[0]["password"]==password){
           await prefs.setBool('isLoggedIn', true);
-          
           await prefs.setString("user", jsonEncode(User.fromJson(result[0])) );
           return "success";
         }else{

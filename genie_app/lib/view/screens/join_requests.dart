@@ -52,8 +52,7 @@ class _JoinRequestPageState extends State<JoinRequestPage>{
         ],
       ),
       ),
-      JoinRequest(),
-      JoinRequest(),
+      
         ],),
       bottomNavigationBar: BottomNavBar(),
     );
