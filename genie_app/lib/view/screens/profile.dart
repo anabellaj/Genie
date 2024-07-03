@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
 import 'package:genie_app/view/screens/search.dart';
@@ -7,6 +8,7 @@ import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/view/widgets/study_group_profile_card.dart';
+import 'package:genie_app/viewModel/controller.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
@@ -20,9 +22,26 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late Future<List<Groups>> userStudyGroups;
+  List<Groups>? groups;
+
+  Future<List<Groups>> getUserGroups() async {
+    return Controller.getUserGroupsById(widget.displayedUser);
+  }
+
+  @override
+  void initState() {
+    userStudyGroups = getUserGroups();
+    super.initState();
+  }
+
   @override
   Widget build(context) {
-    File imageFile = widget.displayedUser.fileFromBase64String();
+    File? imageFile;
+
+    if (widget.displayedUser.profilePicture != "") {
+      imageFile = widget.displayedUser.fileFromBase64String();
+    }
     return Scaffold(
       appBar: TopBar(),
       body: SingleChildScrollView(
@@ -33,10 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               TextButton(
                 onPressed: () {
-                  //Navigator.of(context).pop();
-                  Navigator.pushReplacement(
-                              context, 
-                            MaterialPageRoute(builder: (context)=> SearchPage()));
+                  Navigator.of(context).pop();
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -129,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         )
                       : CircleAvatar(
                           radius: 50,
-                          backgroundImage: FileImage(imageFile),
+                          backgroundImage: FileImage(imageFile!),
                         ),
                 ],
               ),
@@ -138,17 +154,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const Text('Grupos de estudio'),
               const SizedBox(
-                height: 10,
-              ),
-              for (int i = 0; i < widget.displayedUser.studyGroups.length; i++)
-                StudyGroupProfileCard(
-                    id: /*displayedUser.studyGroups[i]['id']*/
-                        widget.displayedUser.studyGroups[i],
-                    name: /*displayedUser.studyGroups[i]['name']*/ 'Nombre $i',
-                    description: /*displayedUser.studyGroups[i]['description']*/
-                        'Descripcion $i'),
-              const SizedBox(
                 height: 20,
+              ),
+              FutureBuilder(
+                future: userStudyGroups,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    //snackbar
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    return Center(
+                      child: Text(
+                          'Ocurrió un error. ${snapshot.error.toString()}'),
+                    );
+                  }
+                  groups = snapshot.data!;
+                  return Column(
+                    children: [
+                      for (int i = 0; i < groups!.length; i++)
+                        StudyGroupProfileCard(
+                            id: widget.displayedUser.studyGroups[i],
+                            name: groups![i].name,
+                            description: groups![i].description),
+                      const SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  );
+                },
               )
             ],
           ),

@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/profile.dart';
 import 'package:genie_app/view/theme.dart';
-import 'package:genie_app/viewModel/ForumNotification.dart';
 import 'package:genie_app/viewModel/controller.dart';
-import 'package:genie_app/view/screens/forum_view.dart';
-import 'package:genie_app/viewModel/controllerForum.dart';
 
 class FoundMember extends StatefulWidget{
 
@@ -25,18 +22,18 @@ class _FoundMemberState extends State<FoundMember> {
 
   void getCurrUsername() async{
     User currUser = await Controller.getUserInfo();
-    print("primero que el false");
     setState(() {
       currUsername = currUser.username;
     });
-    print(currUsername);
-    print(currUser.name);
   }
 
+  @override
   void initState(){
+    super.initState();
     getCurrUsername();
   }
 
+  @override
   Widget build(BuildContext context){
     return GestureDetector(
       onTap: (){
@@ -44,7 +41,6 @@ class _FoundMemberState extends State<FoundMember> {
         if(currUsername == widget.username){
           isCurrUser = true;
         }
-        print(isCurrUser);
         Navigator.pushReplacement(context, 
                                   MaterialPageRoute(builder: (context)=> ProfileScreen(displayedUser: widget.user, currentuUser:isCurrUser)));
       },
