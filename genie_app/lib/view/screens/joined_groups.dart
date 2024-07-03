@@ -51,7 +51,7 @@ class _JoinedGroupsState extends State<JoinedGroups> {
                     style: genieThemeDataDemo.primaryTextTheme.headlineLarge,
                   ),
                   groups.isEmpty? 
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height*.70,
                     child: Column(
