@@ -95,7 +95,7 @@ class SettingsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "Modifiar  Perfil",
+                      "Modificar  Perfil",
                     ),
                     Icon(
                       Icons.chevron_right,
