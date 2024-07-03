@@ -97,7 +97,8 @@ class Controller {
 
   static Future<List<Widget>> getUserGroups() async {
     try {
-      User loggedUser = await Controller.getUserInfo();
+      User userBD = await Controller.getUserInfo();
+      User loggedUser = await Connection.getUser(userBD.id);
       List stGroups = loggedUser.studyGroups;
       List<Widget> obtainedGroups = [];
       for (String groupId in stGroups) {

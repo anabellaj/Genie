@@ -27,9 +27,12 @@ class _StudyGroupProfileCardState extends State<StudyGroupProfileCard> {
       hidden = false;
     });
   }
+  @override
   void initState(){
     checkRequests();
+    super.initState();
   }
+  
   @override
   Widget build(BuildContext context) {
     return Card(
