@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/home.dart';  
 import 'package:genie_app/view/screens/initial.dart';
-import 'package:genie_app/view/screens/test.dart';
 import 'view/theme.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'dart:async';
@@ -12,7 +11,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyApp(),
+    home: const MyApp(),
     theme: genieThemeDataDemo,  
   ));
 }
@@ -24,6 +23,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _myAppState();
 }
 
+// ignore: camel_case_types
 class _myAppState extends State<MyApp> {
   late bool isUser = false;
   late User user;

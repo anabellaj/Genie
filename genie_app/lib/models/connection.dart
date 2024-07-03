@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:genie_app/models/flashcard.dart';
 import 'package:genie_app/models/following.dart';
 import 'group.dart';

@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/screens/initial.dart';
-import 'package:genie_app/view/screens/settings.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/view/theme.dart';

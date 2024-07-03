@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:genie_app/view/theme.dart';
-import 'package:genie_app/viewModel/controller.dart';
 import 'package:genie_app/viewModel/controllerSocial.dart';
 
 class FollowButton extends StatefulWidget {

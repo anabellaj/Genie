@@ -9,6 +9,7 @@ import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
+import 'package:genie_app/view/screens/search.dart';
 import 'package:genie_app/view/widgets/found_member.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
@@ -275,7 +276,7 @@ class Controller {
       case 1:
         return const JoinOrCreate();
       default:
-        return const JoinedGroups();
+        return const SearchPage();
     }
   }
 

@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< hdu2xhdu1
 import 'package:genie_app/view/screens/settings.dart';
-=======
-import 'package:genie_app/models/user.dart';
-import 'package:genie_app/view/screens/profile.dart';
->>>>>>> hdu1
 import 'package:genie_app/view/theme.dart';
-import 'package:genie_app/viewModel/controller.dart';
 
 class TopBar extends AppBar {
   TopBar({super.key});
@@ -29,22 +23,10 @@ class _TopBarState extends State<TopBar> {
             Icons.settings,
             color: genieThemeDataDemo.colorScheme.onPrimary,
           ),
-<<<<<<< hdu2xhdu1
           onPressed: () {
             Navigator.push(context, 
             MaterialPageRoute(builder: (context)=>  SettingsPage())
             );
-=======
-          onPressed: () async {
-            User ans = await Controller.getUserInfo();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProfileScreen(
-                          displayedUser: ans,
-                          currentuUser: true,
-                        )));
->>>>>>> hdu1
           },
         )
       ],

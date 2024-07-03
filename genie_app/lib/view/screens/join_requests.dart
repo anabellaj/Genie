@@ -1,4 +1,3 @@
-import 'package:genie_app/view/screens/settings.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
