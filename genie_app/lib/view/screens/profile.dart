@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (changedUser != null) {
       setState(() {
         widget.displayedUser = changedUser;
-        _image = widget.displayedUser.fileFromBase64String();
+        _image = changedUser.fileFromBase64String();
       });
     }
   }
