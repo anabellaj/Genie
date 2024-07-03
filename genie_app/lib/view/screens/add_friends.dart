@@ -102,7 +102,7 @@ class _AddFriendPageState extends State<AddFriendPage>{
                               genieThemeDataDemo.colorScheme.surface,
                           foregroundColor:
                               genieThemeDataDemo.colorScheme.secondary,
-                          textStyle: genieThemeDataDemo.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                          textStyle: genieThemeDataDemo.textTheme.bodyMedium?.copyWith(fontSize: 14),
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                         ),
                         child: const Text('Código'),
@@ -116,7 +116,10 @@ class _AddFriendPageState extends State<AddFriendPage>{
       ),
       
       Expanded(
-        child: isLoading? Center(child: CircularProgressIndicator(),): 
+        child: isLoading? 
+        Center(child: CircularProgressIndicator(),): 
+        friends.isEmpty? 
+        Center(child: Text("No hay amigos que agregar al grupo", style: TextStyle(color: Color(0xffB4B6BF))),): 
         ListView(
           children: [...friends],
         ))

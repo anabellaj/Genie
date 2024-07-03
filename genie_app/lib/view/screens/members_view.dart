@@ -106,7 +106,7 @@ class _MembersViewState extends State<MembersView> {
                               genieThemeDataDemo.colorScheme.surface,
                           foregroundColor:
                               genieThemeDataDemo.colorScheme.secondary,
-                          textStyle: genieThemeDataDemo.textTheme.bodyMedium,
+                          textStyle: genieThemeDataDemo.textTheme.bodyMedium?.copyWith(fontSize: 14),
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                         ),
                         child: const Text('Invitar'),
@@ -126,7 +126,7 @@ class _MembersViewState extends State<MembersView> {
                               genieThemeDataDemo.colorScheme.surface,
                           foregroundColor:
                               genieThemeDataDemo.colorScheme.secondary,
-                          textStyle: genieThemeDataDemo.textTheme.bodyMedium,
+                          textStyle: genieThemeDataDemo.textTheme.bodyMedium?.copyWith(fontSize: 14),
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                         ),
                         child: const Text('Solicitudes'),

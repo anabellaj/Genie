@@ -104,7 +104,10 @@ class _FollowRequestPageState extends State<FollowRequestPage> {
                       ),
                     ),
                     Expanded(
-                        child: ListView(
+                      child: 
+                      requests.isEmpty? 
+                      Center(child: Text("No hay solicitudes de amistad", style: TextStyle(color: Color(0xffB4B6BF))),):
+                      ListView(
                       children: [...requests],
                     ))
                   ],

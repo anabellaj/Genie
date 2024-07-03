@@ -91,7 +91,10 @@ class _JoinRequestPageState extends State<JoinRequestPage>{
       ),
       ),
       Expanded(
-        child: ListView(
+        child: 
+        requests.isEmpty? 
+        Center(child: Text("No hay solicitudes de acceso al grupo ", style: TextStyle(color: Color(0xffB4B6BF))),):
+        ListView(
           children: [...requests],
         ))
       ],),
