@@ -111,6 +111,7 @@ class Controller {
               group: Groups.fromJson(gr[0])));
         }
       }
+      Controller.updateUserInfo(userBD);
 
       return obtainedGroups;
     } catch (e) {
@@ -270,16 +271,11 @@ class Controller {
     }
   }
 
-  static void sendJoinRequest(String groupId) async{
-    
+  static void sendJoinRequest(String groupId) async {
     List resultGroup = await Connection.checkStudyGroup(groupId);
     User loggedUser = await Controller.getUserInfo();
-    resultGroup[0]["requests"].add(
-      {
-        "id":loggedUser.id,
-        "username":loggedUser.username
-      }
-    );
+    resultGroup[0]["requests"]
+        .add({"id": loggedUser.id, "username": loggedUser.username});
     Connection.addJoinRequest(resultGroup[0]["requests"], groupId);
   }
 
@@ -415,12 +411,12 @@ class Controller {
     }
   }
 
-  static Future<bool> checkIfUserInRequests(String groupId) async{
+  static Future<bool> checkIfUserInRequests(String groupId) async {
     List resultGroup = await Connection.checkStudyGroup(groupId);
     User loggedUser = await Controller.getUserInfo();
     bool userInRequests = false;
-    for (var request in resultGroup[0]["requests"]){
-      if(request["id"] == loggedUser.id){
+    for (var request in resultGroup[0]["requests"]) {
+      if (request["id"] == loggedUser.id) {
         userInRequests = true;
       }
     }

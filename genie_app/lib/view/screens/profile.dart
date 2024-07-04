@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
-import 'package:genie_app/view/screens/search.dart';
 import 'package:genie_app/view/theme.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
@@ -256,7 +255,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             id: widget.displayedUser.studyGroups[i],
                             name: groups![i].name,
                             description: groups![i].description,
-                            userIsPartOfTheGroup: widget.loggedInUser.studyGroups
+                            userIsPartOfTheGroup: widget
+                                .loggedInUser.studyGroups
                                 .contains(groupsIds[i]),
                           ),
                         const SizedBox(
@@ -264,13 +264,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         )
                       ],
                     );
-                  } else {
+                  } 
+                  else {
                     return const Column(
                       children: [
                         SizedBox(
                           height: 20,
                         ),
                         Icon(Icons.lock),
+                        Text('Informacion Privada')
                       ],
                     );
                   }
