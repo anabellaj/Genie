@@ -224,9 +224,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     if (snapshot.data == 1 || widget.currentuUser) {
                       return Column(
                         children: [
-                          FollowButton(
-                              response: snapshot.data!,
-                              followedUserId: widget.displayedUser.id),
+                          if (!widget.currentuUser)
+                            FollowButton(
+                                response: snapshot.data!,
+                                followedUserId: widget.displayedUser.id),
                           const SizedBox(
                             height: 20,
                           ),
@@ -251,23 +252,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               for (int i = 0; i < groups!.length; i++) {
                                 groupsIds.add(groups![i].id.oid);
                               }
-                              // ignore: unrelated_type_equality_checks
-                              return Column(
-                                children: [
-                                  for (int i = 0; i < groups!.length; i++)
-                                    StudyGroupProfileCard(
-                                      id: widget.displayedUser.studyGroups[i],
-                                      name: groups![i].name,
-                                      description: groups![i].description,
-                                      userIsPartOfTheGroup: widget
-                                          .loggedInUser.studyGroups
-                                          .contains(groupsIds[i]),
-                                    ),
-                                  const SizedBox(
-                                    height: 20,
-                                  )
-                                ],
-                              );
+                              if (groupsIds.isEmpty) {
+                                return Column(
+                                  children: [
+                                    for (int i = 0; i < groups!.length; i++)
+                                      StudyGroupProfileCard(
+                                        id: widget.displayedUser.studyGroups[i],
+                                        name: groups![i].name,
+                                        description: groups![i].description,
+                                        userIsPartOfTheGroup: widget
+                                            .loggedInUser.studyGroups
+                                            .contains(groupsIds[i]),
+                                      ),
+                                    const SizedBox(
+                                      height: 20,
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return Text('No pertenece a ningun grupo');
+                              }
                             },
                           )
                         ],
