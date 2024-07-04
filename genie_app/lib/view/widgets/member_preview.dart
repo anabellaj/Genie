@@ -30,8 +30,6 @@ class _MemberPreviewState extends State<MemberPreview> {
       currUserisAdmin = check;
     });}
 
-    print("isAdmin "+ "${isAdmin}");
-    print(currUserisAdmin);
   }
   
   @override
@@ -68,7 +66,7 @@ class _MemberPreviewState extends State<MemberPreview> {
                           children: [
                             Text(widget.name,
                               overflow: TextOverflow.ellipsis,
-                              style: genieThemeDataDemo.primaryTextTheme.titleLarge),
+                              style: genieThemeDataDemo.textTheme.titleLarge),
                              ],
                         ),
                         (isAdmin & !currUserisAdmin)? PopupMenuButton(

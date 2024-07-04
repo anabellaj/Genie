@@ -29,7 +29,6 @@ class _ForumReply extends State<ForumReplyShow>{
   void checkCreator()async{
     bool creator = await Controller.checkIfOwner(widget.creator_id);
     bool like = await ControllerForum.checkLike(widget.id, widget.forum);
-    print(like);
     if(like){
       LikeState(true, widget.id).dispatch(context);
     }

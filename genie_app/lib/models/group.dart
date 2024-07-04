@@ -8,6 +8,7 @@ class Groups{
       creator = "";
       topics=[];
       forums=[];
+      requests=[];
     }
       
   late ObjectId id;
@@ -20,6 +21,7 @@ class Groups{
   late List<dynamic> admins;
   late String entranceCode;
   late List<dynamic> labels;
+  late List<dynamic> requests;
 
   void initialize(){
       name="";
@@ -30,6 +32,7 @@ class Groups{
       forums = [];
       entranceCode = "";
       labels=[];
+      requests=[];
       
 }
   Groups.fromJson(Map<String,dynamic> json):
@@ -40,6 +43,7 @@ class Groups{
     members = json["members"],
     admins = json["admins"],
     entranceCode = json["entrance_code"],
-    labels = json['labels'];
+    labels = json['labels'],
+    requests= json['requests'];
   
 }

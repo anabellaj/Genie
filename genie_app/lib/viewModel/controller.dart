@@ -9,14 +9,16 @@ import 'package:genie_app/models/topic.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/join_or_create.dart';
 import 'package:genie_app/view/screens/joined_groups.dart';
+import 'package:genie_app/view/screens/search.dart';
+import 'package:genie_app/view/widgets/found_member.dart';
 import 'package:genie_app/view/widgets/group_preview.dart';
 import 'package:genie_app/view/widgets/member_preview.dart';
 import 'package:genie_app/view/widgets/topic_preview.dart';
 import 'package:genie_app/viewModel/controllerStudy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-class Controller {
 
+class Controller {
   /*Groups Controller */
   static Future<Groups> updateGroupInfo(
       Groups group, String newDescr, String newName) async {
@@ -34,11 +36,11 @@ class Controller {
       User loggedUser = await Controller.getUserInfo();
       List logUser = await Connection.checkUser(loggedUser);
       if (!loggedUser.studyGroups.contains(responseGroupId)) {
-        loggedUser.studyGroups.add(responseGroupId);
-        updateUserInfo(loggedUser);
         List result = await Connection.checkStudyGroup(responseGroupId);
         Groups currentGroup = Groups.fromJson(result[0]);
         currentGroup.members.add(logUser[0]["_id"].oid);
+        loggedUser.studyGroups.add(responseGroupId);
+        updateUserInfo(loggedUser);
         Connection.updateGroupMembers(responseGroupId, currentGroup.members);
 
         return "success";
@@ -60,12 +62,11 @@ class Controller {
     );
   }
 
-  static Future<String> deleteGroup(Groups group) async{
-    try{
-    Connection.removeGroup(group);
-    return "success";
-    }
-    catch (e){
+  static Future<String> deleteGroup(Groups group) async {
+    try {
+      Connection.removeGroup(group);
+      return "success";
+    } catch (e) {
       return "no_success";
     }
   }
@@ -81,40 +82,89 @@ class Controller {
     }
   }
 
-  static Future<String> leaveGroup(Groups group) async{
+  static Future<String> leaveGroup(Groups group) async {
     User loggedUser = await Controller.getUserInfo();
     List logUser = await Connection.checkUser(loggedUser);
     String logUserId = logUser[0]["_id"].oid;
-    try{
-    String response = await Controller.deleteMember(logUserId, group);
-    return response;
-    } catch (e){
+    try {
+      String response = await Controller.deleteMember(logUserId, group);
+      return response;
+    } catch (e) {
       print(e);
       return "no_success";
     }
   }
 
   static Future<List<Widget>> getUserGroups() async {
-    try{
-User loggedUser = await Controller.getUserInfo();
-    List stGroups = loggedUser.studyGroups;
-    List<Widget> obtainedGroups = [];
-    for (String groupId in stGroups) {
-      List gr = await Connection.checkStudyGroup(groupId);
-      if (gr.isNotEmpty) {
-        obtainedGroups.add(GroupPreview(
-            name: gr[0]["name"],
-            membersQty: gr[0]["members"].length.toString(),
-            description: gr[0]["description"],
-            group: Groups.fromJson(gr[0])));
+    try {
+      User userBD = await Controller.getUserInfo();
+      User loggedUser = await Connection.getUser(userBD.id);
+      List stGroups = loggedUser.studyGroups;
+      List<Widget> obtainedGroups = [];
+      for (String groupId in stGroups) {
+        List gr = await Connection.checkStudyGroup(groupId);
+        if (gr.isNotEmpty) {
+          obtainedGroups.add(GroupPreview(
+              name: gr[0]["name"],
+              membersQty: gr[0]["members"].length.toString(),
+              description: gr[0]["description"],
+              group: Groups.fromJson(gr[0])));
+        }
       }
-    }
+      Controller.updateUserInfo(userBD);
 
-    return obtainedGroups;
-    }catch(e){
+      return obtainedGroups;
+    } catch (e) {
       return [];
     }
-    
+  }
+
+  static Future<List<Groups>> getUserGroupsById(User selectedUser) async {
+    try {
+      List stGroups = selectedUser.studyGroups;
+      List<Groups> obtainedGroups = [];
+      for (String groupId in stGroups) {
+        List gr = await Connection.checkStudyGroup(groupId);
+        if (gr.isNotEmpty) {
+          Groups newG = Groups(gr[0]["description"], gr[0]["name"]);
+          newG.id = gr[0]["_id"];
+          obtainedGroups.add(newG);
+        }
+      }
+
+      return obtainedGroups;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static Future<User> getCurrUserFromDB() async {
+    User loggedUser = await Controller.getUserInfo();
+    List logUser = await Connection.checkUser(loggedUser);
+    User currUser = User.fromJson(logUser[0]);
+    return currUser;
+  }
+
+  static Future<List<Widget>> getFoundUsers(
+      String searchValue, String attribute) async {
+    try {
+      List<Widget> obtainedUsers = [];
+      List users = await Connection.findUsersByName(searchValue, attribute);
+      for (var user in users) {
+        User selectedUser = User.fromJson(user);
+        obtainedUsers.add(FoundMember(
+          user: selectedUser,
+          name: user["name"],
+          username: user["username"],
+          career: user["career"],
+          university: user["university"],
+        ));
+      }
+      return obtainedUsers;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   /*User Controller */
@@ -134,11 +184,11 @@ User loggedUser = await Controller.getUserInfo();
 
   static Future<User> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-    var user = await prefs.getString("user");
+    var user = prefs.getString("user");
     User loggedUser;
     if (user != null) {
       loggedUser = User.fromJson(jsonDecode(user));
-      
+
       return loggedUser;
     } else {
       return User("", "");
@@ -209,7 +259,6 @@ User loggedUser = await Controller.getUserInfo();
     }
   }
 
-
   static Future<bool> checkIfOwner(String owner) async {
     final prefs = await SharedPreferences.getInstance();
     var userInfo = await prefs.getString('user');
@@ -222,6 +271,13 @@ User loggedUser = await Controller.getUserInfo();
     }
   }
 
+  static void sendJoinRequest(String groupId) async {
+    List resultGroup = await Connection.checkStudyGroup(groupId);
+    User loggedUser = await Controller.getUserInfo();
+    resultGroup[0]["requests"]
+        .add({"id": loggedUser.id, "username": loggedUser.username});
+    Connection.addJoinRequest(resultGroup[0]["requests"], groupId);
+  }
 
   static Widget manageNavigation(int index) {
     switch (index) {
@@ -229,8 +285,10 @@ User loggedUser = await Controller.getUserInfo();
         return const JoinedGroups();
       case 1:
         return const JoinOrCreate();
+      case 2:
+        return SearchPage();
       default:
-        return const JoinedGroups();
+        return const SearchPage();
     }
   }
 
@@ -249,66 +307,58 @@ User loggedUser = await Controller.getUserInfo();
       print("error");
       Topic topic = await Connection.readTopic(id);
       print("error 2");
-      double percent=  await ControllerStudy.getPercent(topic, user.id);
-      topic.percent= percent;
+      double percent = await ControllerStudy.getPercent(topic, user.id);
+      topic.percent = percent;
       return topic;
     } catch (e) {
       print(e);
       return Topic(name: "", label: "", files: [], flashCards: []);
     }
-    
   }
-  
 
-static void groupInsertion(String description, String name, User loggedUser) async{
-  try {
-    Groups newGroup = Groups(description, name);
-  String insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup);
-  loggedUser.studyGroups.add(insertedStGroupId);
-  Controller.updateUserInfo(loggedUser);
-  } catch (e) {
-    
+  static void groupInsertion(
+      String description, String name, User loggedUser) async {
+    try {
+      Groups newGroup = Groups(description, name);
+      String insertedStGroupId =
+          await Connection.insertNewGroup(loggedUser, newGroup);
+      loggedUser.studyGroups.add(insertedStGroupId);
+      Controller.updateUserInfo(loggedUser);
+    } catch (e) {}
   }
-  
-}
 
 /*Topic Controller */
 
   static Future<List<Widget>> getTopics(Groups groupId) async {
     try {
       List result = await Connection.getTopics(groupId.id.oid.toString());
-    List<Widget> topics = [];
+      List<Widget> topics = [];
 
-    for (var t in result) {
-      Topic top = Topic.forPreview(t);
-      topics.add(TopicPreview(
-        title: top.name,
-        labels: top.label,
-        topicId: top.id,
-        groupId: groupId,
-      ));
-    }
-    return topics;
+      for (var t in result) {
+        Topic top = Topic.forPreview(t);
+        topics.add(TopicPreview(
+          title: top.name,
+          labels: top.label,
+          topicId: top.id,
+          groupId: groupId,
+        ));
+      }
+      return topics;
     } catch (e) {
       return [];
     }
-
-    
   }
 
+  static Future<String> postTopic(
+      Topic topic, Groups group, bool labelExists) async {
+    try {
+      final response = await Connection.createTopic(topic, group, labelExists);
 
-
-static Future<String> postTopic(Topic topic, Groups group, bool labelExists) async {
-  try {
-    final response = await Connection.createTopic(topic, group, labelExists);
-  
-  return response;
-  } catch (e) {
-    return 'error';
+      return response;
+    } catch (e) {
+      return 'error';
+    }
   }
-  
-}
-
 
   static Future<StudyMaterial?> loadStudyMaterial(String id) async {
     try {
@@ -316,20 +366,18 @@ static Future<String> postTopic(Topic topic, Groups group, bool labelExists) asy
     } catch (e) {
       return null;
     }
-    
   }
 
-  static Future<dynamic> updateFile(StudyMaterial studymaterial, String id, String topicId,int i)async{
+  static Future<dynamic> updateFile(
+      StudyMaterial studymaterial, String id, String topicId, int i) async {
     try {
       return Connection.updateFile(studymaterial, id, topicId, i);
     } catch (e) {
       return null;
     }
-    
   }
 
-  static Future<dynamic> deleteFile(String id, String topicId, int i)async{
-    
+  static Future<dynamic> deleteFile(String id, String topicId, int i) async {
     try {
       return Connection.deleteFile(id, topicId, i);
     } catch (e) {
@@ -337,30 +385,41 @@ static Future<String> postTopic(Topic topic, Groups group, bool labelExists) asy
     }
   }
 
-  static Future<dynamic> updateTopic(Topic newTopic, Topic oldTopic, bool labelExists, Groups group) async{
+  static Future<dynamic> updateTopic(
+      Topic newTopic, Topic oldTopic, bool labelExists, Groups group) async {
     try {
-      return Connection.updateTopic(newTopic, oldTopic,labelExists, group);
+      return Connection.updateTopic(newTopic, oldTopic, labelExists, group);
     } catch (e) {
       return 'error';
     }
-    
   }
 
-  static Future<dynamic> deleteTopic(String topicId)async{
+  static Future<dynamic> deleteTopic(String topicId) async {
     try {
       return Connection.deleteTopic(topicId);
     } catch (e) {
       return 'error';
     }
-    
   }
 
-  static Future<String> addNewMaterial(Topic topic, StudyMaterial study, Uint8List pdfContent)async{
-    try{
+  static Future<String> addNewMaterial(
+      Topic topic, StudyMaterial study, Uint8List pdfContent) async {
+    try {
       return await Connection.addStudyMaterialToTopic(topic, study, pdfContent);
-    }catch(e){
+    } catch (e) {
       return 'error';
     }
-    
+  }
+
+  static Future<bool> checkIfUserInRequests(String groupId) async {
+    List resultGroup = await Connection.checkStudyGroup(groupId);
+    User loggedUser = await Controller.getUserInfo();
+    bool userInRequests = false;
+    for (var request in resultGroup[0]["requests"]) {
+      if (request["id"] == loggedUser.id) {
+        userInRequests = true;
+      }
+    }
+    return userInRequests;
   }
 }

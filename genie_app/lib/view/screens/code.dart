@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/group.dart';
-import 'package:genie_app/view/screens/group_view.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
 import 'package:genie_app/view/widgets/bottom_nav_bar.dart';
 import '../theme.dart';
@@ -21,10 +20,7 @@ class CodePage extends StatelessWidget {
               TextButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GroupView(group: group)));
+                    Navigator.of(context).pop();
                   },
                   child: Row(
                     children: [

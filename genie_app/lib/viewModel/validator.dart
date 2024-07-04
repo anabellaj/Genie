@@ -21,6 +21,15 @@ class Validator{
     return null;
   }
 
+  String? validateUsername(String? value){
+    if(value == null){
+      return 'Campo obligatorio';
+    }else if(value.contains(" ")){
+      return 'Ingrese un usuario sin espacios';
+    }
+    return null;
+  }
+
   bool validateEmptyMessage(String message){
     return message.isNotEmpty;
   }

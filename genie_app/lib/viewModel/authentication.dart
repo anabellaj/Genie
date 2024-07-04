@@ -6,12 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Authenticate{
 
-  static Future<String> registerUser(String email, String password, String name) async{
+  static Future<String> registerUser(String email, String password, String name, String username) async{
     try {
       final prefs = await SharedPreferences.getInstance();
 
       User user = User(email, password);
       user.name = name;
+      user.username = username;
       user.initialize();
 
       final result = await Connection.checkUser(user);
@@ -19,6 +20,8 @@ class Authenticate{
 
       
       if(!result.isNotEmpty){
+        String followingId = await Connection.newFollowing();
+        user.following= followingId;
         String id = await Connection.insertNewUser(user);
         user.id= id;
         await prefs.setBool('isLoggedIn', true);
@@ -45,7 +48,6 @@ class Authenticate{
         
         if(result[0]["password"]==password){
           await prefs.setBool('isLoggedIn', true);
-          
           await prefs.setString("user", jsonEncode(User.fromJson(result[0])) );
           return "success";
         }else{

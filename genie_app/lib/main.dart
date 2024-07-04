@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/home.dart';  
 import 'package:genie_app/view/screens/initial.dart';
 import 'view/theme.dart';
@@ -22,11 +23,13 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _myAppState();
 }
 
+// ignore: camel_case_types
 class _myAppState extends State<MyApp> {
   late bool isUser = false;
-
+  late User user;
   void checkState() async {
     bool ans = await Controller.getLoggedInUser();
+    user = await Controller.getUserInfo();
     if (ans) {
       setState(() {
         isUser = true;
