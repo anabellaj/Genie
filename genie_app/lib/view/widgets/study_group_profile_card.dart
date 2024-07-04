@@ -7,11 +7,13 @@ class StudyGroupProfileCard extends StatefulWidget {
       {super.key,
       required this.id,
       required this.name,
-      required this.description});
-  
+      required this.description,
+      required this.userIsPartOfTheGroup});
+
   final String id;
   final String name;
   final String description;
+  final bool userIsPartOfTheGroup;
 
   @override
   State<StudyGroupProfileCard> createState() => _StudyGroupProfileCardState();
@@ -20,19 +22,20 @@ class StudyGroupProfileCard extends StatefulWidget {
 class _StudyGroupProfileCardState extends State<StudyGroupProfileCard> {
   bool isSolicited = false;
   bool hidden = true;
-  void checkRequests() async{
+  void checkRequests() async {
     bool x = await Controller.checkIfUserInRequests(widget.id);
     setState(() {
       isSolicited = x;
       hidden = false;
     });
   }
+
   @override
-  void initState(){
+  void initState() {
     checkRequests();
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -59,23 +62,26 @@ class _StudyGroupProfileCardState extends State<StudyGroupProfileCard> {
                 ),
               ],
             ),
-            hidden?
-            const SizedBox():
-            !isSolicited ?
-            Tooltip(
-                message: "Solicitar unirse",
-                child: IconButton(
-                  onPressed: () async{
-                    setState(() {
-                      isSolicited = true;
-                    });
-                    Controller.sendJoinRequest(widget.id);
-                  },
-                  icon: const Icon(Icons.person_add_alt_1, color: Colors.blue),
-                ),
-              ):
-            const Tooltip(message: "¡Solicitud enviada!", child: const Icon(Icons.person_add_alt_1))
-            
+            if (!widget.userIsPartOfTheGroup)
+              hidden
+                  ? const SizedBox()
+                  : !isSolicited
+                      ? Tooltip(
+                          message: "Solicitar unirse",
+                          child: IconButton(
+                            onPressed: () async {
+                              setState(() {
+                                isSolicited = true;
+                              });
+                              Controller.sendJoinRequest(widget.id);
+                            },
+                            icon: const Icon(Icons.person_add_alt_1,
+                                color: Colors.blue),
+                          ),
+                        )
+                      : const Tooltip(
+                          message: "¡Solicitud enviada!",
+                          child: Icon(Icons.person_add_alt_1))
           ],
         ),
       ),

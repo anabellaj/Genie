@@ -75,156 +75,156 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopBar(),
-      body: Column(
-        children: [
-          Container(
-              padding: const EdgeInsets.all(12.0),
-              color: genieThemeDataDemo.colorScheme.secondary,
-              child: Column(children: [
-               
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-                        child: TextField(
-                          controller: _controller,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                              filled: true,
-                              fillColor:
-                                  genieThemeDataDemo.colorScheme.onSecondary,
-                              hintText: "Buscar...",
-                              hintStyle:
-                                  genieThemeDataDemo.textTheme.titleMedium,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: genieThemeDataDemo
-                                          .colorScheme.secondary),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(50)))),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          if (nameButtonPressed) {
-                            findUsers("username");
-                          } else if (univButtonPressed) {
-                            findUsers("university");
-                          } else if (careerButtonPressed) {
-                            findUsers("career");
-                          }
-                        },
-                        icon: Icon(Icons.search_outlined,
-                            color: genieThemeDataDemo.colorScheme.onPrimary)),
-                  ],
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+        appBar: TopBar(),
+        body: Column(
+          children: [
+            Container(
+                padding: const EdgeInsets.all(12.0),
+                color: genieThemeDataDemo.colorScheme.secondary,
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Filtrar por:",
-                          style: TextStyle(
-                              color: genieThemeDataDemo.colorScheme.onPrimary,
-                              fontSize: 14),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4),
+                          child: TextField(
+                            controller: _controller,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor:
+                                    genieThemeDataDemo.colorScheme.onSecondary,
+                                hintText: "Buscar...",
+                                hintStyle:
+                                    genieThemeDataDemo.textTheme.titleMedium,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: genieThemeDataDemo
+                                            .colorScheme.secondary),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(50)))),
+                          ),
                         ),
                       ),
-                      FilledButton(
+                      IconButton(
                           onPressed: () {
-                            setState(() {
-                              univButtonPressed = false;
-                              careerButtonPressed = false;
-                              nameButtonPressed = true;
-                            });
+                            if (nameButtonPressed) {
+                              findUsers("username");
+                            } else if (univButtonPressed) {
+                              findUsers("university");
+                            } else if (careerButtonPressed) {
+                              findUsers("career");
+                            }
                           },
-                          style: nameButtonPressed
-                              ? mainButtonStyle
-                              : outlinedButtonStyle,
-                          child: const Text("Nombre", style: TextStyle(fontSize: 14),)),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FilledButton(
-                            onPressed: () {
-                              setState(() {
-                                nameButtonPressed = false;
-                                univButtonPressed = false;
-                                careerButtonPressed = true;
-                              });
-                            },
-                            style: careerButtonPressed
-                                ? mainButtonStyle
-                                : outlinedButtonStyle,
-                            child: const Text("Carrera", style: TextStyle(fontSize: 14))),
-                      ),
-                      FilledButton(
-                          onPressed: () {
-                            setState(() {
-                              careerButtonPressed = false;
-                              nameButtonPressed = false;
-                              univButtonPressed = true;
-                            });
-                          },
-                          style: univButtonPressed
-                              ? mainButtonStyle
-                              : outlinedButtonStyle,
-                          child: const Text("Universidad", style: TextStyle(fontSize: 14))),
+                          icon: Icon(Icons.search_outlined,
+                              color: genieThemeDataDemo.colorScheme.onPrimary)),
                     ],
                   ),
-                ),
-              ])),
-          isLoading
-              ? const Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Center(child: const CircularProgressIndicator()),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Filtrar por:",
+                            style: TextStyle(
+                                color: genieThemeDataDemo.colorScheme.onPrimary,
+                                fontSize: 14),
+                          ),
+                        ),
+                        FilledButton(
+                            onPressed: () {
+                              setState(() {
+                                univButtonPressed = false;
+                                careerButtonPressed = false;
+                                nameButtonPressed = true;
+                              });
+                            },
+                            style: nameButtonPressed
+                                ? mainButtonStyle
+                                : outlinedButtonStyle,
+                            child: const Text(
+                              "Nombre",
+                              style: TextStyle(fontSize: 14),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FilledButton(
+                              onPressed: () {
+                                setState(() {
+                                  nameButtonPressed = false;
+                                  univButtonPressed = false;
+                                  careerButtonPressed = true;
+                                });
+                              },
+                              style: careerButtonPressed
+                                  ? mainButtonStyle
+                                  : outlinedButtonStyle,
+                              child: const Text("Carrera",
+                                  style: TextStyle(fontSize: 14))),
+                        ),
+                        FilledButton(
+                            onPressed: () {
+                              setState(() {
+                                careerButtonPressed = false;
+                                nameButtonPressed = false;
+                                univButtonPressed = true;
+                              });
+                            },
+                            style: univButtonPressed
+                                ? mainButtonStyle
+                                : outlinedButtonStyle,
+                            child: const Text("Universidad",
+                                style: TextStyle(fontSize: 14))),
+                      ],
                     ),
-                  ],
-                )
-              : foundUsers.isEmpty
-                  ? 
-                  !firstTime ?
-                  Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * .70,
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "No se ha encontrado ningún usuario",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Color(0xffB4B6BF)),
-                          ),
-                        ],
-                      )):
-                  const SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Text(
-                              "¡Realiza una búsqueda!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Color(0xffB4B6BF)),
-                            ),
-                          ),
-                        ],
-                      ))
-                  : Expanded(child: ListView(children: [...foundUsers]))
-        ],
-      ),
-    bottomNavigationBar: BottomNavBar());
+                  ),
+                ])),
+            isLoading
+                ? const Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Center(child: const CircularProgressIndicator()),
+                      ),
+                    ],
+                  )
+                : foundUsers.isEmpty
+                    ? !firstTime
+                        ? const Column(
+                            children: [
+                              SizedBox(height: 20,),
+                              Text(
+                                "No se ha encontrado ningún usuario",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Color(0xffB4B6BF)),
+                              ),
+                            ],
+                          )
+                        : const SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    "¡Realiza una búsqueda!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Color(0xffB4B6BF)),
+                                  ),
+                                ),
+                              ],
+                            ))
+                    : Expanded(child: ListView(children: [...foundUsers]))
+          ],
+        ),
+        bottomNavigationBar: BottomNavBar());
   }
 }

@@ -642,7 +642,7 @@ class Connection {
       "admins": [objIdString],
       "profile_picture": "",
       "entrance_code": "",
-      "requests":[]
+      "requests": []
     });
 
     ObjectId insertedStGroupId = await writeResult.id;
@@ -936,77 +936,77 @@ class Connection {
         await followingCollection.updateOne(
             where.eq("_id", ObjectId.fromHexString(id["following"])),
             ModifierBuilder().pull("requested", userid));
-
       }
     }
     await db.close();
   }
 
-
-  static void addJoinRequest(List requests, String groupId) async{
-
+  static void addJoinRequest(List requests, String groupId) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
 
     await db.open();
 
     var groupCollection = db.collection('studyGroup');
-    final requestsUpdate =
-            ModifierBuilder().set("requests", requests);
-    await groupCollection.updateOne(where.eq("_id", ObjectId.fromHexString(groupId)), requestsUpdate);
+    final requestsUpdate = ModifierBuilder().set("requests", requests);
+    await groupCollection.updateOne(
+        where.eq("_id", ObjectId.fromHexString(groupId)), requestsUpdate);
     await db.close();
-    }
-  static Future<List<dynamic>> getFriends(String followingId, List<dynamic> friendsList)async{
+  }
+
+  static Future<List<dynamic>> getFriends(
+      String followingId, List<dynamic> friendsList) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
 
     await db.open();
     final userCollection = db.collection("user");
-    List<dynamic> result = await userCollection.find(where.oneFrom("_id", friendsList)).toList();
+    List<dynamic> result =
+        await userCollection.find(where.oneFrom("_id", friendsList)).toList();
     await db.close();
     return result;
   }
 
-  static Future addNewMembers(Groups g, List<dynamic> toAdd)async{
+  static Future addNewMembers(Groups g, List<dynamic> toAdd) async {
     final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
 
     await db.open();
     final userCollection = db.collection("user");
     final groupCollection = db.collection('studyGroup');
-    await userCollection.updateMany(where.oneFrom('_id', toAdd), ModifierBuilder().push("studyGroups", g.id.oid));
-    WriteResult r = await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
+    await userCollection.updateMany(where.oneFrom('_id', toAdd),
+        ModifierBuilder().push("studyGroups", g.id.oid));
+    await groupCollection.updateOne(
+        where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
   }
-  
-  static Future manageJoinRequests(Groups g, List<dynamic> add)async{
-     final db = await Db.create(
+
+  static Future manageJoinRequests(Groups g, List<dynamic> add) async {
+    final db = await Db.create(
         "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
 
     await db.open();
     final groupCollection = db.collection('studyGroup');
     final userCollection = db.collection('user');
-    await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
-    await groupCollection.updateOne(where.eq("_id", g.id), ModifierBuilder().set('requests', g.requests));
-    await userCollection.updateMany(where.oneFrom("_id", add), ModifierBuilder().push('studyGroups', g.id.oid));
+    await groupCollection.updateOne(
+        where.eq("_id", g.id), ModifierBuilder().set('members', g.members));
+    await groupCollection.updateOne(
+        where.eq("_id", g.id), ModifierBuilder().set('requests', g.requests));
+    await userCollection.updateMany(where.oneFrom("_id", add),
+        ModifierBuilder().push('studyGroups', g.id.oid));
   }
-
 
   static Future<int> checkRequestsFollowing(
       User user, String followedUser) async {
-
     try {
       final db = await Db.create(
           "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
       await db.open();
-      final userCollection = db.collection('user');
+      db.collection('user');
       final followingCollection = db.collection('following');
-
-      ObjectId secondaryUserId = ObjectId.fromHexString(followedUser);
 
       final followingResult = await followingCollection
           .findOne(where.eq('_id', ObjectId.fromHexString(user.following)));
 
-      
       if (followingResult?['followed'].contains(followedUser)) {
         return 1;
       }
@@ -1017,6 +1017,7 @@ class Connection {
 
       return 3;
     } catch (e) {
+      // ignore: avoid_print
       print('Error: $e');
       return 0;
     }
@@ -1034,12 +1035,13 @@ class Connection {
 
       final secondaryUserResult =
           await userCollection.findOne(where.id(secondaryUserId));
-      
-      ObjectId followingSecondary = ObjectId.fromHexString(secondaryUserResult?['following']);
 
-      final mainRequested = await followingCollection
-          .findOne(where.eq('_id', ObjectId.fromHexString(currentUser.following)));
-          
+      ObjectId followingSecondary =
+          ObjectId.fromHexString(secondaryUserResult?['following']);
+
+      final mainRequested = await followingCollection.findOne(
+          where.eq('_id', ObjectId.fromHexString(currentUser.following)));
+
       final secondaryRequest = await followingCollection
           .findOne(where.eq('_id', followingSecondary));
 
@@ -1063,6 +1065,7 @@ class Connection {
 
       await db.close();
     } catch (e) {
+      // ignore: avoid_print
       print('Error: $e');
     }
   }

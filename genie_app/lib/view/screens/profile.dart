@@ -16,9 +16,13 @@ import 'package:genie_app/viewModel/controllerSocial.dart';
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(
-      {super.key, required this.displayedUser, required this.currentuUser});
+      {super.key,
+      required this.displayedUser,
+      required this.currentuUser,
+      required this.loggedInUser});
   User displayedUser;
   final bool currentuUser;
+  final User loggedInUser;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -29,6 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late Future<List<Groups>> userStudyGroups;
   List<Groups>? groups;
   late Future<File> _image;
+  int _friendStatePatch = -10;
 
   Future<List<Groups>> getUserGroups() async {
     return Controller.getUserGroupsById(widget.displayedUser);
@@ -52,17 +57,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Widget checkExtraData(){
-    if(widget.displayedUser.career.isEmpty&&widget.displayedUser.university.isNotEmpty){
-      return Text("${widget.displayedUser.university}");
-    }
-    else if(widget.displayedUser.career.isNotEmpty&&widget.displayedUser.university.isEmpty){
-       return Text("${widget.displayedUser.career}");
-    }
-    else if(widget.displayedUser.career.isNotEmpty&&widget.displayedUser.university.isNotEmpty){
-      return Text('${widget.displayedUser.career} | ${widget.displayedUser.university}');
-    }else{
-      return SizedBox.shrink();
+  Widget checkExtraData() {
+    if (widget.displayedUser.career.isEmpty &&
+        widget.displayedUser.university.isNotEmpty) {
+      return Text(widget.displayedUser.university);
+    } else if (widget.displayedUser.career.isNotEmpty &&
+        widget.displayedUser.university.isEmpty) {
+      return Text(widget.displayedUser.career);
+    } else if (widget.displayedUser.career.isNotEmpty &&
+        widget.displayedUser.university.isNotEmpty) {
+      return Text(
+          '${widget.displayedUser.career} | ${widget.displayedUser.university}');
+    } else {
+      return const SizedBox.shrink();
     }
   }
 
@@ -87,10 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SearchPage()));
+                  Navigator.of(context).pop();
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -134,7 +138,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(
                         height: 4,
                       ),
-
                       checkExtraData(),
                       const SizedBox(
                         height: 10,
@@ -177,6 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       'Ocurrió un error. ${snapshot.error.toString()}'),
                                 );
                               }
+                              //TODO: Arreglar esto
+                              _friendStatePatch = snapshot.data!;
                               return FollowButton(
                                   response: snapshot.data!,
                                   followedUserId: widget.displayedUser.id);
@@ -223,7 +228,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 20,
               ),
-              
               FutureBuilder(
                 future: userStudyGroups,
                 builder: (context, snapshot) {
@@ -239,23 +243,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   }
                   groups = snapshot.data!;
-                  if(_friendState==1){
-                     return Column(
-                    children: [
-                      for (int i = 0; i < groups!.length; i++)
-                        StudyGroupProfileCard(
+                  List<String> groupsIds = [];
+                  for (int i = 0; i < groups!.length; i++) {
+                    groupsIds.add(groups![i].id.oid);
+                  }
+                  // ignore: unrelated_type_equality_checks
+                  if (_friendStatePatch == 1 || widget.currentuUser) {
+                    return Column(
+                      children: [
+                        for (int i = 0; i < groups!.length; i++)
+                          StudyGroupProfileCard(
                             id: widget.displayedUser.studyGroups[i],
                             name: groups![i].name,
-                            description: groups![i].description),
-                      const SizedBox(
-                        height: 20,
-                      )
-                    ],
-                  );
-                  }else{
-                    return SizedBox.shrink();
+                            description: groups![i].description,
+                            userIsPartOfTheGroup: widget.loggedInUser.studyGroups
+                                .contains(groupsIds[i]),
+                          ),
+                        const SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    );
+                  } else {
+                    return const Column(
+                      children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Icon(Icons.lock),
+                      ],
+                    );
                   }
-                 
                 },
               )
             ],

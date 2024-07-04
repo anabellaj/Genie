@@ -50,6 +50,7 @@ class SettingsPage extends StatelessWidget {
                   builder: (context) => ProfileScreen(
                         displayedUser: user,
                         currentuUser: true,
+                        loggedInUser: user,
                       )));
             },
             child: Container(
