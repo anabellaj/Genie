@@ -32,7 +32,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late Future<List<Groups>> userStudyGroups;
   List<Groups>? groups;
   late Future<File> _image;
-  int _friendStatePatch = -10;
 
   Future<List<Groups>> getUserGroups() async {
     return Controller.getUserGroupsById(widget.displayedUser);
@@ -153,38 +152,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text('Modificar perfil'),
                           ),
                         )
-                      else
-                        FutureBuilder(
-                            future: _friendState,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return ElevatedButton(
-                                  onPressed: () {},
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.access_time_outlined),
-                                      SizedBox(width: 8),
-                                      Text('Cargando'),
-                                    ],
-                                  ),
-                                );
-                              }
-                              if (snapshot.hasError) {
-                                //snackbar
-                                ScaffoldMessenger.of(context).clearSnackBars();
-                                return Center(
-                                  child: Text(
-                                      'Ocurrió un error. ${snapshot.error.toString()}'),
-                                );
-                              }
-                              //TODO: Arreglar esto
-                              _friendStatePatch = snapshot.data!;
-                              return FollowButton(
-                                  response: snapshot.data!,
-                                  followedUserId: widget.displayedUser.id);
-                            })
                     ],
                   ),
                   FutureBuilder(
@@ -223,61 +190,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const Text('Grupos de estudio'),
-              const SizedBox(
-                height: 20,
-              ),
               FutureBuilder(
-                future: userStudyGroups,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    //snackbar
-                    ScaffoldMessenger.of(context).clearSnackBars();
-                    return Center(
-                      child: Text(
-                          'Ocurrió un error. ${snapshot.error.toString()}'),
-                    );
-                  }
-                  groups = snapshot.data!;
-                  List<String> groupsIds = [];
-                  for (int i = 0; i < groups!.length; i++) {
-                    groupsIds.add(groups![i].id.oid);
-                  }
-                  // ignore: unrelated_type_equality_checks
-                  if (_friendStatePatch == 1 || widget.currentuUser) {
-                    return Column(
-                      children: [
-                        for (int i = 0; i < groups!.length; i++)
-                          StudyGroupProfileCard(
-                            id: widget.displayedUser.studyGroups[i],
-                            name: groups![i].name,
-                            description: groups![i].description,
-                            userIsPartOfTheGroup: widget
-                                .loggedInUser.studyGroups
-                                .contains(groupsIds[i]),
+                  future: _friendState,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
                           ),
-                        const SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    );
-                  } 
-                  else {
-                    return const Column(
-                      children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Icon(Icons.lock),
-                        Text('Informacion Privada')
-                      ],
-                    );
-                  }
-                },
-              )
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.access_time_outlined),
+                                SizedBox(width: 8),
+                                Text('Cargando'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      //snackbar
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      return Center(
+                        child: Text(
+                            'Ocurrió un error. ${snapshot.error.toString()}'),
+                      );
+                    }
+                    if (snapshot.data == 1 || widget.currentuUser) {
+                      return Column(
+                        children: [
+                          FollowButton(
+                              response: snapshot.data!,
+                              followedUserId: widget.displayedUser.id),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          FutureBuilder(
+                            future: userStudyGroups,
+                            builder: (ctx, sp) {
+                              if (sp.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (sp.hasError) {
+                                //snackbar
+                                ScaffoldMessenger.of(context).clearSnackBars();
+                                return Center(
+                                  child: Text(
+                                      'Ocurrió un error. ${sp.error.toString()}'),
+                                );
+                              }
+                              groups = sp.data!;
+                              List<String> groupsIds = [];
+                              for (int i = 0; i < groups!.length; i++) {
+                                groupsIds.add(groups![i].id.oid);
+                              }
+                              // ignore: unrelated_type_equality_checks
+                              return Column(
+                                children: [
+                                  for (int i = 0; i < groups!.length; i++)
+                                    StudyGroupProfileCard(
+                                      id: widget.displayedUser.studyGroups[i],
+                                      name: groups![i].name,
+                                      description: groups![i].description,
+                                      userIsPartOfTheGroup: widget
+                                          .loggedInUser.studyGroups
+                                          .contains(groupsIds[i]),
+                                    ),
+                                  const SizedBox(
+                                    height: 20,
+                                  )
+                                ],
+                              );
+                            },
+                          )
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          FollowButton(
+                              response: snapshot.data!,
+                              followedUserId: widget.displayedUser.id),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Icon(Icons.lock),
+                          const Text('Informacion Privada')
+                        ],
+                      );
+                    }
+                  }),
             ],
           ),
         ),
