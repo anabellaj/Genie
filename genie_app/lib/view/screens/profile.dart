@@ -252,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               for (int i = 0; i < groups!.length; i++) {
                                 groupsIds.add(groups![i].id.oid);
                               }
-                              if (groupsIds.isEmpty) {
+                              if (groupsIds.isNotEmpty) {
                                 return Column(
                                   children: [
                                     for (int i = 0; i < groups!.length; i++)

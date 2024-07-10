@@ -148,7 +148,7 @@ class _SearchPageState extends State<SearchPage> {
                                 ? mainButtonStyle
                                 : outlinedButtonStyle,
                             child: const Text(
-                              "Nombre",
+                              "Usuario",
                               style: TextStyle(fontSize: 14),
                             )),
                         Padding(
@@ -199,7 +199,9 @@ class _SearchPageState extends State<SearchPage> {
                     ? !firstTime
                         ? const Column(
                             children: [
-                              SizedBox(height: 20,),
+                              SizedBox(
+                                height: 20,
+                              ),
                               Text(
                                 "No se ha encontrado ningún usuario",
                                 textAlign: TextAlign.center,
