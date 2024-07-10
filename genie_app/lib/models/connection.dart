@@ -1069,4 +1069,30 @@ class Connection {
       print('Error: $e');
     }
   }
+
+  static Future sendFeedback (String name, String username, String message, DateTime time) async {
+      try{
+        final db = await Db.create(
+          "mongodb+srv://andreinarivas:Galletas21@cluster0.gbix89j.mongodb.net/demo");
+         await db.open();
+         final feedbackCollection = db.collection('feedback');
+       
+        final feedbackDocument = {
+          'name': name,
+          'username': username,
+          'message': message,
+          'time': time,
+        };
+
+        await feedbackCollection.insert(feedbackDocument);
+        await db.close();
+
+
+        return 'success';
+
+      } catch (e){
+        return 'Error $e';
+      }
+  }
+
 }

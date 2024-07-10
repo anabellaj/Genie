@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genie_app/models/user.dart';
 import 'package:genie_app/view/screens/follow_request.dart';
+import 'package:genie_app/view/screens/help_page.dart';
 import 'package:genie_app/view/screens/modify_profile.dart';
 import 'package:genie_app/view/screens/profile.dart';
 import 'package:genie_app/view/widgets/appbar.dart';
@@ -127,6 +128,36 @@ class SettingsPage extends StatelessWidget {
                   children: [
                     const Text(
                       "Solicitudes de amistad",
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: genieThemeDataDemo.colorScheme.primary,
+                      size: 32,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const HelpPage()));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                          color: genieThemeDataDemo.colorScheme.primary,
+                          width: 2))),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Soporte y ayuda",
                     ),
                     Icon(
                       Icons.chevron_right,
