@@ -152,4 +152,14 @@ class ControllerSocial {
     }
   }
 
+  static Future  <String> sendFeedback (String message, DateTime time) async {
+    try {
+      User currentUser = await Controller.getUserInfo();
+      return await Connection.sendFeedback(currentUser.name, currentUser.username, message, time);
+    }
+    catch(e){
+      return "Error $e";
+    }
+  }
+  
 }
