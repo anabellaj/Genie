@@ -13,6 +13,7 @@ class PercentBar extends StatelessWidget {
   final double percent;
   final Groups group;
   final String topicId;
+  
 
   @override
   Widget build(BuildContext context) {

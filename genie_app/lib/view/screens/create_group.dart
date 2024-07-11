@@ -54,13 +54,13 @@ final _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context){
     return Scaffold(
       appBar:TopBar(),
-      body:SingleChildScrollView(
+      body:isLoading? 
+        const Center(child: CircularProgressIndicator())
+      : SingleChildScrollView(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child:isLoading? 
-            const Center(child: CircularProgressIndicator())
-            : Column(
+            child:Column(
               children: [
                 TextButton(
                         onPressed: () {
@@ -201,7 +201,7 @@ final _formKey = GlobalKey<FormState>();
                               newGroup = Groups(description, name),
                               insertedStGroupId = await Connection.insertNewGroup(loggedUser, newGroup),
                               loggedUser.studyGroups.add(insertedStGroupId),
-                              Controller.updateUserInfo(loggedUser),
+                              await Controller.updateUserInfo(loggedUser),
                               setState(() {
                                 isLoading = false;
                               }),

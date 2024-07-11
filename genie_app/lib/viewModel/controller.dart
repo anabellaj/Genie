@@ -111,7 +111,6 @@ class Controller {
               group: Groups.fromJson(gr[0])));
         }
       }
-      Controller.updateUserInfo(userBD);
 
       return obtainedGroups;
     } catch (e) {
@@ -304,9 +303,7 @@ class Controller {
   static Future<Topic> loadTopic(String id) async {
     try {
       User user = await Controller.getUserInfo();
-      print("error");
       Topic topic = await Connection.readTopic(id);
-      print("error 2");
       double percent = await ControllerStudy.getPercent(topic, user.id);
       topic.percent = percent;
       return topic;
