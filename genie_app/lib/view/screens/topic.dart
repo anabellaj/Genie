@@ -28,6 +28,7 @@ class _TopicScreenState extends State<TopicScreen> {
 
   @override
   void initState() {
+    
     activeTopic = _loadTopic();
     super.initState();
   }

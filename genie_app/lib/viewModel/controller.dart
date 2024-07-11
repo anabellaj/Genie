@@ -111,7 +111,6 @@ class Controller {
               group: Groups.fromJson(gr[0])));
         }
       }
-      Controller.updateUserInfo(userBD);
 
       return obtainedGroups;
     } catch (e) {
@@ -232,6 +231,16 @@ class Controller {
       return 'error';
     }
   }
+  static Future updateUserLocal(User userInfo)async{
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("user", jsonEncode(userInfo.toJson()));
+      
+      return 'success';
+    } catch (e) {
+      return 'error';
+    }
+  }
 
   static Future<String> logOutUser() async {
     try {
@@ -304,9 +313,7 @@ class Controller {
   static Future<Topic> loadTopic(String id) async {
     try {
       User user = await Controller.getUserInfo();
-      print("error");
       Topic topic = await Connection.readTopic(id);
-      print("error 2");
       double percent = await ControllerStudy.getPercent(topic, user.id);
       topic.percent = percent;
       return topic;

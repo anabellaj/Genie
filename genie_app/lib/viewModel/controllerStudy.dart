@@ -74,22 +74,16 @@ class ControllerStudy {
                 studiedFlash.add(false);
               }
             }
-          } else {
-            // ignore: unused_local_variable
-            for (var el in flashcards) {
-              studiedFlash.add(false);
-            }
-          }
+          } 
         }
-      } else {
-        // ignore: unused_local_variable
+      }
+      if(studiedFlash.isEmpty){
         for (var el in flashcards) {
           studiedFlash.add(false);
         }
       }
       return studiedFlash;
     } catch (e) {
-      print(e);
       List<bool> studiedFlash = [];
       // ignore: unused_local_variable
       for (var el in flashcards) {
@@ -132,7 +126,9 @@ class ControllerStudy {
               user.id, {'topic': topicId, 'studied': studiedIds});
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   static int countStudied(List<bool> studied) {

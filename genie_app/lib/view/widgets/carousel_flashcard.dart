@@ -32,6 +32,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
     await ControllerStudy.updateStudied(
         studied, widget.topicId, widget.flashcards);
   }
+  
 
   void getInfo() async {
     setState(() {
@@ -40,11 +41,14 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
     List<bool> l =
         await ControllerStudy.checkIfStudied(widget.topicId, widget.flashcards);
     int number = await ControllerStudy.countStudied(l);
+    print(l);
     if (mounted) {
       setState(() {
         studied = l;
-        isLoading = false;
         num_studied = number;
+      });
+      setState(() {
+        isLoading=false;
       });
     }
   }
@@ -136,6 +140,7 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                     }
                                   });
                                   _controller.animateToPage(_current);
+                                  setState(()=>{});
                                 },
                                 icon: Icon(Icons.chevron_left,
                                     color: genieThemeDataDemo
@@ -201,9 +206,8 @@ class _CarouselFlashcard extends State<CarouselFlashcard> {
                                   });
                                 },
                                 icon: Icon(
-                                  studied[_current]
-                                      ? Icons.check_circle
-                                      : Icons.check_circle_outline,
+                                  studied[_current]?
+                                  Icons.check_circle:Icons.check_circle_outlined,
                                   color: genieThemeDataDemo.colorScheme.primary,
                                 ))
                           ],
